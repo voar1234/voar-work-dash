@@ -85,6 +85,45 @@
     margin-left: auto; padding: 1px 7px; border-radius: 999px;
     background: var(--red); color: #fff; font-size: 10px; font-weight: 700;
   }
+
+  /* ───── 사이드바 아코디언 그룹 ───── */
+  .nav-group { display: flex; flex-direction: column; margin: 2px 0; }
+  .nav-group-header {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; padding: 10px 12px; margin: 2px 0;
+    background: transparent; border: 0; border-radius: 8px;
+    color: var(--text-soft); font-size: 12px; cursor: pointer;
+    text-align: left; font-family: inherit; font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: background .15s, color .15s;
+    user-select: none;
+  }
+  .nav-group-header:hover { background: #f3f4f6; color: var(--text); }
+  .nav-group-header .group-emoji { width: 18px; text-align: center; font-size: 14px; }
+  .nav-group-header .group-title { flex: 1; }
+  .nav-group-header .group-caret {
+    font-size: 10px; color: var(--text-soft);
+    transition: transform 0.18s ease;
+  }
+  .nav-group.open .nav-group-header .group-caret { transform: rotate(90deg); }
+  .nav-group.open .nav-group-header { color: var(--text); }
+  .nav-group-items {
+    display: none; flex-direction: column; gap: 1px;
+    padding: 2px 0 4px 8px;
+    margin-left: 16px;
+    border-left: 1px solid var(--line);
+  }
+  .nav-group.open .nav-group-items { display: flex; }
+  .nav-group-items button.nav-item {
+    font-size: 13px; padding: 8px 10px; font-weight: 500;
+  }
+  /* 그룹 안에 활성 페이지가 있으면 헤더에 점 표시 */
+  .nav-group.has-active > .nav-group-header::after {
+    content: ''; width: 5px; height: 5px;
+    border-radius: 50%; background: var(--accent);
+    margin-left: 2px;
+  }
+  .nav-group.has-active.open > .nav-group-header::after { display: none; }
   /* 긴급알림 페이지 */
   .alert-section { margin-bottom: 22px; }
   .alert-section h3 { font-size: 14px; font-weight: 600; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px; }
@@ -813,51 +852,70 @@
     color: var(--text-soft); cursor: pointer; font-weight: 600;
   }
   .mg-tf.active, .emg-tf.active { background: #fff; color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
-  .mc { background: #fff; border: 1px solid var(--line-strong); border-radius: 12px; padding: 14px 16px; }
-  .mc-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-  .mc-badge { padding: 2px 7px; border-radius: 5px; font-size: 10px; font-weight: 700; }
+  .mc { background: #fff; border: 1px solid var(--line-strong); border-radius: 12px; padding: 16px 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+  .mc-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .mc-badge { padding: 3px 9px; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.2px; }
   .mc-badge.main { background: #d1fae5; color: #065f46; }
   .mc-badge.accessory { background: #fef3c7; color: #92400e; }
-  .mc-name { flex: 1; font-weight: 700; font-size: 13px; color: var(--text); line-height: 1.3; word-break: keep-all; }
-  .mc-code { color: var(--text-soft); font-size: 11px; font-weight: 600; margin-top: 2px; }
-  .mc-mod { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 6px; font-size: 9px; font-weight: 700; }
-  .mc-cost { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: #f3f4f6; border-radius: 6px; margin-bottom: 8px; font-size: 12px; }
-  .mc-cost b { font-size: 14px; color: var(--text); font-variant-numeric: tabular-nums; }
-  .mc-stock { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; padding: 8px 6px; background: #fafafa; border-radius: 6px; margin-bottom: 10px; text-align: center; }
-  .mc-stock-cell .l { color: var(--text-soft); font-size: 10px; }
-  .mc-stock-cell .v { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 1px; }
-  .mc-stock-cell .v.zero { color: #d1d5db; }
+  .mc-name { flex: 1; font-weight: 800; font-size: 14px; color: var(--text); line-height: 1.35; word-break: keep-all; }
+  .mc-code { color: var(--text-soft); font-size: 11px; font-weight: 600; margin-top: 3px; letter-spacing: 0.2px; }
+  .mc-mod { background: #fef3c7; color: #92400e; padding: 2px 7px; border-radius: 6px; font-size: 10px; font-weight: 700; }
+  .mc-cost { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 8px; margin-bottom: 10px; font-size: 12px; border: 1px solid #bfdbfe; }
+  .mc-cost span { font-size: 12px; color: #1e40af; font-weight: 700; }
+  .mc-cost b { font-size: 17px; color: #1e3a8a; font-variant-numeric: tabular-nums; font-weight: 800; }
+  .mc-stock { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 10px 8px; background: #f9fafb; border-radius: 8px; margin-bottom: 12px; text-align: center; border: 1px solid #e5e7eb; }
+  .mc-stock-cell .l { color: #6b7280; font-size: 11px; font-weight: 700; letter-spacing: 0.3px; }
+  .mc-stock-cell .v { font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; margin-top: 3px; color: var(--text); }
+  .mc-stock-cell .v.zero { color: #d1d5db; font-weight: 600; }
   .mc-stock-cell .v.ok { color: #059669; }
-  .mc-row { display: grid; grid-template-columns: 70px 1fr 110px; gap: 8px; align-items: center; padding: 4px 0; font-size: 12px; }
-  .mc-row .lbl { color: var(--text-soft); font-weight: 600; font-size: 11px; }
-  .mc-row input { padding: 6px 8px; border: 1px solid var(--border); border-radius: 5px; font-family: inherit; font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; background: #fff; width: 100%; }
-  .mc-row input:focus { outline: 2px solid #c4b5fd; outline-offset: -1px; border-color: #7c3aed; }
+  .mc-row { display: grid; grid-template-columns: 80px 1fr 120px; gap: 10px; align-items: center; padding: 7px 0; font-size: 13px; }
+  .mc-row .lbl { color: #374151; font-weight: 700; font-size: 12px; }
+  .mc-row input {
+    padding: 9px 11px; border: 1.5px solid #d1d5db; border-radius: 7px;
+    font-family: inherit; font-size: 14px; font-weight: 700;
+    text-align: right; font-variant-numeric: tabular-nums; background: #fff;
+    width: 100%; color: var(--text);
+  }
+  .mc-row input::placeholder { color: #9ca3af; font-weight: 500; font-size: 12px; }
+  .mc-row input:focus { outline: 2px solid #c4b5fd; outline-offset: 0; border-color: #7c3aed; }
   .mc-row .res { text-align: right; }
-  .mc-row .m-val { font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.2; }
+  .mc-row .m-val { font-size: 17px; font-weight: 900; font-variant-numeric: tabular-nums; line-height: 1.15; letter-spacing: -0.3px; }
   .mc-row .m-val.pos { color: #059669; }
   .mc-row .m-val.neg { color: #dc2626; }
-  .mc-row .m-val.flat { color: var(--text-soft); }
-  .mc-row .m-rate { font-size: 11px; color: var(--text-soft); font-weight: 600; margin-top: 1px; font-variant-numeric: tabular-nums; }
-  .mc-sep { border-top: 1px dashed var(--line-strong); margin: 8px 0; }
-  .mc-ship-tag { display: inline-block; font-size: 9px; padding: 1px 5px; border-radius: 4px; font-weight: 700; margin-left: 4px; }
+  .mc-row .m-val.flat { color: #9ca3af; }
+  .mc-row .m-rate { font-size: 12px; color: #6b7280; font-weight: 700; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .mc-sep { border-top: 1px dashed #d1d5db; margin: 10px 0; }
+  .mc-ship-tag { display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 5px; font-weight: 700; margin-left: 4px; }
   .mc-ship-tag.db { background: #dbeafe; color: #1e40af; }
   .mc-ship-tag.user { background: #fef3c7; color: #92400e; }
-  .mc-actions { display: flex; gap: 6px; margin-top: 10px; }
-  .mc-actions button { flex: 1; padding: 7px 10px; border: 1px solid var(--line-strong); border-radius: 5px; background: #fff; font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer; }
+  .mc-actions { display: flex; gap: 8px; margin-top: 14px; }
+  .mc-actions button { flex: 1; padding: 10px 12px; border: 1.5px solid #d1d5db; border-radius: 7px; background: #fff; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.1s; }
   .mc-actions button.primary { background: #7c3aed; color: #fff; border-color: #7c3aed; }
   .mc-actions button.primary:hover { background: #6d28d9; }
-  .mc-actions button:not(.primary):hover { background: #f3f4f6; }
+  .mc-actions button:not(.primary):hover { background: #f3f4f6; border-color: #9ca3af; }
 
   /* 행사 마진계산기 전용 추가 */
-  .emc-erp-prices { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; padding: 8px; background: linear-gradient(135deg, #faf5ff, #ede9fe); border-radius: 6px; margin-bottom: 10px; }
-  .emc-erp-cell { background: #fff; padding: 6px 8px; border-radius: 5px; text-align: center; }
-  .emc-erp-cell .l { font-size: 10px; color: #6b7280; font-weight: 600; }
-  .emc-erp-cell .v { font-size: 13px; font-weight: 800; color: #1e40af; margin-top: 1px; font-variant-numeric: tabular-nums; }
-  .emc-erp-cell .v.null { color: #d1d5db; font-size: 11px; }
-  .emc-erp-cell.event { background: #fef3c7; }
+  .emc-erp-label { font-size: 11px; color: #6b7280; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 6px; text-transform: uppercase; }
+  .emc-erp-prices { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 10px; background: linear-gradient(135deg, #faf5ff, #ede9fe); border-radius: 8px; margin-bottom: 12px; border: 1px solid #ddd6fe; }
+  .emc-erp-cell { background: #fff; padding: 9px 8px; border-radius: 6px; text-align: center; }
+  .emc-erp-cell .l { font-size: 11px; color: #6b7280; font-weight: 700; }
+  .emc-erp-cell .v { font-size: 15px; font-weight: 800; color: #1e40af; margin-top: 3px; font-variant-numeric: tabular-nums; }
+  .emc-erp-cell .v.null { color: #cbd5e1; font-size: 12px; font-weight: 600; }
+  .emc-erp-cell.event { background: linear-gradient(135deg, #fef3c7, #fde68a); }
   .emc-erp-cell.event .v { color: #92400e; }
-  .emc-discount { padding: 6px 10px; background: #fef9c3; border-radius: 5px; margin-top: 8px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; }
-  .emc-discount b { font-size: 13px; }
+  .emc-scenario-label { font-size: 11px; color: #7c3aed; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 6px; text-transform: uppercase; }
+  .emc-result-box {
+    background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+    border: 1.5px solid #c4b5fd; border-radius: 8px;
+    padding: 12px 14px; margin-top: 10px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: center;
+  }
+  .emc-result-box .lbl-big { font-size: 13px; font-weight: 800; color: #5b21b6; }
+  .emc-result-box .res-big { text-align: right; }
+  .emc-result-box .res-big .m-val { font-size: 22px; font-weight: 900; line-height: 1.1; }
+  .emc-result-box .res-big .m-rate { font-size: 13px; font-weight: 700; margin-top: 3px; }
+  .emc-discount { padding: 9px 12px; background: #fef9c3; border-radius: 7px; margin-top: 8px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #fde68a; font-weight: 700; }
+  .emc-discount b { font-size: 15px; }
 </style>
 </head>
 <body>
@@ -1019,16 +1077,45 @@
       <div class="owner-label">VOAR 생활가전 · 육아 MD</div>
     </div>
     <nav class="menu">
-      <button class="nav-item"        data-page="alerts">      <span class="nav-emoji">🚨</span> 긴급알림 <span class="nav-badge" id="alertCount" hidden>0</span></button>
-      <button class="nav-item active" data-page="products">    <span class="nav-emoji">📊</span> 제품현황</button>
-      <button class="nav-item"        data-page="sales">       <span class="nav-emoji">📈</span> 판매현황</button>
-      <button class="nav-item"        data-page="margin">      <span class="nav-emoji">💰</span> 마진계산기</button>
-      <button class="nav-item"        data-page="event-margin"><span class="nav-emoji">🎁</span> 행사 마진계산기</button>
-      <button class="nav-item"        data-page="reviews">     <span class="nav-emoji">💝</span> 리뷰이벤트</button>
-      <button class="nav-item"        data-page="todos">       <span class="nav-emoji">✅</span> TO DO LIST</button>
-      <button class="nav-item"        data-page="calendar">   <span class="nav-emoji">📅</span> 입고 캘린더</button>
-      <button class="nav-item"        data-page="notes">      <span class="nav-emoji">📝</span> 메모장</button>
-      <button class="nav-item"        data-page="settings">   <span class="nav-emoji">⚙️</span> 설정</button>
+      <button class="nav-item" data-page="alerts"><span class="nav-emoji">🚨</span> 긴급알림 <span class="nav-badge" id="alertCount" hidden>0</span></button>
+      <button class="nav-item" data-page="todos"><span class="nav-emoji">✅</span> TO DO LIST</button>
+
+      <div class="nav-group" data-group="sales-analysis">
+        <button class="nav-group-header"><span class="group-emoji">📊</span><span class="group-title">매출/분석</span><span class="group-caret">▶</span></button>
+        <div class="nav-group-items">
+          <button class="nav-item active" data-page="products"><span class="nav-emoji">📦</span> 제품현황</button>
+          <button class="nav-item" data-page="sales"><span class="nav-emoji">📈</span> 판매현황</button>
+        </div>
+      </div>
+
+      <div class="nav-group" data-group="operations">
+        <button class="nav-group-header"><span class="group-emoji">🚚</span><span class="group-title">운영/물류</span><span class="group-caret">▶</span></button>
+        <div class="nav-group-items">
+          <button class="nav-item" data-page="calendar"><span class="nav-emoji">📅</span> 입고 캘린더</button>
+        </div>
+      </div>
+
+      <div class="nav-group" data-group="event-sales">
+        <button class="nav-group-header"><span class="group-emoji">🎁</span><span class="group-title">행사/판매</span><span class="group-caret">▶</span></button>
+        <div class="nav-group-items">
+          <button class="nav-item" data-page="margin"><span class="nav-emoji">💰</span> 마진계산기</button>
+          <button class="nav-item" data-page="event-margin"><span class="nav-emoji">🎯</span> 행사 마진계산기</button>
+          <button class="nav-item" data-page="event-schedule"><span class="nav-emoji">📆</span> 행사 일정</button>
+        </div>
+      </div>
+
+      <div class="nav-group" data-group="marketing">
+        <button class="nav-group-header"><span class="group-emoji">📣</span><span class="group-title">마케팅</span><span class="group-caret">▶</span></button>
+        <div class="nav-group-items">
+          <button class="nav-item" data-page="ranking"><span class="nav-emoji">🏆</span> 순위 관리</button>
+          <button class="nav-item" data-page="monitoring"><span class="nav-emoji">📡</span> 모니터링</button>
+          <button class="nav-item" data-page="review-analysis"><span class="nav-emoji">💬</span> 리뷰분석</button>
+          <button class="nav-item" data-page="reviews"><span class="nav-emoji">💝</span> 리뷰이벤트</button>
+        </div>
+      </div>
+
+      <button class="nav-item" data-page="notes"><span class="nav-emoji">📝</span> 메모장</button>
+      <button class="nav-item" data-page="settings"><span class="nav-emoji">⚙️</span> 설정</button>
     </nav>
   </aside>
 
@@ -1384,6 +1471,56 @@
       </div>
     </section>
 
+    <!-- ─── Page: 행사 일정 (신규 placeholder) ─── -->
+    <section class="page" id="page-event-schedule">
+      <div class="panel">
+        <h2 style="margin:0 0 4px 0;font-size:16px;font-weight:600">📆 행사 일정</h2>
+        <div class="pc-info-label">진행 중·예정 행사 일정 관리 (네이버 오늘끝딜·기획전·외부 행사 등)</div>
+        <div class="empty-hint" style="margin-top:18px">
+          🚧 곧 추가 예정<br><br>
+          어떤 정보가 필요한지 알려주면 만들게:<br>
+          예) 행사명·시작/종료일·채널·예상매출·결과 등
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Page: 순위 관리 (신규 placeholder) ─── -->
+    <section class="page" id="page-ranking">
+      <div class="panel">
+        <h2 style="margin:0 0 4px 0;font-size:16px;font-weight:600">🏆 순위 관리</h2>
+        <div class="pc-info-label">네이버 검색 순위·키워드별 노출 위치 추적</div>
+        <div class="empty-hint" style="margin-top:18px">
+          🚧 곧 추가 예정<br><br>
+          어떤 식으로 관리할지 알려주면 만들게:<br>
+          예) 키워드별 일자별 순위 추이·경쟁사 비교 등
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Page: 모니터링 (신규 placeholder) ─── -->
+    <section class="page" id="page-monitoring">
+      <div class="panel">
+        <h2 style="margin:0 0 4px 0;font-size:16px;font-weight:600">📡 모니터링</h2>
+        <div class="pc-info-label">실시간 매출·트래픽·전환율·이벤트 추적</div>
+        <div class="empty-hint" style="margin-top:18px">
+          🚧 곧 추가 예정<br><br>
+          어떤 지표를 모니터링할지 알려주면 만들게.
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Page: 리뷰분석 (신규 placeholder) ─── -->
+    <section class="page" id="page-review-analysis">
+      <div class="panel">
+        <h2 style="margin:0 0 4px 0;font-size:16px;font-weight:600">💬 리뷰분석</h2>
+        <div class="pc-info-label">네이버·쿠팡·G마켓 등 채널별 리뷰 수집·감정 분석</div>
+        <div class="empty-hint" style="margin-top:18px">
+          🚧 곧 추가 예정<br><br>
+          어떤 채널·어떤 분석이 필요한지 알려주면 만들게.
+        </div>
+      </div>
+    </section>
+
     <!-- ─── Page: 설정 ─── -->
     <section class="page" id="page-settings">
       <div class="panel">
@@ -1627,17 +1764,28 @@ function switchPage(name) {
   $$('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.page === name));
   $$('.page').forEach(p => p.classList.toggle('active', p.id === `page-${name}`));
   $('#pageTitle').textContent = {
-    alerts:        '🚨 긴급알림',
-    notes:         '📝 메모장',
-    reviews:       '💝 리뷰이벤트',
-    products:      '📊 제품현황',
-    sales:         '📈 판매현황',
-    margin:        '💰 마진계산기',
-    'event-margin':'🎁 행사 마진계산기',
-    todos:         '✅ TO DO LIST',
-    calendar:      '📅 입고 캘린더',
-    settings:      '⚙️ 설정',
+    alerts:           '🚨 긴급알림',
+    notes:            '📝 메모장',
+    reviews:          '💝 리뷰이벤트',
+    products:         '📦 제품현황',
+    sales:            '📈 판매현황',
+    margin:           '💰 마진계산기',
+    'event-margin':   '🎯 행사 마진계산기',
+    'event-schedule': '📆 행사 일정',
+    ranking:          '🏆 순위 관리',
+    monitoring:       '📡 모니터링',
+    'review-analysis':'💬 리뷰분석',
+    todos:            '✅ TO DO LIST',
+    calendar:         '📅 입고 캘린더',
+    settings:         '⚙️ 설정',
   }[name];
+
+  // 활성 페이지가 속한 그룹 자동 펼침 + has-active 표시
+  document.querySelectorAll('.nav-group').forEach(g => {
+    const hasActive = g.querySelector(`.nav-item[data-page="${name}"]`);
+    g.classList.toggle('has-active', !!hasActive);
+    if (hasActive) g.classList.add('open');
+  });
   if (name === 'notes') renderNotes();
   if (name === 'reviews') renderReviews();
   if (name === 'alerts') { renderAlerts(); markAllAlertsSeen(); }
@@ -4078,13 +4226,13 @@ function renderEventMargin() {
           <div class="mc-code">${escapeHtml(p.code)}</div>
         </div>
       </div>
-      <div style="font-size:10px;color:var(--text-soft);font-weight:700;letter-spacing:0.3px;margin-bottom:4px">📦 전산 등록가 (참고)</div>
+      <div class="emc-erp-label">📦 전산 등록가 (참고)</div>
       <div class="emc-erp-prices">
         <div class="emc-erp-cell"><div class="l">판매가</div><div class="v ${p.salePrice ? '' : 'null'}">${p.salePrice ? fmtKRW(p.salePrice) : '미설정'}</div></div>
         <div class="emc-erp-cell"><div class="l">중간가</div><div class="v ${p.midPrice ? '' : 'null'}">${p.midPrice ? fmtKRW(p.midPrice) : '미설정'}</div></div>
         <div class="emc-erp-cell event"><div class="l">행사가</div><div class="v ${p.eventPrice ? '' : 'null'}">${p.eventPrice ? fmtKRW(p.eventPrice) : '미설정'}</div></div>
       </div>
-      <div style="font-size:10px;color:#7c3aed;font-weight:700;letter-spacing:0.3px;margin-bottom:4px">🎁 행사 시나리오</div>
+      <div class="emc-scenario-label">🎁 행사 시나리오 입력</div>
       <div class="mc-row">
         <span class="lbl">즉시할인가</span>
         <input type="number" data-f="eventPrice" value="${evtPrice != null ? evtPrice : ''}" placeholder="${p.eventPrice || '입력'}">
@@ -4111,10 +4259,9 @@ function renderEventMargin() {
         <div></div>
       </div>
       <div class="mc-sep"></div>
-      <div class="mc-row" data-key="result">
-        <span class="lbl" style="color:#7c3aed;font-weight:700">행사 마진</span>
-        <div></div>
-        <div class="res">
+      <div class="emc-result-box" data-key="result">
+        <div class="lbl-big">💰 행사 마진</div>
+        <div class="res-big">
           <div class="m-val ${m == null ? 'flat' : m.margin >= 0 ? 'pos' : 'neg'}" data-r="val">${m ? fmtKRW(m.margin) : '—'}</div>
           <div class="m-rate" data-r="rate">${m ? fmtPct(m.rate) : '입력 필요'}</div>
         </div>
@@ -4504,6 +4651,14 @@ async function boot() {
 
   // 이벤트 바인딩
   $$('.nav-item').forEach(b => b.addEventListener('click', () => switchPage(b.dataset.page)));
+
+  // ───── 사이드바 아코디언 그룹 토글 ─────
+  document.querySelectorAll('.nav-group-header').forEach(h => {
+    h.addEventListener('click', () => {
+      const group = h.closest('.nav-group');
+      group.classList.toggle('open');
+    });
+  });
 
   // ───── 마진계산기 / 행사 마진계산기 검색·필터 바인딩 ─────
   $('#margin-search')?.addEventListener('input', e => { MARGIN_STATE.search = e.target.value; renderMargin(); });
