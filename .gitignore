@@ -1,0 +1,47 @@
+# ═══════════════════════════════════════════════════════════
+#  외부 호스팅(GitHub Pages)에는 절대 올리면 안 되는 파일
+# ═══════════════════════════════════════════════════════════
+
+# 비밀 — 절대 push 금지
+.env
+db_config.json
+
+# DB 접근·서버 코드 (내부 전용)
+extract_dashboard_data.py
+server.py
+start_server.bat
+서버시작.bat
+서버시작_바로가기.lnk
+_갱신.bat
+_갱신_숨김.vbs
+_갱신_log.txt
+_媛깆떊_log.txt
+_log.txt
+
+# 디버깅·진단 스크립트 (외부 노출 불필요)
+_*.py
+_*.txt
+
+# 백업·일시 파일
+*.bak.json
+todos_*.bak.json
+todos.broken_*.json
+todos.before_*.json
+reviews_backup/
+*.xlsx
+
+# 캐시·자동 생성
+__pycache__/
+*.pyc
+manuals/
+
+# 다른 프로젝트 산출물 (별도 호스팅)
+리뷰이벤트_CS.html
+키워드_카테고리_대시보드.html
+keyword_volumes.json
+
+# 사용자 안내·메모 (외부 공개 불필요)
+README_담당자용.txt
+팀원_안내.txt
+
+# GitHub Pages는 index.html을 사용. 메인 대시보드 복사본을 index.html로 push.
