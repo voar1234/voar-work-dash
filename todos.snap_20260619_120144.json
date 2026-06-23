@@ -3,7 +3,7 @@
     {
       "id": "t_expr2cydu0j",
       "text": "[자동] 보아르아가스테인레스빨대컵(가칭) 마케팅샘플 수령일 확인",
-      "done": true,
+      "done": false,
       "autoKey": "auto:qa2:1135:2026-06-15",
       "autoSource": {
         "품목ID": 1135,
@@ -99,6 +99,12 @@
       }
     },
     {
+      "id": "t_tr7z3dkxuuq",
+      "text": "광고 점검하기",
+      "done": false,
+      "rolledFrom": "2026-06-10"
+    },
+    {
       "id": "t_6sym26fysqu",
       "text": "넾다세일 행사 준비 (관련배너/cpc광고 소재 등록)",
       "done": true,
@@ -107,7 +113,7 @@
     {
       "id": "t_urft019twah",
       "text": "슈트쏙 최종 상세페이지 적용/판매중으로 전환",
-      "done": true
+      "done": false
     }
   ],
   "2026-06-26": [
@@ -212,7 +218,7 @@
     {
       "id": "t_wxvgolgcmbf",
       "text": "[자동·주간] 네이버 오늘끝딜 제안",
-      "done": true,
+      "done": false,
       "autoKey": "auto:friday-ondeal:2026-06-05",
       "autoSource": {
         "type": "매주 금요일 정기"
@@ -239,7 +245,7 @@
     {
       "id": "t_kajoln1xlte",
       "text": "[자동] 보아르의류관리기-화이트(가칭) 마케팅샘플 수령일 확인",
-      "done": true,
+      "done": false,
       "autoKey": "auto:qa2:1091:2026-06-04",
       "autoSource": {
         "품목ID": 1091,
@@ -298,11 +304,6 @@
       "id": "t_41o5gupn4vt",
       "text": "키즈 오늘끝딜 노출구좌 확인하기 (파악용)",
       "done": false
-    },
-    {
-      "id": "t_ehpur602djq",
-      "text": "슈트쏙 신상페스타 종료 / 모두 원복(출근직후)",
-      "done": false
     }
   ],
   "2026-06-24": [
@@ -312,13 +313,13 @@
       "done": false
     },
     {
-      "id": "t_1n2xuoyqepl",
-      "text": "네이버 키즈 브랜드스토어 단독전 행사 제안 (공지확인 필요)",
+      "id": "t_emalpa32if",
+      "text": "슈트쏙 전채널 광고등록 / 원부 생성",
       "done": false
     },
     {
-      "id": "t_jgiiy9fvjij",
-      "text": "오늘의집 스오딜 원복",
+      "id": "t_1n2xuoyqepl",
+      "text": "네이버 키즈 브랜드스토어 단독전 행사 제안 (공지확인 필요)",
       "done": false
     }
   ],
@@ -348,60 +349,24 @@
     {
       "id": "t_chfs30be4dk",
       "text": "슈트쏙 브랜드커넥트 컨텐츠 제출 확인",
-      "done": true
+      "done": false
+    },
+    {
+      "id": "t_d96ub0pxa6d",
+      "text": "넾다세일 행사시작 ~7/5까지",
+      "done": false
     },
     {
       "id": "t_wpgd5amxw38",
       "text": "슈트쏙 전채널 광고등록 / 원부 생성",
-      "done": true
-    },
-    {
-      "id": "t_szw1byui3fq",
-      "text": "넾다세일 행사시작 ~7/5 이벤트배너 넣기",
-      "done": true
-    },
-    {
-      "id": "t_z5qtsgwq28",
-      "text": "오늘의집 슈트쏙 검수 현황 체크 / 네이버 비노출 메일 요청",
-      "done": true
-    },
-    {
-      "id": "t_gxqlh1ilss9",
-      "text": "슈트쏙 숏클립 등록",
-      "done": true
+      "done": false
     }
   ],
   "2026-06-23": [
     {
       "id": "t_pf6i7o19l3",
       "text": "7월 슈퍼적립 선정결과 발표",
-      "done": true
-    },
-    {
-      "id": "t_nr7byxxmkj",
-      "text": "슈트쏙 원부형 광고 등록",
       "done": false
-    },
-    {
-      "id": "t_4andl9lglng",
-      "text": "슈트쏙 브커 미작성자 연락",
-      "done": false
-    },
-    {
-      "id": "t_tr7z3dkxuuq",
-      "text": "광고 점검하기",
-      "done": false,
-      "rolledFrom": "2026-06-10"
-    },
-    {
-      "id": "t_obw4lrete3a",
-      "text": "슈즈쏙 리셀러 신고",
-      "done": true
-    },
-    {
-      "id": "t_0bfbw31rbuo",
-      "text": "네이버 CPC 상품형광고 육아 제품 전체 점검",
-      "done": true
     }
   ],
   "2026-06-02": [
@@ -415,18 +380,6 @@
       "id": "t_6ywgw320jec",
       "text": "5월 매출비교 분석 부장님 전달",
       "done": true
-    },
-    {
-      "id": "t_nyb10y295kc",
-      "text": "[자동·D-31] 보아르컴플릿M20L쓰레기통 신제품 시장조사·판매가 측정",
-      "done": false,
-      "autoKey": "auto:po:1036:260415003",
-      "autoSource": {
-        "품목ID": 1036,
-        "type": "생산완료예정일 D-31",
-        "발주번호": "260415003",
-        "생산완료예정일": "2026-07-03"
-      }
     }
   ],
   "2026-06-15": [
@@ -618,7 +571,7 @@
     {
       "id": "t_2hfzf4b5a19",
       "text": "[자동] 보아르아가듀이분유포트 마케팅샘플 수령일 확인",
-      "done": true,
+      "done": false,
       "autoKey": "auto:qa2:1054:2026-06-17",
       "autoSource": {
         "품목ID": 1054,
@@ -657,34 +610,22 @@
       "done": true
     }
   ],
-  "2026-04-07": [
+  "2026-04-07": [],
+  "2026-01-07": [
     {
-      "id": "t_lyzp4borq9",
-      "text": "[자동] 보아르컴플릿M20L쓰레기통 마케팅샘플 수령일 확인",
+      "id": "t_kuqu1tshchm",
+      "text": "[자동] 보아르슈트쏙의류관리기 마케팅샘플 수령일 확인",
       "done": false,
-      "autoKey": "auto:qa2:1036:2026-04-06",
+      "autoKey": "auto:qa2:998:2026-01-06",
       "autoSource": {
-        "품목ID": 1036,
+        "품목ID": 998,
         "type": "2차 품질검사 완료 후",
-        "트리거일": "2026-04-06"
+        "트리거일": "2026-01-06"
       }
     }
   ],
-  "2026-01-07": [],
   "2026-05-30": [],
-  "2026-02-26": [
-    {
-      "id": "t_qdq2vflux0g",
-      "text": "[자동] 보아르아가미니휴대용젖병소독기 마케팅샘플 수령일 확인",
-      "done": false,
-      "autoKey": "auto:qa2:1010:2026-02-25",
-      "autoSource": {
-        "품목ID": 1010,
-        "type": "2차 품질검사 완료 후",
-        "트리거일": "2026-02-25"
-      }
-    }
-  ],
+  "2026-02-26": [],
   "2026-02-25": [],
   "2026-02-21": [
     {
@@ -701,39 +642,5 @@
   ],
   "2026-05-10": [],
   "2026-06-07": [],
-  "2026-06-05": [],
-  "2026-06-29": [],
-  "2026-08-21": [
-    {
-      "id": "t_kiwoclnnty",
-      "text": "[자동·주간] 네이버 오늘끝딜 제안",
-      "done": false,
-      "autoKey": "auto:friday-ondeal:2026-08-21",
-      "autoSource": {
-        "type": "매주 금요일 정기"
-      }
-    }
-  ],
-  "2026-06-28": [
-    {
-      "id": "t_zlif66ikvzh",
-      "text": "[자동·D-31] 보아르아가미니휴대용젖병소독기 신제품 시장조사·판매가 측정",
-      "done": false,
-      "autoKey": "auto:po:1010:260414003",
-      "autoSource": {
-        "품목ID": 1010,
-        "type": "생산완료예정일 D-31",
-        "발주번호": "260414003",
-        "생산완료예정일": "2026-07-30"
-      },
-      "leaveRerouted": "2026-06-29"
-    }
-  ],
-  "2026-07-01": [
-    {
-      "id": "t_qdv5zngugl",
-      "text": "오늘의집 7월 광고상품 상품명 점검하기(재셋팅, 기존꺼 삭제 필요)",
-      "done": false
-    }
-  ]
+  "2026-06-05": []
 }

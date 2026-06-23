@@ -530,6 +530,18 @@
   .product-card.new-product.depletion-soon { border-left: 4px solid #ef4444; }
   .product-card.new-product.reorder-needed { border-left: 4px solid #ef4444; }
   .product-card.reorder-needed.depletion-soon { border-left: 4px solid #3b82f6; }
+  .product-card.discontinued { border-left: 4px solid #6b7280; background: #fafafa; opacity: 0.85; }
+  .product-card.discontinued .pc-title { color: #6b7280; }
+  .pc-badge-disc {
+    display: inline-block; padding: 2px 8px; border-radius: 5px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+    background: #4b5563; color: #fff; margin-right: 6px;
+  }
+  .pc-badge-disc-soft {
+    display: inline-block; padding: 2px 8px; border-radius: 5px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+    background: #d1d5db; color: #374151; margin-right: 6px;
+  }
 
   .pc-header { margin-bottom: 10px; }
   .pc-title {
@@ -2764,17 +2776,28 @@ function productCard(p) {
   // 소진 임박 = 7일 이내
   const depletionSoon = sales.소진_잔여일수 != null && sales.소진_잔여일수 <= 7;
 
+  // 엑셀 분류 기반 단종 판정
+  const excelCat = p.엑셀_분류;
+  const isDiscontinued       = excelCat === '단종';
+  const isDiscPropagated     = excelCat === '단종(전파)';
+  const isDiscConsidering    = excelCat === '단종고려';
+  const anyDisc = isDiscontinued || isDiscPropagated || isDiscConsidering;
+
   const cardClasses = ['product-card'];
   if (isNew) cardClasses.push('new-product');
-  if (needsReorder) cardClasses.push('reorder-needed');
-  if (depletionSoon) cardClasses.push('depletion-soon');
+  if (anyDisc) cardClasses.push('discontinued');
+  if (needsReorder && !anyDisc) cardClasses.push('reorder-needed');
+  if (depletionSoon && !anyDisc) cardClasses.push('depletion-soon');
 
   const card = el('div', {class: cardClasses.join(' '), onclick: () => openProductDrawer(p)});
 
   // ───── 헤더 ─────
-  const noStock = (stock.현재고 || 0) === 0 && !isNew;
+  const noStock = (stock.현재고 || 0) === 0 && !isNew && !anyDisc;
   const titleEl = el('div', {class:'pc-title'});
   if (isNew) titleEl.append(el('span', {class:'pc-badge-new'}, '신제품'));
+  else if (isDiscontinued)    titleEl.append(el('span', {class:'pc-badge-disc'}, '단종'));
+  else if (isDiscPropagated)  titleEl.append(el('span', {class:'pc-badge-disc-soft', title:'본품 단종에 따른 자동 표시'}, '단종(연계)'));
+  else if (isDiscConsidering) titleEl.append(el('span', {class:'pc-badge-disc-soft'}, '단종고려'));
   else if (noStock) titleEl.append(el('span', {class:'pc-badge-nostock'}, '재고없음'));
   else if (needsReorder) titleEl.append(el('span', {class:'pc-badge-reorder'}, '발주필요'));
   titleEl.append(p.상품명 || p.품목명);  // 상품명(SKU 단위) 우선 표시

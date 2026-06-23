@@ -315,11 +315,6 @@
       "id": "t_1n2xuoyqepl",
       "text": "네이버 키즈 브랜드스토어 단독전 행사 제안 (공지확인 필요)",
       "done": false
-    },
-    {
-      "id": "t_jgiiy9fvjij",
-      "text": "오늘의집 스오딜 원복",
-      "done": false
     }
   ],
   "2026-06-01": [
@@ -366,6 +361,12 @@
       "done": true
     },
     {
+      "id": "t_tr7z3dkxuuq",
+      "text": "광고 점검하기",
+      "done": false,
+      "rolledFrom": "2026-06-10"
+    },
+    {
       "id": "t_gxqlh1ilss9",
       "text": "슈트쏙 숏클립 등록",
       "done": true
@@ -375,7 +376,7 @@
     {
       "id": "t_pf6i7o19l3",
       "text": "7월 슈퍼적립 선정결과 발표",
-      "done": true
+      "done": false
     },
     {
       "id": "t_nr7byxxmkj",
@@ -386,22 +387,6 @@
       "id": "t_4andl9lglng",
       "text": "슈트쏙 브커 미작성자 연락",
       "done": false
-    },
-    {
-      "id": "t_tr7z3dkxuuq",
-      "text": "광고 점검하기",
-      "done": false,
-      "rolledFrom": "2026-06-10"
-    },
-    {
-      "id": "t_obw4lrete3a",
-      "text": "슈즈쏙 리셀러 신고",
-      "done": true
-    },
-    {
-      "id": "t_0bfbw31rbuo",
-      "text": "네이버 CPC 상품형광고 육아 제품 전체 점검",
-      "done": true
     }
   ],
   "2026-06-02": [
@@ -714,21 +699,7 @@
       }
     }
   ],
-  "2026-06-28": [
-    {
-      "id": "t_zlif66ikvzh",
-      "text": "[자동·D-31] 보아르아가미니휴대용젖병소독기 신제품 시장조사·판매가 측정",
-      "done": false,
-      "autoKey": "auto:po:1010:260414003",
-      "autoSource": {
-        "품목ID": 1010,
-        "type": "생산완료예정일 D-31",
-        "발주번호": "260414003",
-        "생산완료예정일": "2026-07-30"
-      },
-      "leaveRerouted": "2026-06-29"
-    }
-  ],
+  "2026-06-28": [],
   "2026-07-01": [
     {
       "id": "t_qdv5zngugl",
