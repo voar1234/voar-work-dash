@@ -871,6 +871,78 @@
     border: 1px dashed var(--line-strong); border-radius: 10px; background: #fff;
   }
 
+  /* ───── 목표매출 양성준 양식 ───── */
+  .gd-year-total {
+    background: linear-gradient(135deg, #111827, #1f2937); color: #fff;
+    border-radius: 14px; padding: 22px 24px; margin-bottom: 18px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 120px; gap: 24px; align-items: center;
+  }
+  .gd-yt-block .lbl { font-size: 11px; color: #9ca3af; font-weight: 700; letter-spacing: 0.4px; }
+  .gd-yt-block .val { font-size: 22px; font-weight: 800; margin-top: 4px; }
+  .gd-yt-block .sub { font-size: 11px; color: #9ca3af; margin-top: 4px; }
+  .gd-yt-rate {
+    text-align: center; font-size: 30px; font-weight: 900;
+    padding: 16px; border-radius: 10px; background: rgba(255,255,255,0.08);
+  }
+  .gd-yt-rate.up { color: #34d399; }
+  .gd-yt-rate.down { color: #f87171; }
+
+  .gd-month-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px 18px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+  .gd-month-card.future { opacity: 0.55; }
+  .gd-month-card.live { border-color: #fda4af; background: linear-gradient(180deg, #fff5f5 0%, #fff 30%); }
+  .gd-month-head {
+    display: flex; align-items: center; gap: 12px; cursor: pointer;
+    user-select: none; padding-bottom: 10px; border-bottom: 1px dashed var(--line);
+  }
+  .gd-month-head .mo { font-size: 18px; font-weight: 800; }
+  .gd-month-head .live-tag {
+    background: #dc2626; color: #fff; font-size: 9px; font-weight: 700;
+    padding: 2px 7px; border-radius: 999px; letter-spacing: 0.3px;
+  }
+  .gd-month-head .gd-stat { font-size: 12px; color: var(--text-soft); margin-left: 8px; }
+  .gd-month-head .gd-stat b { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .gd-month-head .gd-rate {
+    margin-left: auto; padding: 4px 12px; border-radius: 999px;
+    font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums;
+  }
+  .gd-month-head .gd-rate.up { background: #dcfce7; color: #15803d; }
+  .gd-month-head .gd-rate.down { background: #fee2e2; color: #b91c1c; }
+  .gd-month-head .gd-rate.flat { background: var(--chip); color: var(--text-soft); }
+  .gd-month-head .caret { font-size: 11px; color: var(--text-soft); margin-left: 6px; }
+
+  .gd-pace-warn {
+    margin-top: 10px; padding: 8px 12px; background: #fef3c7;
+    border-radius: 8px; font-size: 12px; color: #92400e; font-weight: 600;
+  }
+  .gd-cat-table {
+    width: 100%; margin-top: 12px; border-collapse: collapse; font-size: 13px;
+  }
+  .gd-cat-table th {
+    text-align: left; padding: 9px 10px; font-size: 11px; color: var(--text-soft);
+    font-weight: 700; letter-spacing: 0.3px; border-bottom: 1px solid var(--line);
+    background: #fafafa;
+  }
+  .gd-cat-table th.num { text-align: right; }
+  .gd-cat-table td { padding: 10px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+  .gd-cat-table td.num { text-align: right; }
+  .gd-cat-table td.diff.neg { color: #dc2626; font-weight: 600; }
+  .gd-cat-table td.diff.pos { color: #15803d; font-weight: 600; }
+  .gd-cat-table tr.total td { font-weight: 800; background: #fafafa; border-top: 2px solid var(--line-strong); }
+  .gd-rate-pill {
+    display: inline-block; padding: 3px 9px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
+  }
+  .gd-rate-pill.up { background: #dcfce7; color: #15803d; }
+  .gd-rate-pill.down { background: #fee2e2; color: #b91c1c; }
+  .gd-rate-pill.flat { background: var(--chip); color: var(--text-soft); }
+  .gd-month-body { display: none; }
+  .gd-month-card.open .gd-month-body { display: block; }
+  .gd-month-card.open .gd-month-head .caret::before { content: '▼'; }
+  .gd-month-card .gd-month-head .caret::before { content: '▶'; }
+
   /* ───── 마진계산기 / 행사 마진계산기 공통 ───── */
   .mg-tf, .emg-tf {
     padding: 5px 12px; border: none; background: transparent;
@@ -1288,6 +1360,8 @@
 
         <!-- 목표매출 현황 -->
         <div class="sub-content" id="sub-goal" hidden>
+          <!-- 양성준 양식 — 카테고리별 월별 목표 vs 실제 -->
+          <div id="goal-dash-section" style="margin-bottom:24px"></div>
           <!-- 메가 카드 (연간 합산) -->
           <div class="mega-card" id="goal-mega">
             <div class="mega-col">
@@ -2440,7 +2514,171 @@ function renderMonthExpand() {
 
 let EXPANDED_MONTH = null;
 
+// ───── 양성준 양식 — 카테고리별 월별 목표매출 ─────
+function renderGoalDashboard() {
+  const host = $('#goal-dash-section'); if (!host) return;
+  const gd = DATA.sales?.goal_dashboard;
+  if (!gd || !gd.goals) {
+    host.innerHTML = '<div class="empty-hint">목표 데이터 로딩 실패 (monthly_goals_2026.json 확인)</div>';
+    return;
+  }
+  const CATS = ['주방', '생활', '계절', '육아'];
+  const goalsByMonth = gd.goals.months || {};
+  const actualByMonth = gd.actual?.['2026'] || {};
+  const actualByMonth2025 = gd.actual?.['2025'] || {};
+
+  // 연간 합산
+  let yTarget = 0, yActual = 0, yLastYear = 0;
+  for (let m = 1; m <= 12; m++) {
+    const goalsM = goalsByMonth[String(m)] || {};
+    const actualM = actualByMonth[String(m)] || {};
+    const actualMLast = actualByMonth2025[String(m)] || {};
+    for (const cat of CATS) {
+      yTarget   += Number(goalsM[cat]   || 0);
+      yActual   += Number(actualM[cat]  || 0);
+      yLastYear += Number(actualMLast[cat] || 0);
+    }
+  }
+  const yRate = yTarget ? (yActual / yTarget * 100) : 0;
+  const yoy   = yLastYear ? ((yActual - yLastYear) / yLastYear * 100) : null;
+  const rateCls = yRate >= 100 ? 'up' : yRate >= 70 ? '' : 'down';
+
+  // 연간 합산 카드
+  const yearCard = `
+    <div class="gd-year-total">
+      <div class="gd-yt-block">
+        <div class="lbl">연간 합산</div>
+        <div class="val">2026년</div>
+        <div class="sub">카테고리별 · 4개 카테고리 합계</div>
+      </div>
+      <div class="gd-yt-block">
+        <div class="lbl">🎯 연간 목표</div>
+        <div class="val">${fmtWon(yTarget)}</div>
+        <div class="sub">월 평균 ${fmtWon(Math.round(yTarget/12))}</div>
+      </div>
+      <div class="gd-yt-block">
+        <div class="lbl">💰 연간 실제</div>
+        <div class="val">${fmtWon(yActual)}</div>
+        <div class="sub">${yoy != null ? '전년比 <b style="color:'+(yoy>=0?'#34d399':'#f87171')+'">'+(yoy>=0?'+':'')+yoy.toFixed(1)+'%</b>' : ''}</div>
+      </div>
+      <div class="gd-yt-block">
+        <div class="lbl">📊 전년 동기간</div>
+        <div class="val">${fmtWon(yLastYear)}</div>
+        <div class="sub">실제 매출 있는 월만 합산</div>
+      </div>
+      <div class="gd-yt-rate ${rateCls}">${yRate.toFixed(1)}%</div>
+    </div>`;
+
+  // 12개 월 카드
+  const today = new Date();
+  const todayY = today.getFullYear(), todayM = today.getMonth() + 1;
+  const todayD = today.getDate();
+  const daysInMonth = new Date(todayY, todayM, 0).getDate();
+  const pace = todayD / daysInMonth;  // 이번달 진행률
+
+  const monthCards = [];
+  for (let m = 1; m <= 12; m++) {
+    const goalsM = goalsByMonth[String(m)] || {};
+    const actualM = actualByMonth[String(m)] || {};
+    const lastY = actualByMonth2025[String(m)] || {};
+    let mTarget = 0, mActual = 0, mLast = 0;
+    for (const c of CATS) {
+      mTarget += Number(goalsM[c] || 0);
+      mActual += Number(actualM[c] || 0);
+      mLast   += Number(lastY[c] || 0);
+    }
+    const isLive = todayM === m;
+    const isFuture = m > todayM;
+    const mRate = mTarget ? (mActual / mTarget * 100) : 0;
+    const rateClass = mRate >= 100 ? 'up' : mRate >= 70 ? 'flat' : 'down';
+
+    // 카테고리별 표
+    const catRows = CATS.map(c => {
+      const t = Number(goalsM[c] || 0);
+      const a = Number(actualM[c] || 0);
+      const ly = Number(lastY[c] || 0);
+      const d = a - t;
+      const r = t ? (a / t * 100) : 0;
+      const lyR = ly ? (a / ly * 100) : null;
+      const diffCls = d >= 0 ? 'pos' : 'neg';
+      const rPillCls = r >= 100 ? 'up' : r >= 70 ? 'flat' : 'down';
+      const lyPillCls = lyR == null ? 'flat' : lyR >= 100 ? 'up' : 'down';
+      return `<tr>
+        <td>${c}</td>
+        <td class="num">${t ? fmtWon(t) : '—'}</td>
+        <td class="num">${a ? fmtWon(a) : '—'}</td>
+        <td class="num diff ${diffCls}">${a && t ? (d>=0?'+':'') + fmtWon(d) : '—'}</td>
+        <td class="num"><span class="gd-rate-pill ${rPillCls}">${t && a ? r.toFixed(1)+'%' : '—'}</span></td>
+        <td class="num">${ly ? fmtWon(ly) : '—'}</td>
+        <td class="num">${lyR != null ? '<span class="gd-rate-pill '+lyPillCls+'">'+lyR.toFixed(1)+'%</span>' : '—'}</td>
+      </tr>`;
+    }).join('');
+
+    // 페이스 미달 경고 (라이브 월)
+    let paceWarn = '';
+    if (isLive && mTarget) {
+      const expectedRate = pace * 100;
+      const actualRate = mRate;
+      if (actualRate < expectedRate - 5) {
+        const paceRatio = actualRate / expectedRate * 100;
+        paceWarn = `<div class="gd-pace-warn">⚠️ 페이스 미달 — 현재 ${todayD}/${daysInMonth}일 진행 · 기대 달성률 ${expectedRate.toFixed(1)}% · 실제 ${actualRate.toFixed(1)}% · 페이스 ${paceRatio.toFixed(0)}%</div>`;
+      }
+    }
+
+    const cardClasses = ['gd-month-card'];
+    if (isLive) cardClasses.push('live');
+    if (isFuture) cardClasses.push('future');
+    if (isLive) cardClasses.push('open');  // 라이브 월은 기본 펼침
+
+    monthCards.push(`
+    <div class="${cardClasses.join(' ')}" data-month="${m}">
+      <div class="gd-month-head">
+        <div class="mo">${m}월</div>
+        ${isLive ? `<div class="live-tag">● LIVE · ${todayY}-${String(todayM).padStart(2,'0')}-${String(todayD).padStart(2,'0')}</div>` : ''}
+        <div class="gd-stat">실제 <b>${mActual ? fmtWon(mActual) : '—'}</b></div>
+        <div class="gd-stat">목표 <b>${fmtWon(mTarget)}</b></div>
+        <div class="gd-rate ${rateClass}">${mTarget ? mRate.toFixed(1)+'%' : '—'}</div>
+        <div class="caret"></div>
+      </div>
+      <div class="gd-month-body">
+        ${paceWarn}
+        <table class="gd-cat-table">
+          <thead><tr>
+            <th>카테고리</th>
+            <th class="num">목표</th>
+            <th class="num">실제</th>
+            <th class="num">차이</th>
+            <th class="num">달성률</th>
+            <th class="num">전년</th>
+            <th class="num">전년대비</th>
+          </tr></thead>
+          <tbody>
+            ${catRows}
+            <tr class="total">
+              <td>총합계</td>
+              <td class="num">${fmtWon(mTarget)}</td>
+              <td class="num">${mActual ? fmtWon(mActual) : '—'}</td>
+              <td class="num diff ${mActual>=mTarget?'pos':'neg'}">${mActual && mTarget ? (mActual-mTarget>=0?'+':'') + fmtWon(mActual-mTarget) : '—'}</td>
+              <td class="num"><span class="gd-rate-pill ${rateClass}">${mTarget && mActual ? mRate.toFixed(1)+'%' : '—'}</span></td>
+              <td class="num">${mLast ? fmtWon(mLast) : '—'}</td>
+              <td class="num">${mLast && mActual ? '<span class="gd-rate-pill '+(mActual/mLast>=1?'up':'down')+'">'+(mActual/mLast*100).toFixed(1)+'%</span>' : '—'}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>`);
+  }
+
+  host.innerHTML = yearCard + monthCards.join('');
+
+  // 카드 헤더 클릭 → 펼침 토글
+  host.querySelectorAll('.gd-month-head').forEach(h => {
+    h.addEventListener('click', () => h.closest('.gd-month-card').classList.toggle('open'));
+  });
+}
+
 function renderSalesGoal() {
+  renderGoalDashboard();
   const g = DATA.sales?.goal;
   if (!g) return;
   const monthlyActual = DATA.sales?.monthly_compare?.['2026'] || new Array(12).fill(0);
