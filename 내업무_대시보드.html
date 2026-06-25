@@ -2522,10 +2522,14 @@ function renderGoalDashboard() {
     host.innerHTML = '<div class="empty-hint">목표 데이터 로딩 실패 (monthly_goals_2026.json 확인)</div>';
     return;
   }
-  const CATS = ['주방', '생활', '계절', '육아'];
+  const CATS = ['생활', '육아'];  // 사용자 담당 카테고리
   const goalsByMonth = gd.goals.months || {};
   const actualByMonth = gd.actual?.['2026'] || {};
   const actualByMonth2025 = gd.actual?.['2025'] || {};
+  // 광고비 (ERP 자동) + 사용자 수동 입력 override
+  const adAutoByMonth = DATA.sales?.ad_cost_monthly?.['2026'] || {};
+  const adManualByMonth = loadAdManualOverride();  // localStorage
+  const CAT_ERP_MAP = { '생활': '생활가전', '육아': '육아' };
 
   // 연간 합산
   let yTarget = 0, yActual = 0, yLastYear = 0;
@@ -2630,6 +2634,45 @@ function renderGoalDashboard() {
     if (isFuture) cardClasses.push('future');
     if (isLive) cardClasses.push('open');  // 라이브 월은 기본 펼침
 
+    // 광고비 박스 (카테고리별 ERP 자동 + 수동 입력 override)
+    const adAutoM = adAutoByMonth[String(m)] || {};
+    const adManualM = adManualByMonth[String(m)] || {};
+    let adTotalAuto = 0, adTotalUsed = 0;
+    const adBoxes = CATS.map(c => {
+      const erpCat = CAT_ERP_MAP[c];
+      const auto = Number(adAutoM[erpCat] || 0);
+      const manual = adManualM[c];
+      const used = manual != null ? Number(manual) : auto;
+      adTotalAuto += auto;
+      adTotalUsed += used;
+      const a = Number(actualM[c] || 0);
+      const adRate = a ? (used / a * 100) : null;
+      const isOverride = manual != null;
+      return `<div style="background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px">
+        <div style="font-size:11px;color:var(--text-soft);font-weight:700;margin-bottom:4px">
+          ${c} ${isOverride ? '<span style="background:#fef3c7;color:#92400e;font-size:9px;padding:1px 5px;border-radius:4px;margin-left:4px">수정</span>' : '<span style="background:#dbeafe;color:#1e40af;font-size:9px;padding:1px 5px;border-radius:4px;margin-left:4px">ERP</span>'}
+        </div>
+        <input type="number" data-ad-month="${m}" data-ad-cat="${c}" value="${used}" min="0"
+               style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:5px;font-size:13px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600">
+        <div style="font-size:10px;color:var(--text-soft);margin-top:4px">
+          ERP: ${fmtWon(auto)} · 매출 ${a ? fmtWon(a) : '—'} ${adRate != null ? '· <b style="color:'+(adRate>15?'#dc2626':adRate>10?'#ea580c':'#15803d')+'">'+adRate.toFixed(1)+'%</b>' : ''}
+        </div>
+      </div>`;
+    }).join('');
+    const adTotalCol = `<div style="background:#111827;color:#fff;border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;justify-content:center">
+        <div style="font-size:11px;color:#9ca3af;font-weight:700;margin-bottom:4px">총 광고비</div>
+        <div style="font-size:18px;font-weight:800">${fmtWon(adTotalUsed)}</div>
+        <div style="font-size:10px;color:#9ca3af;margin-top:2px">${mActual ? '광고비율 <b style="color:#fff">'+(adTotalUsed/mActual*100).toFixed(1)+'%</b>' : ''}</div>
+      </div>`;
+    const adGrid = `
+      <div style="margin-top:12px;background:#fef9c3;border:1px solid #fde68a;border-radius:10px;padding:12px">
+        <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:8px">📢 광고비 (카테고리별) · ERP 참고값 자동 · 수정 시 저장됨</div>
+        <div style="display:grid;grid-template-columns:repeat(${CATS.length}, 1fr) 140px;gap:8px">
+          ${adBoxes}
+          ${adTotalCol}
+        </div>
+      </div>`;
+
     monthCards.push(`
     <div class="${cardClasses.join(' ')}" data-month="${m}">
       <div class="gd-month-head">
@@ -2665,6 +2708,7 @@ function renderGoalDashboard() {
             </tr>
           </tbody>
         </table>
+        ${adGrid}
       </div>
     </div>`);
   }
@@ -2675,6 +2719,28 @@ function renderGoalDashboard() {
   host.querySelectorAll('.gd-month-head').forEach(h => {
     h.addEventListener('click', () => h.closest('.gd-month-card').classList.toggle('open'));
   });
+  // 광고비 입력 변경 → localStorage 저장 + 광고비율 즉시 재계산
+  host.querySelectorAll('input[data-ad-month]').forEach(inp => {
+    inp.addEventListener('change', () => {
+      const m = inp.dataset.adMonth, c = inp.dataset.adCat;
+      const o = loadAdManualOverride();
+      o[m] = o[m] || {};
+      const v = inp.value.trim();
+      if (v === '') delete o[m][c];
+      else o[m][c] = Number(v);
+      if (Object.keys(o[m]).length === 0) delete o[m];
+      saveAdManualOverride(o);
+      renderGoalDashboard();  // 재렌더 (광고비율 갱신)
+    });
+  });
+}
+
+function loadAdManualOverride() {
+  try { return JSON.parse(localStorage.getItem('voar_ad_manual_2026_v1') || '{}'); }
+  catch { return {}; }
+}
+function saveAdManualOverride(o) {
+  try { localStorage.setItem('voar_ad_manual_2026_v1', JSON.stringify(o)); } catch {}
 }
 
 function renderSalesGoal() {
