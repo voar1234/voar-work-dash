@@ -2989,9 +2989,9 @@ async function fetchComparePeriod(start, end, cmpStart, cmpEnd) {
       const byCat = {};
       for (const r of rows) {
         const cat = r['카테고리'];
-        if (!byCat[cat]) byCat[cat] = { name: cat, rev:0, profit:0, qty:0, items: [] };
+        if (!byCat[cat]) byCat[cat] = { name: cat, rev:0, profit:0, qty:0, products: [] };
         byCat[cat].rev += r['매출']; byCat[cat].profit += r['이익']; byCat[cat].qty += r['수량'];
-        byCat[cat].items.push({ name: r['품목명'], rev: r['매출'], profit: r['이익'], qty: r['수량'] });
+        byCat[cat].products.push({ name: r['품목명'], rev: r['매출'], profit: r['이익'], qty: r['수량'] });
       }
       return byCat;
     }
@@ -3000,27 +3000,29 @@ async function fetchComparePeriod(start, end, cmpStart, cmpEnd) {
     const allCats = new Set([...Object.keys(curByCat), ...Object.keys(cmpByCat)]);
     const categories = [];
     for (const cn of allCats) {
-      const c = curByCat[cn] || { items: [] };
-      const p = cmpByCat[cn] || { items: [] };
+      const c = curByCat[cn] || { products: [] };
+      const p = cmpByCat[cn] || { products: [] };
       // 품목별 매칭
-      const allItems = new Set([...c.items.map(x => x.name), ...p.items.map(x => x.name)]);
-      const items = [];
+      const allItems = new Set([...c.products.map(x => x.name), ...p.products.map(x => x.name)]);
+      const products = [];
       for (const nm of allItems) {
-        const ci = c.items.find(x => x.name === nm) || {};
-        const pi = p.items.find(x => x.name === nm) || {};
-        items.push({
+        const ci = c.products.find(x => x.name === nm) || {};
+        const pi = p.products.find(x => x.name === nm) || {};
+        products.push({
           name: nm,
           current_rev: ci.rev || 0, prev_rev: pi.rev || 0,
           current_profit: ci.profit || 0, prev_profit: pi.profit || 0,
           current_qty: ci.qty || 0, prev_qty: pi.qty || 0,
         });
       }
+      // 매출 큰 순으로 정렬
+      products.sort((a, b) => b.current_rev - a.current_rev);
       categories.push({
         name: cn,
         current_rev: c.rev || 0, prev_rev: p.rev || 0,
         current_profit: c.profit || 0, prev_profit: p.profit || 0,
         current_qty: c.qty || 0, prev_qty: p.qty || 0,
-        items,
+        products,
       });
     }
     COMPARE_DYNAMIC_DATA = {
