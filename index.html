@@ -871,6 +871,21 @@
     border: 1px dashed var(--line-strong); border-radius: 10px; background: #fff;
   }
 
+  /* ───── 매출비교 양성준 양식 ───── */
+  .rcb-filter { padding: 14px 18px; margin-bottom: 14px; }
+  .rcb-row { display: flex; align-items: center; gap: 14px; padding: 8px 0; }
+  .rcb-row + .rcb-row { border-top: 1px dashed var(--line); }
+  .rcb-lbl { flex: 0 0 90px; font-size: 11px; font-weight: 700; color: var(--text-soft); letter-spacing: 0.5px; text-transform: uppercase; }
+  .rcb-presets, .rcb-months, .rcb-dates, .rcb-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; flex: 1; }
+  .rcb-months .chip { font-size: 11px; padding: 5px 10px; }
+  .rcb-month-btn.active { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+  .rcb-mini { background: #f3f4f6 !important; color: #6b7280 !important; border: 1px solid #d1d5db !important; font-size: 11px; }
+  .rcb-mini:hover { background: #e5e7eb !important; }
+  .rcb-dates input[type="date"] { padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 12px; }
+  .rcb-actions { justify-content: flex-end; }
+  .rcb-actions .btn.primary { background: #111827; color: #fff; padding: 8px 18px; border-radius: 7px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; }
+  .rcb-actions .btn.primary:hover { background: #1f2937; }
+
   /* ───── 목표매출 양성준 양식 ───── */
   .gd-year-total {
     background: linear-gradient(135deg, #111827, #1f2937); color: #fff;
@@ -1419,24 +1434,74 @@
 
         <!-- 매출 비교 -->
         <div class="sub-content" id="sub-compare" hidden>
+          <!-- 메트릭 토글 -->
           <div class="filter-bar" style="margin-bottom:14px;">
             <button class="chip active" data-compare-tab="revenue">💰 매출액</button>
             <button class="chip" data-compare-tab="qty">📦 판매량</button>
-          </div>
-          <div class="filter-bar" style="margin-bottom:14px;">
-            <span class="pc-info-label" style="margin-right:8px">기간 프리셋:</span>
-            <button class="chip active" data-compare-preset="30d">30일</button>
-            <button class="chip" data-compare-preset="7d">7일</button>
-            <button class="chip" data-compare-preset="ytd">올해</button>
-            <button class="chip" data-compare-preset="1y">1년</button>
             <span class="pc-info-label" id="compare-period-label" style="margin-left:auto"></span>
           </div>
+
+          <!-- 필터 카드 — 양성준 양식 -->
+          <div class="panel rcb-filter">
+            <div class="rcb-row">
+              <div class="rcb-lbl">기간 프리셋</div>
+              <div class="rcb-presets" id="rcbPresets">
+                <button class="chip" data-rcb-preset="7">7일</button>
+                <button class="chip active" data-rcb-preset="ytd">올해</button>
+                <button class="chip" data-rcb-preset="365">1년</button>
+              </div>
+            </div>
+            <div class="rcb-row">
+              <div class="rcb-lbl">월별 <small style="color:#9ca3af;font-weight:500">(여러 개 선택 가능)</small></div>
+              <div class="rcb-months" id="rcbMonths">
+                <button class="chip rcb-month-btn" data-rcb-month="01">1월</button>
+                <button class="chip rcb-month-btn" data-rcb-month="02">2월</button>
+                <button class="chip rcb-month-btn" data-rcb-month="03">3월</button>
+                <button class="chip rcb-month-btn" data-rcb-month="04">4월</button>
+                <button class="chip rcb-month-btn" data-rcb-month="05">5월</button>
+                <button class="chip rcb-month-btn" data-rcb-month="06">6월</button>
+                <button class="chip rcb-month-btn" data-rcb-month="07">7월</button>
+                <button class="chip rcb-month-btn" data-rcb-month="08">8월</button>
+                <button class="chip rcb-month-btn" data-rcb-month="09">9월</button>
+                <button class="chip rcb-month-btn" data-rcb-month="10">10월</button>
+                <button class="chip rcb-month-btn" data-rcb-month="11">11월</button>
+                <button class="chip rcb-month-btn" data-rcb-month="12">12월</button>
+                <button class="chip rcb-mini" id="rcbClearMonths">✕ 해제</button>
+              </div>
+            </div>
+            <div class="rcb-row">
+              <div class="rcb-lbl">현재 기간</div>
+              <div class="rcb-dates">
+                <input type="date" id="rcbStart">
+                <span>~</span>
+                <input type="date" id="rcbEnd">
+              </div>
+            </div>
+            <div class="rcb-row">
+              <div class="rcb-lbl">비교 기간</div>
+              <div class="rcb-dates">
+                <input type="date" id="rcbCmpStart">
+                <span>~</span>
+                <input type="date" id="rcbCmpEnd">
+                <button class="chip rcb-mini" id="rcbResetCompare" title="전년 동기간으로 자동 설정">↺ 전년</button>
+              </div>
+            </div>
+            <div class="rcb-row">
+              <div class="rcb-lbl"></div>
+              <div class="rcb-actions">
+                <span style="font-size:11px;color:#9ca3af">팁: 표 헤더 숫자 컬럼 클릭 → 정렬</span>
+                <button class="btn primary" id="rcbApplyBtn">🔍 조회</button>
+              </div>
+            </div>
+          </div>
+
           <h3 class="sec-title">📊 카테고리별 매출·영업이익 차이 <span style="font-size:11px;color:#9ca3af;font-weight:400">(행 클릭 → 제품별 펼치기)</span></h3>
           <div style="overflow-x:auto">
             <table class="data-table compare-table" id="table-compare"><thead>
               <tr id="compare-thead"></tr>
             </thead><tbody></tbody></table>
           </div>
+          <div id="compare-status" style="padding:10px;font-size:12px;color:#9ca3af" hidden></div>
         </div>
       </div>
     </section>
@@ -2248,7 +2313,20 @@ function switchSubTab(sub) {
   $$('.sub-content').forEach(c => c.hidden = (c.id !== `sub-${sub}`));
   if (sub === 'realtime') renderSalesRealtime();
   if (sub === 'goal') renderSalesGoal();
-  if (sub === 'compare') renderSalesCompare();
+  if (sub === 'compare') {
+    // 첫 진입 시 ytd 프리셋 기본값 자동 채움
+    if (!$('#rcbStart').value) {
+      const t = new Date();
+      const s = new Date(t.getFullYear(), 0, 1);
+      $('#rcbStart').value = s.toISOString().slice(0,10);
+      $('#rcbEnd').value = t.toISOString().slice(0,10);
+      const cs = new Date(s); cs.setFullYear(cs.getFullYear() - 1);
+      const ce = new Date(t); ce.setFullYear(ce.getFullYear() - 1);
+      $('#rcbCmpStart').value = cs.toISOString().slice(0,10);
+      $('#rcbCmpEnd').value = ce.toISOString().slice(0,10);
+    }
+    renderSalesCompare();
+  }
 }
 
 function renderSales() {
@@ -2892,11 +2970,74 @@ function fmtKRWk(v) {
 }
 
 let COMPARE_TAB = 'revenue';  // revenue / qty
-let COMPARE_PRESET = '30d';
+let COMPARE_PRESET = 'ytd';
 let COMPARE_EXPANDED = new Set();
+let COMPARE_SELECTED_MONTHS = new Set();
+let COMPARE_DYNAMIC_DATA = null;   // server에서 fetch한 동적 결과
+
+// 동적 fetch — 양성준 양식
+async function fetchComparePeriod(start, end, cmpStart, cmpEnd) {
+  const statusEl = $('#compare-status');
+  if (statusEl) { statusEl.hidden = false; statusEl.textContent = '⏳ 조회 중...'; }
+  try {
+    const url = `/api/compare-period?start=${start}&end=${end}&cmp_start=${cmpStart}&cmp_end=${cmpEnd}`;
+    const r = await fetch(url);
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error || 'API 실패');
+    // 응답 → 기존 categories[] 구조로 변환
+    function bucketize(rows) {
+      const byCat = {};
+      for (const r of rows) {
+        const cat = r['카테고리'];
+        if (!byCat[cat]) byCat[cat] = { name: cat, rev:0, profit:0, qty:0, items: [] };
+        byCat[cat].rev += r['매출']; byCat[cat].profit += r['이익']; byCat[cat].qty += r['수량'];
+        byCat[cat].items.push({ name: r['품목명'], rev: r['매출'], profit: r['이익'], qty: r['수량'] });
+      }
+      return byCat;
+    }
+    const curByCat = bucketize(j.current);
+    const cmpByCat = bucketize(j.compare);
+    const allCats = new Set([...Object.keys(curByCat), ...Object.keys(cmpByCat)]);
+    const categories = [];
+    for (const cn of allCats) {
+      const c = curByCat[cn] || { items: [] };
+      const p = cmpByCat[cn] || { items: [] };
+      // 품목별 매칭
+      const allItems = new Set([...c.items.map(x => x.name), ...p.items.map(x => x.name)]);
+      const items = [];
+      for (const nm of allItems) {
+        const ci = c.items.find(x => x.name === nm) || {};
+        const pi = p.items.find(x => x.name === nm) || {};
+        items.push({
+          name: nm,
+          current_rev: ci.rev || 0, prev_rev: pi.rev || 0,
+          current_profit: ci.profit || 0, prev_profit: pi.profit || 0,
+          current_qty: ci.qty || 0, prev_qty: pi.qty || 0,
+        });
+      }
+      categories.push({
+        name: cn,
+        current_rev: c.rev || 0, prev_rev: p.rev || 0,
+        current_profit: c.profit || 0, prev_profit: p.profit || 0,
+        current_qty: c.qty || 0, prev_qty: p.qty || 0,
+        items,
+      });
+    }
+    COMPARE_DYNAMIC_DATA = {
+      current_start: j.meta.start, current_end: j.meta.end,
+      previous_start: j.meta.cmp_start, previous_end: j.meta.cmp_end,
+      categories,
+    };
+    if (statusEl) statusEl.hidden = true;
+    renderSalesCompare();
+  } catch (e) {
+    if (statusEl) { statusEl.hidden = false; statusEl.textContent = '❌ 조회 실패: ' + e.message + (window.IS_REMOTE_MODE ? ' (외부 모드는 동적 조회 미지원)' : ''); }
+  }
+}
 
 function renderSalesCompare() {
-  const cmp = DATA.sales?.compare?.[COMPARE_PRESET];
+  // 우선 동적 데이터 사용, 없으면 미리 추출된 프리셋
+  const cmp = COMPARE_DYNAMIC_DATA || DATA.sales?.compare?.[COMPARE_PRESET];
   if (!cmp) {
     $('#compare-period-label').textContent = '데이터 없음';
     $('#table-compare tbody').innerHTML = '';
@@ -5135,16 +5276,83 @@ async function boot() {
     });
   });
   $$('.sub-tab').forEach(b => b.addEventListener('click', () => switchSubTab(b.dataset.sub)));
-  // 매출비교 탭/프리셋
+  // 매출비교 — 탭 (매출액/판매량) + 양성준 양식 필터
   document.addEventListener('click', (e) => {
     const tab = e.target?.closest?.('[data-compare-tab]');
     if (tab) { COMPARE_TAB = tab.dataset.compareTab;
       $$('[data-compare-tab]').forEach(b => b.classList.toggle('active', b === tab));
       renderSalesCompare(); return; }
-    const pre = e.target?.closest?.('[data-compare-preset]');
-    if (pre) { COMPARE_PRESET = pre.dataset.comparePreset;
-      $$('[data-compare-preset]').forEach(b => b.classList.toggle('active', b === pre));
-      renderSalesCompare(); return; }
+    // 프리셋 (7일/올해/1년) — 날짜 자동 입력
+    const pre = e.target?.closest?.('[data-rcb-preset]');
+    if (pre) {
+      $$('[data-rcb-preset]').forEach(b => b.classList.toggle('active', b === pre));
+      const k = pre.dataset.rcbPreset;
+      const t = new Date(); t.setHours(0,0,0,0);
+      let s = new Date(t);
+      if (k === '7') s.setDate(t.getDate() - 6);
+      else if (k === '365') s.setDate(t.getDate() - 364);
+      else if (k === 'ytd') s = new Date(t.getFullYear(), 0, 1);
+      $('#rcbStart').value = s.toISOString().slice(0,10);
+      $('#rcbEnd').value = t.toISOString().slice(0,10);
+      // 비교 기간 = 전년 동기간 자동
+      const cs = new Date(s); cs.setFullYear(cs.getFullYear() - 1);
+      const ce = new Date(t); ce.setFullYear(ce.getFullYear() - 1);
+      $('#rcbCmpStart').value = cs.toISOString().slice(0,10);
+      $('#rcbCmpEnd').value = ce.toISOString().slice(0,10);
+      // 월 선택 모두 해제
+      COMPARE_SELECTED_MONTHS.clear();
+      $$('.rcb-month-btn').forEach(b => b.classList.remove('active'));
+      return;
+    }
+    // 월별 다중 선택
+    const mb = e.target?.closest?.('[data-rcb-month]');
+    if (mb) {
+      const m = mb.dataset.rcbMonth;
+      if (COMPARE_SELECTED_MONTHS.has(m)) { COMPARE_SELECTED_MONTHS.delete(m); mb.classList.remove('active'); }
+      else { COMPARE_SELECTED_MONTHS.add(m); mb.classList.add('active'); }
+      // 선택된 월들로 날짜 입력 자동 채움 (최소~최대월의 1일~말일)
+      if (COMPARE_SELECTED_MONTHS.size > 0) {
+        const months = [...COMPARE_SELECTED_MONTHS].sort();
+        const y = new Date().getFullYear();
+        const startM = parseInt(months[0]);
+        const endM = parseInt(months[months.length - 1]);
+        const startDate = `${y}-${String(startM).padStart(2,'0')}-01`;
+        const endDay = new Date(y, endM, 0).getDate();
+        const endDate = `${y}-${String(endM).padStart(2,'0')}-${String(endDay).padStart(2,'0')}`;
+        $('#rcbStart').value = startDate;
+        $('#rcbEnd').value = endDate;
+        const csM = new Date(y - 1, startM - 1, 1);
+        const ceM = new Date(y - 1, endM, 0);
+        $('#rcbCmpStart').value = csM.toISOString().slice(0,10);
+        $('#rcbCmpEnd').value = ceM.toISOString().slice(0,10);
+        $$('[data-rcb-preset]').forEach(b => b.classList.remove('active'));
+      }
+      return;
+    }
+    // 월 해제
+    if (e.target?.id === 'rcbClearMonths') {
+      COMPARE_SELECTED_MONTHS.clear();
+      $$('.rcb-month-btn').forEach(b => b.classList.remove('active'));
+      return;
+    }
+    // 전년 리셋
+    if (e.target?.id === 'rcbResetCompare') {
+      const s = $('#rcbStart').value, ed = $('#rcbEnd').value;
+      if (!s || !ed) return;
+      const cs = new Date(s); cs.setFullYear(cs.getFullYear() - 1);
+      const ce = new Date(ed); ce.setFullYear(ce.getFullYear() - 1);
+      $('#rcbCmpStart').value = cs.toISOString().slice(0,10);
+      $('#rcbCmpEnd').value = ce.toISOString().slice(0,10);
+      return;
+    }
+    // 조회
+    if (e.target?.id === 'rcbApplyBtn') {
+      const s = $('#rcbStart').value, ed = $('#rcbEnd').value;
+      const cs = $('#rcbCmpStart').value, ce = $('#rcbCmpEnd').value;
+      if (!s || !ed || !cs || !ce) { alert('현재·비교 기간을 모두 입력하세요'); return; }
+      fetchComparePeriod(s, ed, cs, ce);
+      return;
+    }
   });
   // 2026 판매량 표 필터·검색
   document.addEventListener('input', (e) => {
