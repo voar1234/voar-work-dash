@@ -1375,8 +1375,6 @@
 
         <!-- 목표매출 현황 -->
         <div class="sub-content" id="sub-goal" hidden>
-          <!-- 양성준 양식 — 카테고리별 월별 목표 vs 실제 -->
-          <div id="goal-dash-section" style="margin-bottom:24px"></div>
           <!-- 메가 카드 (연간 합산) -->
           <div class="mega-card" id="goal-mega">
             <div class="mega-col">
@@ -1430,6 +1428,10 @@
               <tbody></tbody>
             </table>
           </div>
+
+          <!-- 양성준 양식 — 카테고리별 월별 (자세히) — 위 요약 밑에 -->
+          <h3 class="sec-title" style="margin-top:28px">🎯 카테고리별 자세히 (양성준 양식)</h3>
+          <div id="goal-dash-section" style="margin-top:12px"></div>
         </div>
 
         <!-- 매출 비교 -->
@@ -2829,6 +2831,14 @@ function renderSalesGoal() {
   const monthlyGoal = new Array(12).fill(0);
   for (const p of (g.products || [])) {
     for (let m = 0; m < 12; m++) monthlyGoal[m] += (p.monthly_revenue?.[m] || 0);
+  }
+  // Fallback — g.products(엑셀) 비어있을 때 monthly_goals_2026.json 사용
+  if (monthlyGoal.every(v => v === 0)) {
+    const gdMonths = DATA.sales?.goal_dashboard?.goals?.months || {};
+    for (let m = 1; m <= 12; m++) {
+      const cats = gdMonths[String(m)] || {};
+      monthlyGoal[m-1] = Object.values(cats).reduce((a,b)=>a + (Number(b)||0), 0);
+    }
   }
   const cm = g.current_month;
   const annualTarget = monthlyGoal.reduce((a,b)=>a+b, 0);
