@@ -3865,7 +3865,20 @@ function renderReviews() {
         r.발송불가_사유 ? el('div', {style:'color:#92400e;font-weight:600'}, '⚠️ ' + r.발송불가_사유) : null,
         r.메모 ? el('div', {style: r.발송불가_사유 ? 'margin-top:2px;font-size:11px;color:var(--text-soft)' : ''}, r.메모) : null,
       ),
-      el('td', null, el('button', {class:'icon-btn', onclick: (e) => { e.stopPropagation(); openReviewModal(r); }}, '✏️')),
+      el('td', null,
+        el('div', {style:'display:flex;gap:4px'},
+          el('button', {
+            class:'icon-btn',
+            title:'수정',
+            onclick: (e) => { e.stopPropagation(); openReviewModal(r); }
+          }, '✏️'),
+          el('button', {
+            class:'icon-btn',
+            title:'복사해서 새 고객으로 등록',
+            onclick: (e) => { e.stopPropagation(); openReviewModalCopy(r); }
+          }, '📋'),
+        ),
+      ),
     );
     tbody.append(tr);
   }
@@ -3897,6 +3910,30 @@ function openReviewModal(row) {
   $('#rv-blocked-reason').value = row?.발송불가_사유 || '';
   $('#rv-memo').value = row?.메모 || '';
   $('#rv-delete-btn').style.display = isNewRow ? 'none' : 'inline-flex';
+  $('#reviewModalBg').classList.add('show');
+}
+
+// 기존 고객 정보를 복사해서 새 고객으로 등록 (id 없이, 발송완료·발송불가는 초기화)
+function openReviewModalCopy(src) {
+  if (!EDIT_UNLOCKED) { alert('수정 모드를 잠금 해제하세요.'); return; }
+  if (!src) return;
+  _RV_EDITING_ID = null;  // 새 항목으로 처리
+  $('#reviewModalTitle').textContent = '📋 복사해서 새 고객 추가';
+  $('#rv-date').value  = todayIso();  // 작성일은 오늘
+  $('#rv-name').value  = src.고객명 || '';
+  $('#rv-phone').value = src.전화번호 || '';
+  $('#rv-id-mom').value     = src.아이디_맘카페 || '';
+  $('#rv-id-insta').value   = src.아이디_인스타 || '';
+  $('#rv-link-mom').value   = src.후기링크_맘카페 || '';
+  $('#rv-link-insta').value = src.후기링크_인스타 || '';
+  // 발송완료·발송불가는 초기화 (새로 발송 작업할 거니까)
+  $('#rv-sent-mom').checked   = false;
+  $('#rv-sent-insta').checked = false;
+  $('#rv-blocked-mom').checked   = false;
+  $('#rv-blocked-insta').checked = false;
+  $('#rv-blocked-reason').value = '';
+  $('#rv-memo').value = src.메모 ? `(${src.고객명}에서 복사) ${src.메모}` : '';
+  $('#rv-delete-btn').style.display = 'none';
   $('#reviewModalBg').classList.add('show');
 }
 
