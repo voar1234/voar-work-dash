@@ -1809,6 +1809,7 @@
           <span id="ec-detail-channel-dot" style="width:12px;height:12px;border-radius:3px"></span>
           <h3 id="ec-detail-name" style="margin:0;flex:1">행사명</h3>
           <button class="btn" id="ec-detail-edit" style="padding:5px 12px;font-size:12px">✏️ 수정</button>
+          <button class="btn danger" id="ec-detail-delete" style="padding:5px 12px;font-size:12px">🗑 삭제</button>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;background:#f9fafb;border-radius:8px;padding:12px;margin-bottom:14px;font-size:13px">
           <div><span style="color:var(--text-soft);font-size:11px">기간</span><br><b id="ec-detail-period">-</b></div>
@@ -6000,6 +6001,17 @@ async function boot() {
     const arr = ecLoad();
     const row = arr.find(x => x.id === EC_STATE.editingId);
     if (row) { closeEcDetail(); openEcModal(row); }
+  });
+  $('#ec-detail-delete')?.addEventListener('click', () => {
+    if (!EDIT_UNLOCKED) { alert('수정 모드를 잠금 해제하세요.'); return; }
+    if (!EC_STATE.editingId) return;
+    const arr = ecLoad();
+    const row = arr.find(x => x.id === EC_STATE.editingId);
+    if (!row) return;
+    if (!confirm(`"${row.name}" 행사를 삭제하시겠습니까?\n(참여 상품 ${(row.items||[]).length}건 · ${row.start} ~ ${row.end})`)) return;
+    ecSave(arr.filter(x => x.id !== EC_STATE.editingId));
+    closeEcDetail();
+    renderEventCalendar();
   });
   $('#ec-search')?.addEventListener('input', e => { EC_STATE.search = e.target.value; renderEventCalendar(); });
   document.querySelectorAll('#ec-status-filter .ec-sf').forEach(b => {
