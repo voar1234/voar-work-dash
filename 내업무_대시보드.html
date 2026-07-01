@@ -1791,14 +1791,6 @@
               <tbody id="ec-items-body"></tbody>
             </table>
           </div>
-          <!-- 상품 검색 드롭다운 팝오버 (커스텀) -->
-          <div id="ec-product-popover" style="display:none;position:absolute;background:#fff;border:1px solid var(--line-strong);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.15);z-index:1000;width:420px;max-height:400px;overflow:hidden">
-            <div style="padding:8px;border-bottom:1px solid var(--line)">
-              <input type="search" id="ec-prod-search" placeholder="🔍 검색어 입력 (예: 포스D14, 슈트쏙)" autocomplete="off"
-                     style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px">
-            </div>
-            <div id="ec-prod-list" style="max-height:320px;overflow-y:auto"></div>
-          </div>
           <div id="ec-items-empty" style="padding:20px;text-align:center;color:var(--text-soft);font-size:12px" hidden>참여 상품 없음 - "+ 상품 추가" 클릭</div>
         </div>
 
@@ -1964,6 +1956,16 @@
       <button class="btn primary" id="rv-save">저장</button>
     </div>
   </div>
+</div>
+
+<!-- 상품 검색 팝오버 (모달 위에 뜨는 z-index) -->
+<div id="ec-product-popover" style="display:none;position:fixed;background:#fff;border:1px solid var(--line-strong);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.2);z-index:99999;width:460px;max-height:440px;overflow:hidden">
+  <div style="padding:8px;border-bottom:1px solid var(--line);background:#f9fafb">
+    <input type="search" id="ec-prod-search" placeholder="🔍 검색어 입력 (예: 포스D14, 슈트쏙, 오아)" autocomplete="off"
+           style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px">
+    <div id="ec-prod-count" style="font-size:11px;color:var(--text-soft);margin-top:6px"></div>
+  </div>
+  <div id="ec-prod-list" style="max-height:340px;overflow-y:auto"></div>
 </div>
 
 <!-- 비밀번호 모달 -->
@@ -5068,8 +5070,28 @@ function ecMigrateItems(row) {
   return [];
 }
 
-// ERP 상품 인덱스 — dashboard_data.json 의 products + accessories
+// 전체 ERP 상품 카탈로그 캐시 (server API에서 로드 — 담당 외 브랜드도 검색 가능)
+let _EC_FULL_CATALOG = null;
+async function ecEnsureFullCatalog() {
+  if (_EC_FULL_CATALOG) return _EC_FULL_CATALOG;
+  try {
+    const r = await fetch('/api/products-catalog');
+    if (r.ok) {
+      const j = await r.json();
+      if (j.ok && Array.isArray(j.products)) {
+        _EC_FULL_CATALOG = j.products;
+        return _EC_FULL_CATALOG;
+      }
+    }
+  } catch (e) { console.warn('[ec-catalog]', e); }
+  return null;
+}
+
+// ERP 상품 인덱스 — 우선 전체 카탈로그, 없으면 dashboard_data.json fallback
 function ecGetProductCatalog() {
+  if (_EC_FULL_CATALOG) {
+    return _EC_FULL_CATALOG.filter(x => x.name);
+  }
   const cat = [];
   const p = DATA.products || [];
   for (const x of p) {
@@ -5161,18 +5183,29 @@ function ecCollectItems() {
 }
 
 // 상품 검색 팝오버 — 상품명 셀 클릭 시 열림
-function ecOpenProductSearch(tr) {
+async function ecOpenProductSearch(tr) {
   _EC_ACTIVE_ROW = tr;
   const nameInp = tr.querySelector('[data-f="name"]');
   const pop = $('#ec-product-popover');
-  // 위치 (상품명 인풋 아래)
+  // 위치: 인풋 바로 아래. fixed 라 viewport 기준
   const rect = nameInp.getBoundingClientRect();
-  pop.style.left = (rect.left + window.scrollX) + 'px';
-  pop.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+  let left = rect.left;
+  let top = rect.bottom + 4;
+  // 뷰포트 오른쪽 넘어가면 조정
+  if (left + 460 > window.innerWidth) left = window.innerWidth - 470;
+  if (left < 8) left = 8;
+  // 아래 공간 부족하면 위로
+  if (top + 440 > window.innerHeight) top = Math.max(8, rect.top - 444);
+  pop.style.left = left + 'px';
+  pop.style.top = top + 'px';
   pop.style.display = 'block';
   $('#ec-prod-search').value = '';
   ecRenderProductList('');
   setTimeout(() => $('#ec-prod-search').focus(), 30);
+  // 전체 카탈로그 백그라운드 로드 (첫 검색만 시간 걸림)
+  const before = _EC_FULL_CATALOG;
+  await ecEnsureFullCatalog();
+  if (before !== _EC_FULL_CATALOG) ecRenderProductList($('#ec-prod-search').value);
 }
 function ecCloseProductSearch() {
   $('#ec-product-popover').style.display = 'none';
@@ -5180,11 +5213,15 @@ function ecCloseProductSearch() {
 }
 function ecRenderProductList(query) {
   const list = $('#ec-prod-list');
+  const cnt = $('#ec-prod-count');
   const cat = ecGetProductCatalog();
   const q = (query || '').toLowerCase().trim();
   const filtered = q
     ? cat.filter(x => x.name.toLowerCase().includes(q) || String(x.code).toLowerCase().includes(q))
     : cat;
+  cnt.textContent = _EC_FULL_CATALOG
+    ? `총 ${cat.length}개 상품 · ${filtered.length}개 매칭`
+    : `대시보드 ${cat.length}개 (전체 카탈로그 로딩 중…)`;
   list.innerHTML = '';
   if (!filtered.length) {
     list.append(el('div', {style:'padding:20px;text-align:center;color:var(--text-soft);font-size:12px'}, '검색 결과 없음'));
@@ -5192,14 +5229,14 @@ function ecRenderProductList(query) {
   }
   filtered.slice(0, 200).forEach((x, i) => {
     const item = el('div', {
-      style: 'padding:8px 12px;font-size:12px;cursor:pointer;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px',
+      style: 'padding:8px 12px;font-size:12px;cursor:pointer;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;background:#fff',
       onclick: () => ecPickProduct(x),
-      onmouseenter: (e) => e.target.closest('div').style.background = '#f3f4f6',
-      onmouseleave: (e) => e.target.closest('div').style.background = '',
+      onmouseenter: (e) => e.currentTarget.style.background = '#eff6ff',
+      onmouseleave: (e) => e.currentTarget.style.background = '#fff',
     },
-      el('span', {style:'color:#9ca3af;font-size:10px;min-width:24px'}, `[${i+1}]`),
-      el('span', {style:'flex:1'}, x.name),
-      el('span', {style:'color:var(--text-soft);font-size:10px'}, x.code || ''),
+      el('span', {style:'color:#9ca3af;font-size:10px;min-width:28px'}, `[${i+1}]`),
+      el('span', {style:'flex:1;font-weight:500'}, x.name),
+      el('span', {style:'color:var(--text-soft);font-size:10px;min-width:60px;text-align:right'}, x.code || ''),
     );
     list.append(item);
   });
