@@ -1741,33 +1741,99 @@
 
     <!-- 행사 추가/수정 모달 -->
     <div class="modal-bg" id="ecModalBg">
-      <div class="modal" style="width:520px;max-width:92vw">
+      <div class="modal" style="width:900px;max-width:96vw;max-height:90vh;overflow-y:auto">
         <h3 id="ecModalTitle">행사 추가</h3>
-        <div class="row"><label>행사명 *</label><input type="text" id="ec-name" placeholder="예: 네이버 오늘끝딜 · 8월 슈퍼세일" autocomplete="off"></div>
-        <div class="row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div><label>시작일 *</label><input type="date" id="ec-start"></div>
-          <div><label>종료일 *</label><input type="date" id="ec-end"></div>
+
+        <!-- 기본 정보 -->
+        <div style="background:#f9fafb;border-radius:8px;padding:12px;margin-bottom:14px">
+          <div style="font-size:11px;color:var(--text-soft);font-weight:700;letter-spacing:0.5px;margin-bottom:8px">📋 기본 정보</div>
+          <div class="row"><label>행사명 *</label><input type="text" id="ec-name" placeholder="예: 네이버 오늘끝딜 · 8월 슈퍼세일" autocomplete="off"></div>
+          <div class="row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div><label>시작일 *</label><input type="date" id="ec-start"></div>
+            <div><label>종료일 *</label><input type="date" id="ec-end"></div>
+          </div>
+          <div class="row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div>
+              <label>채널 (색상 구분용)</label>
+              <select id="ec-channel">
+                <option value="네이버">🟢 네이버</option>
+                <option value="쿠팡">🟡 쿠팡</option>
+                <option value="오늘의집">🔵 오늘의집</option>
+                <option value="롯데온">🟣 롯데온</option>
+                <option value="11번가">🔴 11번가</option>
+                <option value="G마켓">🟠 G마켓</option>
+                <option value="자사몰">🩷 자사몰</option>
+                <option value="기타">⚪ 기타</option>
+              </select>
+            </div>
+            <div><label>담당·기타 메모</label><input type="text" id="ec-memo" placeholder="(선택)" autocomplete="off"></div>
+          </div>
         </div>
-        <div class="row">
-          <label>채널 (색상 구분용)</label>
-          <select id="ec-channel">
-            <option value="네이버">🟢 네이버</option>
-            <option value="쿠팡">🟡 쿠팡</option>
-            <option value="오늘의집">🔵 오늘의집</option>
-            <option value="롯데온">🟣 롯데온</option>
-            <option value="11번가">🔴 11번가</option>
-            <option value="G마켓">🟠 G마켓</option>
-            <option value="자사몰">🩷 자사몰</option>
-            <option value="기타">⚪ 기타</option>
-          </select>
+
+        <!-- 행사 상품 목록 -->
+        <div style="background:#fff;border:1px solid var(--line-strong);border-radius:8px;padding:12px;margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div style="font-size:12px;font-weight:700">🎁 행사 상품 목록 <span id="ec-items-count" style="color:var(--text-soft);font-weight:500;font-size:11px">(0)</span></div>
+            <button type="button" class="btn primary" id="ec-add-item" style="padding:5px 12px;font-size:12px">+ 상품 추가</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:12px" id="ec-items-table">
+              <thead>
+                <tr style="background:#f3f4f6">
+                  <th style="padding:6px 8px;text-align:left;font-size:11px;font-weight:700;color:var(--text-soft)">상품명</th>
+                  <th style="padding:6px 8px;text-align:right;font-size:11px;font-weight:700;color:var(--text-soft);width:110px">판매가</th>
+                  <th style="padding:6px 8px;text-align:right;font-size:11px;font-weight:700;color:var(--text-soft);width:110px">할인가 (원)</th>
+                  <th style="padding:6px 8px;text-align:right;font-size:11px;font-weight:700;color:var(--text-soft);width:100px">추가 할인율(%)</th>
+                  <th style="padding:6px 8px;text-align:right;font-size:11px;font-weight:700;color:#7c3aed;width:120px">🎯 행사가</th>
+                  <th style="width:30px"></th>
+                </tr>
+              </thead>
+              <tbody id="ec-items-body"></tbody>
+            </table>
+          </div>
+          <div id="ec-items-empty" style="padding:20px;text-align:center;color:var(--text-soft);font-size:12px" hidden>참여 상품 없음 - "+ 상품 추가" 클릭</div>
         </div>
-        <div class="row"><label>참여 제품 (여러 개면 쉼표로 구분)</label><input type="text" id="ec-products" placeholder="예: 포스D14, 미스팀클링, 워터클링" autocomplete="off"></div>
-        <div class="row"><label>행사가 (원)</label><input type="text" id="ec-price" placeholder="예: 189,000 (자유 입력 - 여러 제품이면 서술)" autocomplete="off"></div>
-        <div class="row"><label>메모</label><input type="text" id="ec-memo" placeholder="(선택) 담당·특이사항" autocomplete="off"></div>
+
         <div class="actions">
           <button class="btn danger" id="ec-delete-btn" style="margin-right:auto;display:none">삭제</button>
           <button class="btn" id="ec-cancel">취소</button>
           <button class="btn primary" id="ec-save">저장</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 행사 상세 팝업 (읽기 전용) -->
+    <div class="modal-bg" id="ecDetailBg">
+      <div class="modal" style="width:720px;max-width:94vw;max-height:88vh;overflow-y:auto">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <span id="ec-detail-channel-dot" style="width:12px;height:12px;border-radius:3px"></span>
+          <h3 id="ec-detail-name" style="margin:0;flex:1">행사명</h3>
+          <button class="btn" id="ec-detail-edit" style="padding:5px 12px;font-size:12px">✏️ 수정</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;background:#f9fafb;border-radius:8px;padding:12px;margin-bottom:14px;font-size:13px">
+          <div><span style="color:var(--text-soft);font-size:11px">기간</span><br><b id="ec-detail-period">-</b></div>
+          <div><span style="color:var(--text-soft);font-size:11px">채널</span><br><b id="ec-detail-channel-txt">-</b></div>
+          <div><span style="color:var(--text-soft);font-size:11px">상태</span><br><b id="ec-detail-status">-</b></div>
+          <div><span style="color:var(--text-soft);font-size:11px">메모</span><br><b id="ec-detail-memo">-</b></div>
+        </div>
+        <div style="font-size:12px;font-weight:700;margin-bottom:8px">🎁 참여 상품 <span id="ec-detail-item-count" style="color:var(--text-soft);font-weight:500;font-size:11px">(0)</span></div>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:12px" id="ec-detail-items-table">
+            <thead>
+              <tr style="background:#f3f4f6">
+                <th style="padding:8px 10px;text-align:left;font-size:11px;color:var(--text-soft)">상품명</th>
+                <th style="padding:8px 10px;text-align:right;font-size:11px;color:var(--text-soft)">판매가</th>
+                <th style="padding:8px 10px;text-align:right;font-size:11px;color:var(--text-soft)">할인가</th>
+                <th style="padding:8px 10px;text-align:right;font-size:11px;color:var(--text-soft)">추가 %</th>
+                <th style="padding:8px 10px;text-align:right;font-size:11px;color:#7c3aed">🎯 행사가</th>
+                <th style="padding:8px 10px;text-align:right;font-size:11px;color:var(--text-soft)">할인율</th>
+              </tr>
+            </thead>
+            <tbody id="ec-detail-items-body"></tbody>
+          </table>
+        </div>
+        <div class="actions" style="margin-top:16px">
+          <button class="btn" id="ec-detail-close">닫기</button>
         </div>
       </div>
     </div>
@@ -4961,11 +5027,13 @@ function renderEventCalendar() {
       else if (ev.end === endD) barClasses.push('end');
       const isPast = ecStatus(ev, today) === 'ended';
       if (isPast) barClasses.push('past');
+      const items = ecMigrateItems(ev);
+      const itemSummary = items.length ? ` · 상품 ${items.length}건` : '';
       const bar = el('div', {
         class: barClasses.join(' '),
         style: `left:${left}%; width:calc(${width}% - 4px); top:${lane * LANE_H}px; background:${color};`,
-        title: `${ev.name}${ev.products ? ' · ' + ev.products : ''}${ev.price ? ' · ' + ev.price : ''}${ev.memo ? ' · ' + ev.memo : ''}`,
-        onclick: (e) => { e.stopPropagation(); openEcModal(ev); },
+        title: `${ev.name}${itemSummary}${ev.memo ? ' · ' + ev.memo : ''}`,
+        onclick: (e) => { e.stopPropagation(); openEcDetail(ev); },
       }, ev.name);
       overlay.append(bar);
     }
@@ -4973,6 +5041,69 @@ function renderEventCalendar() {
     wrap.append(row);
   }
   cal.append(wrap);
+}
+
+function ecCalcEventPrice(discountPrice, discountPct) {
+  const d = Number(discountPrice) || 0;
+  const p = Number(discountPct) || 0;
+  return Math.round(d * (1 - p/100));
+}
+function ecMigrateItems(row) {
+  // 옛 데이터 (products 문자열 + price 하나) → items 배열로
+  if (row.items && Array.isArray(row.items)) return row.items;
+  if (row.products) {
+    return row.products.split(',').map(n => ({
+      name: n.trim(),
+      salePrice: '', discountPrice: '', discountPct: '', eventPrice: row.price || '',
+    }));
+  }
+  return [];
+}
+function ecRenderItemsRow(item = {}) {
+  const tr = el('tr', { style: 'border-bottom:1px solid var(--line)' });
+  const nameInp = el('input', { type:'text', class:'ec-item-inp', 'data-f':'name', value: item.name || '', placeholder:'상품명', style:'width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px' });
+  const saleInp = el('input', { type:'number', class:'ec-item-inp', 'data-f':'salePrice', value: item.salePrice ?? '', placeholder:'0', style:'width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px;text-align:right' });
+  const discInp = el('input', { type:'number', class:'ec-item-inp', 'data-f':'discountPrice', value: item.discountPrice ?? '', placeholder:'0', style:'width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px;text-align:right' });
+  const pctInp = el('input', { type:'number', class:'ec-item-inp', 'data-f':'discountPct', value: item.discountPct ?? '', placeholder:'0', step:'0.1', style:'width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px;text-align:right' });
+  const priceInp = el('input', { type:'number', class:'ec-item-inp', 'data-f':'eventPrice', value: item.eventPrice ?? ecCalcEventPrice(item.discountPrice, item.discountPct), placeholder:'0', style:'width:100%;padding:5px 8px;border:1.5px solid #c4b5fd;border-radius:4px;font-size:13px;text-align:right;font-weight:700;color:#7c3aed' });
+  const delBtn = el('button', { type:'button', class:'icon-btn', title:'삭제', style:'color:#dc2626', onclick: (e) => { tr.remove(); ecUpdateItemsCount(); } }, '×');
+  // 할인가·할인율 변경 시 행사가 자동 재계산
+  [discInp, pctInp].forEach(inp => {
+    inp.addEventListener('input', () => {
+      const dp = tr.querySelector('[data-f="discountPrice"]').value;
+      const pc = tr.querySelector('[data-f="discountPct"]').value;
+      const calc = ecCalcEventPrice(dp, pc);
+      if (calc > 0) tr.querySelector('[data-f="eventPrice"]').value = calc;
+    });
+  });
+  tr.append(
+    el('td', {style:'padding:5px 8px'}, nameInp),
+    el('td', {style:'padding:5px 8px'}, saleInp),
+    el('td', {style:'padding:5px 8px'}, discInp),
+    el('td', {style:'padding:5px 8px'}, pctInp),
+    el('td', {style:'padding:5px 8px'}, priceInp),
+    el('td', {style:'padding:5px 4px;text-align:center'}, delBtn),
+  );
+  return tr;
+}
+function ecUpdateItemsCount() {
+  const n = $('#ec-items-body').children.length;
+  $('#ec-items-count').textContent = `(${n})`;
+  $('#ec-items-empty').hidden = n > 0;
+}
+function ecCollectItems() {
+  const items = [];
+  $('#ec-items-body').querySelectorAll('tr').forEach(tr => {
+    const item = {};
+    tr.querySelectorAll('[data-f]').forEach(inp => {
+      const v = inp.value.trim();
+      const k = inp.dataset.f;
+      if (k === 'name') item[k] = v;
+      else item[k] = v === '' ? '' : Number(v);
+    });
+    if (item.name) items.push(item);
+  });
+  return items;
 }
 
 function openEcModal(row, defaultDate) {
@@ -4983,9 +5114,12 @@ function openEcModal(row, defaultDate) {
   $('#ec-start').value = row?.start || defaultDate || todayIso();
   $('#ec-end').value = row?.end || defaultDate || todayIso();
   $('#ec-channel').value = row?.channel || '네이버';
-  $('#ec-products').value = row?.products || '';
-  $('#ec-price').value = row?.price || '';
   $('#ec-memo').value = row?.memo || '';
+  // 상품 표 초기화 + 로드
+  const tbody = $('#ec-items-body'); tbody.innerHTML = '';
+  const items = row ? ecMigrateItems(row) : [];
+  items.forEach(it => tbody.append(ecRenderItemsRow(it)));
+  ecUpdateItemsCount();
   $('#ec-delete-btn').style.display = row ? 'inline-flex' : 'none';
   $('#ecModalBg').classList.add('show');
 }
@@ -4997,12 +5131,12 @@ function saveEcModal() {
   if (!name || !start || !end) { alert('행사명·시작일·종료일 필수'); return; }
   if (end < start) { alert('종료일이 시작일보다 빠릅니다'); return; }
   const arr = ecLoad();
+  const items = ecCollectItems();
   const row = {
     id: EC_STATE.editingId || 'e_' + Math.random().toString(36).slice(2),
     name, start, end,
     channel: $('#ec-channel').value,
-    products: $('#ec-products').value.trim(),
-    price: $('#ec-price').value.trim(),
+    items,
     memo: $('#ec-memo').value.trim(),
     updated_at: new Date().toISOString(),
   };
@@ -5020,6 +5154,47 @@ function deleteEcRow() {
   closeEcModal();
   renderEventCalendar();
 }
+
+// 상세 팝업 (읽기 전용)
+function openEcDetail(row) {
+  if (!row) return;
+  $('#ec-detail-name').textContent = row.name;
+  const color = EC_CHANNEL_COLORS[row.channel] || '#6b7280';
+  $('#ec-detail-channel-dot').style.background = color;
+  $('#ec-detail-channel-txt').textContent = row.channel || '-';
+  $('#ec-detail-period').textContent = `${row.start} ~ ${row.end} (${Math.round((new Date(row.end) - new Date(row.start))/86400000) + 1}일)`;
+  const today = todayIso();
+  const status = ecStatus(row, today);
+  const statusMap = { upcoming: '🗓 예정', ongoing: '🔴 진행 중', ended: '✅ 종료' };
+  $('#ec-detail-status').textContent = statusMap[status] || '-';
+  $('#ec-detail-memo').textContent = row.memo || '-';
+  const items = ecMigrateItems(row);
+  $('#ec-detail-item-count').textContent = `(${items.length})`;
+  const tbody = $('#ec-detail-items-body'); tbody.innerHTML = '';
+  if (!items.length) {
+    tbody.append(el('tr', null, el('td', {colspan:6, style:'padding:20px;text-align:center;color:var(--text-soft)'}, '참여 상품 없음')));
+  } else {
+    for (const it of items) {
+      const sp = Number(it.salePrice) || 0;
+      const dp = Number(it.discountPrice) || 0;
+      const ep = Number(it.eventPrice) || ecCalcEventPrice(dp, it.discountPct);
+      const discRate = sp && ep ? Math.round((sp - ep) / sp * 100 * 10) / 10 : null;
+      tbody.append(el('tr', {style:'border-bottom:1px solid var(--line)'},
+        el('td', {style:'padding:8px 10px'}, it.name || '-'),
+        el('td', {style:'padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums'}, sp ? sp.toLocaleString() : '-'),
+        el('td', {style:'padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums'}, dp ? dp.toLocaleString() : '-'),
+        el('td', {style:'padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums'}, it.discountPct ? Number(it.discountPct).toFixed(1) + '%' : '-'),
+        el('td', {style:`padding:8px 10px;text-align:right;font-weight:800;color:#7c3aed;font-variant-numeric:tabular-nums;font-size:14px`}, ep ? '₩' + ep.toLocaleString() : '-'),
+        el('td', {style:'padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums'},
+          discRate != null ? el('span', {style:`padding:2px 8px;border-radius:5px;font-weight:700;background:${discRate>=30?'#fee2e2':discRate>=15?'#fef3c7':'#dbeafe'};color:${discRate>=30?'#b91c1c':discRate>=15?'#92400e':'#1e40af'}`}, '-' + discRate + '%') : '-'
+        ),
+      ));
+    }
+  }
+  EC_STATE.editingId = row.id;  // 수정 버튼용
+  $('#ecDetailBg').classList.add('show');
+}
+function closeEcDetail() { $('#ecDetailBg').classList.remove('show'); }
 
 function renderMargin() {
   const grid = $('#margin-grid'); if (!grid) return;
@@ -5652,6 +5827,16 @@ async function boot() {
   $('#ec-cancel')?.addEventListener('click', closeEcModal);
   $('#ec-save')?.addEventListener('click', saveEcModal);
   $('#ec-delete-btn')?.addEventListener('click', deleteEcRow);
+  $('#ec-add-item')?.addEventListener('click', () => {
+    $('#ec-items-body').append(ecRenderItemsRow());
+    ecUpdateItemsCount();
+  });
+  $('#ec-detail-close')?.addEventListener('click', closeEcDetail);
+  $('#ec-detail-edit')?.addEventListener('click', () => {
+    const arr = ecLoad();
+    const row = arr.find(x => x.id === EC_STATE.editingId);
+    if (row) { closeEcDetail(); openEcModal(row); }
+  });
   $('#ec-search')?.addEventListener('input', e => { EC_STATE.search = e.target.value; renderEventCalendar(); });
   document.querySelectorAll('#ec-status-filter .ec-sf').forEach(b => {
     b.addEventListener('click', () => {
