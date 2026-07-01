@@ -1780,16 +1780,24 @@
             <table style="width:100%;border-collapse:collapse;font-size:12px" id="ec-items-table">
               <thead>
                 <tr style="background:#f3f4f6">
-                  <th style="padding:6px 8px;text-align:left;font-size:11px;font-weight:700;color:var(--text-soft)">상품명</th>
-                  <th style="padding:6px 8px;text-align:right;font-size:11px;font-weight:700;color:var(--text-soft);width:110px">판매가</th>
-                  <th style="padding:6px 8px;text-align:right;font-size:11px;font-weight:700;color:var(--text-soft);width:110px">할인가 (원)</th>
-                  <th style="padding:6px 8px;text-align:right;font-size:11px;font-weight:700;color:var(--text-soft);width:100px">추가 할인율(%)</th>
+                  <th style="padding:6px 8px;text-align:left;font-size:11px;font-weight:700;color:var(--text-soft);min-width:200px">상품명 <span style="font-size:9px;color:#6b7280;font-weight:500">(입력 시 ERP 자동)</span></th>
+                  <th style="padding:6px 8px;text-align:right;font-size:11px;font-weight:700;color:var(--text-soft);width:110px">판매가 (ERP)</th>
+                  <th style="padding:6px 8px;text-align:right;font-size:11px;font-weight:700;color:var(--text-soft);width:110px">중간가 (ERP)</th>
                   <th style="padding:6px 8px;text-align:right;font-size:11px;font-weight:700;color:#7c3aed;width:120px">🎯 행사가</th>
+                  <th style="padding:6px 8px;text-align:right;font-size:11px;font-weight:700;color:var(--text-soft);width:80px">할인율</th>
                   <th style="width:30px"></th>
                 </tr>
               </thead>
               <tbody id="ec-items-body"></tbody>
             </table>
+          </div>
+          <!-- 상품 검색 드롭다운 팝오버 (커스텀) -->
+          <div id="ec-product-popover" style="display:none;position:absolute;background:#fff;border:1px solid var(--line-strong);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.15);z-index:1000;width:420px;max-height:400px;overflow:hidden">
+            <div style="padding:8px;border-bottom:1px solid var(--line)">
+              <input type="search" id="ec-prod-search" placeholder="🔍 검색어 입력 (예: 포스D14, 슈트쏙)" autocomplete="off"
+                     style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px">
+            </div>
+            <div id="ec-prod-list" style="max-height:320px;overflow-y:auto"></div>
           </div>
           <div id="ec-items-empty" style="padding:20px;text-align:center;color:var(--text-soft);font-size:12px" hidden>참여 상품 없음 - "+ 상품 추가" 클릭</div>
         </div>
@@ -1823,8 +1831,7 @@
               <tr style="background:#f3f4f6">
                 <th style="padding:8px 10px;text-align:left;font-size:11px;color:var(--text-soft)">상품명</th>
                 <th style="padding:8px 10px;text-align:right;font-size:11px;color:var(--text-soft)">판매가</th>
-                <th style="padding:8px 10px;text-align:right;font-size:11px;color:var(--text-soft)">할인가</th>
-                <th style="padding:8px 10px;text-align:right;font-size:11px;color:var(--text-soft)">추가 %</th>
+                <th style="padding:8px 10px;text-align:right;font-size:11px;color:var(--text-soft)">중간가</th>
                 <th style="padding:8px 10px;text-align:right;font-size:11px;color:#7c3aed">🎯 행사가</th>
                 <th style="padding:8px 10px;text-align:right;font-size:11px;color:var(--text-soft)">할인율</th>
               </tr>
@@ -5043,45 +5050,90 @@ function renderEventCalendar() {
   cal.append(wrap);
 }
 
-function ecCalcEventPrice(discountPrice, discountPct) {
-  const d = Number(discountPrice) || 0;
-  const p = Number(discountPct) || 0;
-  return Math.round(d * (1 - p/100));
+function ecCalcDiscountPct(salePrice, eventPrice) {
+  const s = Number(salePrice) || 0;
+  const e = Number(eventPrice) || 0;
+  if (!s || !e) return null;
+  return Math.round((s - e) / s * 1000) / 10;  // 소수 1자리
 }
 function ecMigrateItems(row) {
-  // 옛 데이터 (products 문자열 + price 하나) → items 배열로
   if (row.items && Array.isArray(row.items)) return row.items;
+  // 옛 데이터 (products 문자열 + price 하나) → items 배열로
   if (row.products) {
     return row.products.split(',').map(n => ({
       name: n.trim(),
-      salePrice: '', discountPrice: '', discountPct: '', eventPrice: row.price || '',
+      salePrice: '', midPrice: '', eventPrice: row.price || '', discountPct: '',
     }));
   }
   return [];
 }
+
+// ERP 상품 인덱스 — dashboard_data.json 의 products + accessories
+function ecGetProductCatalog() {
+  const cat = [];
+  const p = DATA.products || [];
+  for (const x of p) {
+    cat.push({
+      name: x.표시명 || x.상품명 || x.품목명 || '',
+      code: x.모델코드 || x.상품번호 || '',
+      salePrice: Number(x.가격?.판매가) || 0,
+      midPrice: Number(x.가격?.중간가) || 0,
+    });
+  }
+  for (const x of (DATA.accessories || [])) {
+    cat.push({
+      name: x.상품명 || x.품목명 || '',
+      code: x.모델코드 || x.상품번호 || '',
+      salePrice: Number(x.판매가) || 0,
+      midPrice: Number(x.중간가) || 0,
+    });
+  }
+  return cat.filter(x => x.name);
+}
+
+let _EC_ACTIVE_ROW = null;  // 어느 tr에 대해 팝오버 떠있는지
+
 function ecRenderItemsRow(item = {}) {
   const tr = el('tr', { style: 'border-bottom:1px solid var(--line)' });
-  const nameInp = el('input', { type:'text', class:'ec-item-inp', 'data-f':'name', value: item.name || '', placeholder:'상품명', style:'width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px' });
-  const saleInp = el('input', { type:'number', class:'ec-item-inp', 'data-f':'salePrice', value: item.salePrice ?? '', placeholder:'0', style:'width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px;text-align:right' });
-  const discInp = el('input', { type:'number', class:'ec-item-inp', 'data-f':'discountPrice', value: item.discountPrice ?? '', placeholder:'0', style:'width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px;text-align:right' });
-  const pctInp = el('input', { type:'number', class:'ec-item-inp', 'data-f':'discountPct', value: item.discountPct ?? '', placeholder:'0', step:'0.1', style:'width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px;text-align:right' });
-  const priceInp = el('input', { type:'number', class:'ec-item-inp', 'data-f':'eventPrice', value: item.eventPrice ?? ecCalcEventPrice(item.discountPrice, item.discountPct), placeholder:'0', style:'width:100%;padding:5px 8px;border:1.5px solid #c4b5fd;border-radius:4px;font-size:13px;text-align:right;font-weight:700;color:#7c3aed' });
-  const delBtn = el('button', { type:'button', class:'icon-btn', title:'삭제', style:'color:#dc2626', onclick: (e) => { tr.remove(); ecUpdateItemsCount(); } }, '×');
-  // 할인가·할인율 변경 시 행사가 자동 재계산
-  [discInp, pctInp].forEach(inp => {
-    inp.addEventListener('input', () => {
-      const dp = tr.querySelector('[data-f="discountPrice"]').value;
-      const pc = tr.querySelector('[data-f="discountPct"]').value;
-      const calc = ecCalcEventPrice(dp, pc);
-      if (calc > 0) tr.querySelector('[data-f="eventPrice"]').value = calc;
-    });
+  // 상품명 — 클릭하면 팝오버 열림
+  const nameInp = el('input', {
+    type:'text', class:'ec-item-inp', 'data-f':'name',
+    value: item.name || '', placeholder:'클릭해서 상품 검색', readonly:true,
+    style:'width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px;background:#fff;cursor:pointer'
   });
+  nameInp.addEventListener('click', () => ecOpenProductSearch(tr));
+  const saleInp = el('input', { type:'number', class:'ec-item-inp', 'data-f':'salePrice', value: item.salePrice ?? '', placeholder:'ERP 자동', style:'width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px;text-align:right;background:#f9fafb;color:var(--text)' });
+  const midInp  = el('input', { type:'number', class:'ec-item-inp', 'data-f':'midPrice', value: item.midPrice ?? '', placeholder:'ERP 자동', style:'width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px;text-align:right;background:#f9fafb;color:var(--text)' });
+  const priceInp = el('input', { type:'number', class:'ec-item-inp', 'data-f':'eventPrice', value: item.eventPrice ?? '', placeholder:'행사가 입력', style:'width:100%;padding:6px 8px;border:1.5px solid #c4b5fd;border-radius:4px;font-size:13px;text-align:right;font-weight:700;color:#7c3aed' });
+  const pctSpan = el('span', { class:'ec-item-inp', 'data-f':'discountPct',
+    style:'display:block;padding:6px 8px;text-align:right;font-weight:700;font-size:12px;color:#dc2626' }, '');
+  const delBtn = el('button', { type:'button', class:'icon-btn', title:'삭제', style:'color:#dc2626', onclick: () => { tr.remove(); ecUpdateItemsCount(); } }, '×');
+  // 행사가 변경 → 판매가 기준 할인율 자동 계산
+  const recalcPct = () => {
+    const sp = saleInp.value, ep = priceInp.value;
+    const pct = ecCalcDiscountPct(sp, ep);
+    pctSpan.textContent = pct != null ? '−' + pct.toFixed(1) + '%' : '';
+    pctSpan.dataset.value = pct != null ? pct : '';
+    // 색상
+    if (pct != null) {
+      pctSpan.style.color = pct >= 30 ? '#b91c1c' : pct >= 15 ? '#ea580c' : '#0ea5e9';
+    }
+  };
+  priceInp.addEventListener('input', recalcPct);
+  saleInp.addEventListener('input', recalcPct);
+  // 초기값 표시
+  if (item.discountPct != null && item.discountPct !== '') {
+    pctSpan.textContent = '−' + Number(item.discountPct).toFixed(1) + '%';
+    pctSpan.dataset.value = item.discountPct;
+  } else {
+    recalcPct();
+  }
   tr.append(
     el('td', {style:'padding:5px 8px'}, nameInp),
     el('td', {style:'padding:5px 8px'}, saleInp),
-    el('td', {style:'padding:5px 8px'}, discInp),
-    el('td', {style:'padding:5px 8px'}, pctInp),
+    el('td', {style:'padding:5px 8px'}, midInp),
     el('td', {style:'padding:5px 8px'}, priceInp),
+    el('td', {style:'padding:5px 8px'}, pctSpan),
     el('td', {style:'padding:5px 4px;text-align:center'}, delBtn),
   );
   return tr;
@@ -5096,14 +5148,81 @@ function ecCollectItems() {
   $('#ec-items-body').querySelectorAll('tr').forEach(tr => {
     const item = {};
     tr.querySelectorAll('[data-f]').forEach(inp => {
-      const v = inp.value.trim();
       const k = inp.dataset.f;
+      let v;
+      if (inp.tagName === 'SPAN') v = inp.dataset.value || '';
+      else v = inp.value.trim();
       if (k === 'name') item[k] = v;
       else item[k] = v === '' ? '' : Number(v);
     });
     if (item.name) items.push(item);
   });
   return items;
+}
+
+// 상품 검색 팝오버 — 상품명 셀 클릭 시 열림
+function ecOpenProductSearch(tr) {
+  _EC_ACTIVE_ROW = tr;
+  const nameInp = tr.querySelector('[data-f="name"]');
+  const pop = $('#ec-product-popover');
+  // 위치 (상품명 인풋 아래)
+  const rect = nameInp.getBoundingClientRect();
+  pop.style.left = (rect.left + window.scrollX) + 'px';
+  pop.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+  pop.style.display = 'block';
+  $('#ec-prod-search').value = '';
+  ecRenderProductList('');
+  setTimeout(() => $('#ec-prod-search').focus(), 30);
+}
+function ecCloseProductSearch() {
+  $('#ec-product-popover').style.display = 'none';
+  _EC_ACTIVE_ROW = null;
+}
+function ecRenderProductList(query) {
+  const list = $('#ec-prod-list');
+  const cat = ecGetProductCatalog();
+  const q = (query || '').toLowerCase().trim();
+  const filtered = q
+    ? cat.filter(x => x.name.toLowerCase().includes(q) || String(x.code).toLowerCase().includes(q))
+    : cat;
+  list.innerHTML = '';
+  if (!filtered.length) {
+    list.append(el('div', {style:'padding:20px;text-align:center;color:var(--text-soft);font-size:12px'}, '검색 결과 없음'));
+    return;
+  }
+  filtered.slice(0, 200).forEach((x, i) => {
+    const item = el('div', {
+      style: 'padding:8px 12px;font-size:12px;cursor:pointer;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px',
+      onclick: () => ecPickProduct(x),
+      onmouseenter: (e) => e.target.closest('div').style.background = '#f3f4f6',
+      onmouseleave: (e) => e.target.closest('div').style.background = '',
+    },
+      el('span', {style:'color:#9ca3af;font-size:10px;min-width:24px'}, `[${i+1}]`),
+      el('span', {style:'flex:1'}, x.name),
+      el('span', {style:'color:var(--text-soft);font-size:10px'}, x.code || ''),
+    );
+    list.append(item);
+  });
+  if (filtered.length > 200) {
+    list.append(el('div', {style:'padding:8px;text-align:center;color:var(--text-soft);font-size:11px'}, `... 외 ${filtered.length - 200}개 (검색어로 좁혀주세요)`));
+  }
+}
+function ecPickProduct(x) {
+  if (!_EC_ACTIVE_ROW) return;
+  const tr = _EC_ACTIVE_ROW;
+  tr.querySelector('[data-f="name"]').value = x.name;
+  tr.querySelector('[data-f="salePrice"]').value = x.salePrice || '';
+  tr.querySelector('[data-f="midPrice"]').value = x.midPrice || '';
+  // 행사가 아직 없으면 판매가로 초기값
+  const priceInp = tr.querySelector('[data-f="eventPrice"]');
+  if (!priceInp.value && x.salePrice) priceInp.value = x.salePrice;
+  // 할인율 재계산 (span 업데이트)
+  const pctSpan = tr.querySelector('[data-f="discountPct"]');
+  const pct = ecCalcDiscountPct(x.salePrice, priceInp.value);
+  pctSpan.textContent = pct != null ? '−' + pct.toFixed(1) + '%' : '';
+  pctSpan.dataset.value = pct != null ? pct : '';
+  if (pct != null) pctSpan.style.color = pct >= 30 ? '#b91c1c' : pct >= 15 ? '#ea580c' : '#0ea5e9';
+  ecCloseProductSearch();
 }
 
 function openEcModal(row, defaultDate) {
@@ -5172,21 +5291,20 @@ function openEcDetail(row) {
   $('#ec-detail-item-count').textContent = `(${items.length})`;
   const tbody = $('#ec-detail-items-body'); tbody.innerHTML = '';
   if (!items.length) {
-    tbody.append(el('tr', null, el('td', {colspan:6, style:'padding:20px;text-align:center;color:var(--text-soft)'}, '참여 상품 없음')));
+    tbody.append(el('tr', null, el('td', {colspan:5, style:'padding:20px;text-align:center;color:var(--text-soft)'}, '참여 상품 없음')));
   } else {
     for (const it of items) {
       const sp = Number(it.salePrice) || 0;
-      const dp = Number(it.discountPrice) || 0;
-      const ep = Number(it.eventPrice) || ecCalcEventPrice(dp, it.discountPct);
-      const discRate = sp && ep ? Math.round((sp - ep) / sp * 100 * 10) / 10 : null;
+      const mp = Number(it.midPrice) || 0;
+      const ep = Number(it.eventPrice) || 0;
+      const discRate = sp && ep ? Math.round((sp - ep) / sp * 1000) / 10 : null;
       tbody.append(el('tr', {style:'border-bottom:1px solid var(--line)'},
         el('td', {style:'padding:8px 10px'}, it.name || '-'),
-        el('td', {style:'padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums'}, sp ? sp.toLocaleString() : '-'),
-        el('td', {style:'padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums'}, dp ? dp.toLocaleString() : '-'),
-        el('td', {style:'padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums'}, it.discountPct ? Number(it.discountPct).toFixed(1) + '%' : '-'),
+        el('td', {style:'padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums'}, sp ? '₩' + sp.toLocaleString() : '-'),
+        el('td', {style:'padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums'}, mp ? '₩' + mp.toLocaleString() : '-'),
         el('td', {style:`padding:8px 10px;text-align:right;font-weight:800;color:#7c3aed;font-variant-numeric:tabular-nums;font-size:14px`}, ep ? '₩' + ep.toLocaleString() : '-'),
         el('td', {style:'padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums'},
-          discRate != null ? el('span', {style:`padding:2px 8px;border-radius:5px;font-weight:700;background:${discRate>=30?'#fee2e2':discRate>=15?'#fef3c7':'#dbeafe'};color:${discRate>=30?'#b91c1c':discRate>=15?'#92400e':'#1e40af'}`}, '-' + discRate + '%') : '-'
+          discRate != null ? el('span', {style:`padding:2px 8px;border-radius:5px;font-weight:700;background:${discRate>=30?'#fee2e2':discRate>=15?'#fef3c7':'#dbeafe'};color:${discRate>=30?'#b91c1c':discRate>=15?'#92400e':'#1e40af'}`}, '−' + discRate + '%') : '-'
         ),
       ));
     }
@@ -5831,6 +5949,15 @@ async function boot() {
     $('#ec-items-body').append(ecRenderItemsRow());
     ecUpdateItemsCount();
   });
+  $('#ec-prod-search')?.addEventListener('input', e => ecRenderProductList(e.target.value));
+  // 팝오버 외부 클릭 시 닫힘
+  document.addEventListener('click', (e) => {
+    const pop = $('#ec-product-popover');
+    if (!pop || pop.style.display !== 'block') return;
+    if (pop.contains(e.target)) return;
+    if (e.target?.classList?.contains('ec-item-inp') && e.target.dataset.f === 'name') return;
+    ecCloseProductSearch();
+  }, true);
   $('#ec-detail-close')?.addEventListener('click', closeEcDetail);
   $('#ec-detail-edit')?.addEventListener('click', () => {
     const arr = ecLoad();
