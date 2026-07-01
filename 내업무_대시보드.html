@@ -871,6 +871,50 @@
     border: 1px dashed var(--line-strong); border-radius: 10px; background: #fff;
   }
 
+  /* ───── 행사 일정 캘린더 ───── */
+  .ec-sf {
+    padding: 5px 10px; border: none; background: transparent;
+    border-radius: 5px; font-family: inherit; font-size: 11px;
+    color: var(--text-soft); cursor: pointer; font-weight: 600;
+  }
+  .ec-sf.active { background: #fff; color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .ec-cal { background: #fff; border: 1px solid var(--line-strong); border-radius: 10px; overflow: hidden; }
+  .ec-dow-row { display: grid; grid-template-columns: repeat(7, 1fr); background: #f9fafb; border-bottom: 1px solid var(--line-strong); }
+  .ec-dow { padding: 8px 0; text-align: center; font-size: 11px; font-weight: 700; color: var(--text-soft); letter-spacing: 0.5px; }
+  .ec-dow.sun { color: #dc2626; }
+  .ec-dow.sat { color: #2563eb; }
+  .ec-week-row { display: grid; grid-template-columns: repeat(7, 1fr); position: relative; border-bottom: 1px solid var(--line); }
+  .ec-week-row:last-child { border-bottom: none; }
+  .ec-day-cell {
+    min-height: 120px; padding: 6px 8px; border-right: 1px solid var(--line);
+    position: relative; cursor: pointer; transition: background 0.1s;
+  }
+  .ec-day-cell:hover { background: #fafafa; }
+  .ec-day-cell:last-child { border-right: none; }
+  .ec-day-cell.other-month { background: #fafafa; color: #d1d5db; }
+  .ec-day-cell.other-month .ec-day-num { color: #d1d5db; }
+  .ec-day-cell.today { background: #fffbeb; }
+  .ec-day-cell.today .ec-day-num { background: #f59e0b; color: #fff; border-radius: 999px; padding: 0 6px; font-weight: 700; }
+  .ec-day-num { font-size: 12px; font-weight: 600; color: var(--text); }
+  .ec-day-cell.sun .ec-day-num { color: #dc2626; }
+  .ec-day-cell.sat .ec-day-num { color: #2563eb; }
+  .ec-events-layer {
+    position: absolute; top: 26px; left: 0; right: 0; pointer-events: none;
+  }
+  .ec-event-bar {
+    position: absolute; height: 20px; padding: 2px 6px;
+    color: #fff; font-size: 10px; font-weight: 700;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    display: flex; align-items: center;
+    pointer-events: auto; cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+  .ec-event-bar:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+  .ec-event-bar.start { border-radius: 4px 0 0 4px; padding-left: 8px; }
+  .ec-event-bar.end { border-radius: 0 4px 4px 0; padding-right: 8px; }
+  .ec-event-bar.single { border-radius: 4px; padding: 2px 8px; }
+  .ec-event-bar.past { opacity: 0.55; }
+
   /* ───── 매출비교 양성준 양식 ───── */
   .rcb-filter { padding: 14px 18px; margin-bottom: 14px; }
   .rcb-row { display: flex; align-items: center; gap: 14px; padding: 8px 0; }
@@ -1646,15 +1690,87 @@
     <!-- ─── Page: 행사 일정 (신규 placeholder) ─── -->
     <section class="page" id="page-event-schedule">
       <div class="panel">
-        <h2 style="margin:0 0 4px 0;font-size:16px;font-weight:600">📆 행사 일정</h2>
-        <div class="pc-info-label">진행 중·예정 행사 일정 관리 (네이버 오늘끝딜·기획전·외부 행사 등)</div>
-        <div class="empty-hint" style="margin-top:18px">
-          🚧 곧 추가 예정<br><br>
-          어떤 정보가 필요한지 알려주면 만들게:<br>
-          예) 행사명·시작/종료일·채널·예상매출·결과 등
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap">
+          <div>
+            <h2 style="margin:0 0 4px 0;font-size:16px;font-weight:600">📆 행사 일정</h2>
+            <div class="pc-info-label">행사명·기간·참여제품·행사가 · 캘린더 클릭으로 추가 · 다일 행사는 바 연결</div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            <input id="ec-search" type="search" placeholder="🔍 행사명·제품 검색" autocomplete="off"
+                   style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;min-width:180px">
+            <div id="ec-status-filter" style="display:flex;gap:4px;background:#f3f4f6;padding:3px;border-radius:6px">
+              <button class="ec-sf active" data-status="">전체</button>
+              <button class="ec-sf" data-status="upcoming">🗓 예정</button>
+              <button class="ec-sf" data-status="ongoing">🔴 진행</button>
+              <button class="ec-sf" data-status="ended">✅ 종료</button>
+            </div>
+          </div>
         </div>
+
+        <!-- 상단 메모 -->
+        <div style="background:#fef9c3;border:1px solid #fde68a;border-radius:8px;padding:8px 12px;margin-bottom:12px;display:flex;align-items:center;gap:8px">
+          <span style="font-size:11px;color:#92400e;font-weight:700">📝 메모</span>
+          <input id="ec-note" type="text" placeholder="이 달 메모 (자동 저장)"
+                 style="flex:1;border:none;background:transparent;font-size:13px;color:#92400e;outline:none">
+        </div>
+
+        <!-- 상단 요약 -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
+          <div class="kpi-card"><div class="kpi-label">전체 행사</div><div class="kpi-value" id="ec-kpi-total">0</div></div>
+          <div class="kpi-card"><div class="kpi-label">🔴 진행 중</div><div class="kpi-value" id="ec-kpi-ongoing" style="color:#dc2626">0</div></div>
+          <div class="kpi-card"><div class="kpi-label">🗓 이번 주 예정</div><div class="kpi-value" id="ec-kpi-upcoming" style="color:#ea580c">0</div></div>
+          <div class="kpi-card"><div class="kpi-label">📅 이번 달 총</div><div class="kpi-value" id="ec-kpi-month" style="color:#7c3aed">0</div></div>
+        </div>
+
+        <!-- 캘린더 헤더 -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <button class="btn" id="ec-prev">◀</button>
+            <span id="ec-title" style="font-size:15px;font-weight:700">2026년 8월</span>
+            <button class="btn" id="ec-next">▶</button>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="btn" id="ec-today">당월</button>
+            <button class="btn primary" id="ec-add">+ 행사 추가</button>
+          </div>
+        </div>
+
+        <div id="ec-calendar"></div>
       </div>
     </section>
+
+    <!-- 행사 추가/수정 모달 -->
+    <div class="modal-bg" id="ecModalBg">
+      <div class="modal" style="width:520px;max-width:92vw">
+        <h3 id="ecModalTitle">행사 추가</h3>
+        <div class="row"><label>행사명 *</label><input type="text" id="ec-name" placeholder="예: 네이버 오늘끝딜 · 8월 슈퍼세일" autocomplete="off"></div>
+        <div class="row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div><label>시작일 *</label><input type="date" id="ec-start"></div>
+          <div><label>종료일 *</label><input type="date" id="ec-end"></div>
+        </div>
+        <div class="row">
+          <label>채널 (색상 구분용)</label>
+          <select id="ec-channel">
+            <option value="네이버">🟢 네이버</option>
+            <option value="쿠팡">🟡 쿠팡</option>
+            <option value="오늘의집">🔵 오늘의집</option>
+            <option value="롯데온">🟣 롯데온</option>
+            <option value="11번가">🔴 11번가</option>
+            <option value="G마켓">🟠 G마켓</option>
+            <option value="자사몰">🩷 자사몰</option>
+            <option value="기타">⚪ 기타</option>
+          </select>
+        </div>
+        <div class="row"><label>참여 제품 (여러 개면 쉼표로 구분)</label><input type="text" id="ec-products" placeholder="예: 포스D14, 미스팀클링, 워터클링" autocomplete="off"></div>
+        <div class="row"><label>행사가 (원)</label><input type="text" id="ec-price" placeholder="예: 189,000 (자유 입력 - 여러 제품이면 서술)" autocomplete="off"></div>
+        <div class="row"><label>메모</label><input type="text" id="ec-memo" placeholder="(선택) 담당·특이사항" autocomplete="off"></div>
+        <div class="actions">
+          <button class="btn danger" id="ec-delete-btn" style="margin-right:auto;display:none">삭제</button>
+          <button class="btn" id="ec-cancel">취소</button>
+          <button class="btn primary" id="ec-save">저장</button>
+        </div>
+      </div>
+    </div>
 
     <!-- ─── Page: 순위 관리 (신규 placeholder) ─── -->
     <section class="page" id="page-ranking">
@@ -1965,6 +2081,7 @@ function switchPage(name) {
   if (name === 'sales') renderSales();
   if (name === 'margin') renderMargin();
   if (name === 'event-margin') renderEventMargin();
+  if (name === 'event-schedule') renderEventCalendar();
   if (name === 'todos') renderTodos();
   if (name === 'calendar') renderCalendar();
 }
@@ -4698,6 +4815,212 @@ function fmtPct(r) {
 }
 
 // ───────── 마진계산기 렌더 ─────────
+// ═══════════════════════════════════════════════════════════════
+//  📆 행사 일정 캘린더
+// ═══════════════════════════════════════════════════════════════
+const EC_STORE_KEY = 'voar_event_schedule_v1';
+const EC_NOTE_KEY_PREFIX = 'voar_event_note_';  // + YYYY-MM
+const EC_CHANNEL_COLORS = {
+  '네이버':   '#10b981',
+  '쿠팡':     '#eab308',
+  '오늘의집': '#3b82f6',
+  '롯데온':   '#a855f7',
+  '11번가':   '#dc2626',
+  'G마켓':    '#f97316',
+  '자사몰':   '#ec4899',
+  '기타':     '#6b7280',
+};
+const EC_STATE = { year: null, month: null, search: '', statusFilter: '', editingId: null };
+
+function ecInit() {
+  const today = new Date();
+  if (EC_STATE.year == null) { EC_STATE.year = today.getFullYear(); EC_STATE.month = today.getMonth() + 1; }
+}
+function ecLoad() {
+  try { return JSON.parse(localStorage.getItem(EC_STORE_KEY) || '[]'); } catch { return []; }
+}
+function ecSave(list) {
+  try { localStorage.setItem(EC_STORE_KEY, JSON.stringify(list)); } catch {}
+  // 로컬 서버에도 저장 (외부 URL 동기화용)
+  try { fetch('/api/events', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(list)}); } catch {}
+}
+function ecLoadNote(yr, mo) {
+  return localStorage.getItem(EC_NOTE_KEY_PREFIX + `${yr}-${String(mo).padStart(2,'0')}`) || '';
+}
+function ecSaveNote(yr, mo, v) {
+  const k = EC_NOTE_KEY_PREFIX + `${yr}-${String(mo).padStart(2,'0')}`;
+  localStorage.setItem(k, v);
+}
+function ecStatus(ev, todayIsoStr) {
+  if (ev.start > todayIsoStr) return 'upcoming';
+  if (ev.end < todayIsoStr) return 'ended';
+  return 'ongoing';
+}
+
+function renderEventCalendar() {
+  ecInit();
+  const y = EC_STATE.year, m = EC_STATE.month;
+  $('#ec-title').textContent = `${y}년 ${m}월`;
+  // 상단 메모
+  const noteInp = $('#ec-note');
+  if (noteInp) noteInp.value = ecLoadNote(y, m);
+
+  const all = ecLoad();
+  const q = (EC_STATE.search || '').toLowerCase().trim();
+  const sf = EC_STATE.statusFilter;
+  const today = todayIso();
+
+  // 필터
+  let events = all.filter(ev => {
+    if (q && !((ev.name || '').toLowerCase().includes(q) || (ev.products || '').toLowerCase().includes(q))) return false;
+    if (sf) { if (ecStatus(ev, today) !== sf) return false; }
+    return true;
+  });
+
+  // KPI
+  const monthStart = `${y}-${String(m).padStart(2,'0')}-01`;
+  const nextMonth = m === 12 ? { y: y+1, m: 1 } : { y, m: m+1 };
+  const monthEnd = `${nextMonth.y}-${String(nextMonth.m).padStart(2,'0')}-01`;
+  const inMonth = all.filter(ev => !(ev.end < monthStart || ev.start >= monthEnd));
+  const weekAhead = new Date(today); weekAhead.setDate(weekAhead.getDate() + 7);
+  const weekAheadIso = weekAhead.toISOString().slice(0,10);
+  $('#ec-kpi-total').textContent = all.length;
+  $('#ec-kpi-ongoing').textContent = all.filter(ev => ecStatus(ev, today) === 'ongoing').length;
+  $('#ec-kpi-upcoming').textContent = all.filter(ev => ev.start > today && ev.start <= weekAheadIso).length;
+  $('#ec-kpi-month').textContent = inMonth.length;
+
+  // 캘린더 그리드 생성 — 첫 날짜의 요일부터 6주
+  const firstDay = new Date(y, m - 1, 1);
+  const startCell = new Date(firstDay);
+  startCell.setDate(1 - firstDay.getDay());  // 일요일 시작
+  const cal = $('#ec-calendar');
+  cal.innerHTML = '';
+  const wrap = el('div', { class: 'ec-cal' });
+
+  // 요일 헤더
+  const dowRow = el('div', { class: 'ec-dow-row' });
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach((d, i) => {
+    dowRow.append(el('div', { class: `ec-dow ${i===0?'sun':i===6?'sat':''}` }, d));
+  });
+  wrap.append(dowRow);
+
+  // 이벤트 lane 배치 — 각 이벤트에 lane 인덱스 부여 (충돌 회피)
+  events.sort((a,b) => a.start.localeCompare(b.start) || (b.end.localeCompare(a.end)));
+  const laneEnd = [];  // laneEnd[i] = 그 lane이 언제까지 점유되는지 (isoStr)
+  const eventLane = {};
+  for (const ev of events) {
+    let lane = 0;
+    while (laneEnd[lane] && laneEnd[lane] >= ev.start) lane++;
+    eventLane[ev.id] = lane;
+    laneEnd[lane] = ev.end;
+  }
+  const LANE_H = 22;  // px per lane
+
+  // 6주 (42일) 렌더
+  for (let w = 0; w < 6; w++) {
+    const row = el('div', { class: 'ec-week-row', style: `min-height:${Math.max(120, 32 + LANE_H * 3)}px` });
+    const weekStart = new Date(startCell); weekStart.setDate(startCell.getDate() + w * 7);
+    const weekStartIso = todayIso(weekStart);
+    const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6);
+    const weekEndIso = todayIso(weekEnd);
+
+    // 7일 셀
+    for (let d = 0; d < 7; d++) {
+      const day = new Date(weekStart); day.setDate(weekStart.getDate() + d);
+      const iso = todayIso(day);
+      const otherMonth = day.getMonth() !== (m - 1);
+      const isToday = iso === today;
+      const cls = ['ec-day-cell'];
+      if (d === 0) cls.push('sun');
+      if (d === 6) cls.push('sat');
+      if (otherMonth) cls.push('other-month');
+      if (isToday) cls.push('today');
+      const cell = el('div', {
+        class: cls.join(' '),
+        onclick: () => openEcModal(null, iso),
+      });
+      cell.append(el('div', { class: 'ec-day-num' }, String(day.getDate())));
+      row.append(cell);
+    }
+
+    // 주 이벤트 오버레이 — 이 주와 겹치는 이벤트만
+    const overlay = el('div', { class: 'ec-events-layer' });
+    for (const ev of events) {
+      if (ev.end < weekStartIso || ev.start > weekEndIso) continue;
+      const startD = ev.start > weekStartIso ? ev.start : weekStartIso;
+      const endD = ev.end < weekEndIso ? ev.end : weekEndIso;
+      const startCol = new Date(startD).getDay();
+      const endCol = new Date(endD).getDay();
+      const lane = eventLane[ev.id] || 0;
+      const left = (startCol / 7 * 100);
+      const width = ((endCol - startCol + 1) / 7 * 100);
+      const color = EC_CHANNEL_COLORS[ev.channel] || '#6b7280';
+      const barClasses = ['ec-event-bar'];
+      if (ev.start === startD && ev.end === endD) barClasses.push('single');
+      else if (ev.start === startD) barClasses.push('start');
+      else if (ev.end === endD) barClasses.push('end');
+      const isPast = ecStatus(ev, today) === 'ended';
+      if (isPast) barClasses.push('past');
+      const bar = el('div', {
+        class: barClasses.join(' '),
+        style: `left:${left}%; width:calc(${width}% - 4px); top:${lane * LANE_H}px; background:${color};`,
+        title: `${ev.name}${ev.products ? ' · ' + ev.products : ''}${ev.price ? ' · ' + ev.price : ''}${ev.memo ? ' · ' + ev.memo : ''}`,
+        onclick: (e) => { e.stopPropagation(); openEcModal(ev); },
+      }, ev.name);
+      overlay.append(bar);
+    }
+    row.append(overlay);
+    wrap.append(row);
+  }
+  cal.append(wrap);
+}
+
+function openEcModal(row, defaultDate) {
+  if (!EDIT_UNLOCKED) { alert('수정 모드를 잠금 해제하세요.'); return; }
+  EC_STATE.editingId = row?.id || null;
+  $('#ecModalTitle').textContent = row ? '행사 수정' : '행사 추가';
+  $('#ec-name').value = row?.name || '';
+  $('#ec-start').value = row?.start || defaultDate || todayIso();
+  $('#ec-end').value = row?.end || defaultDate || todayIso();
+  $('#ec-channel').value = row?.channel || '네이버';
+  $('#ec-products').value = row?.products || '';
+  $('#ec-price').value = row?.price || '';
+  $('#ec-memo').value = row?.memo || '';
+  $('#ec-delete-btn').style.display = row ? 'inline-flex' : 'none';
+  $('#ecModalBg').classList.add('show');
+}
+function closeEcModal() { $('#ecModalBg').classList.remove('show'); EC_STATE.editingId = null; }
+function saveEcModal() {
+  const name = $('#ec-name').value.trim();
+  const start = $('#ec-start').value;
+  const end = $('#ec-end').value;
+  if (!name || !start || !end) { alert('행사명·시작일·종료일 필수'); return; }
+  if (end < start) { alert('종료일이 시작일보다 빠릅니다'); return; }
+  const arr = ecLoad();
+  const row = {
+    id: EC_STATE.editingId || 'e_' + Math.random().toString(36).slice(2),
+    name, start, end,
+    channel: $('#ec-channel').value,
+    products: $('#ec-products').value.trim(),
+    price: $('#ec-price').value.trim(),
+    memo: $('#ec-memo').value.trim(),
+    updated_at: new Date().toISOString(),
+  };
+  const idx = arr.findIndex(x => x.id === row.id);
+  if (idx >= 0) arr[idx] = { ...arr[idx], ...row };
+  else arr.push({ ...row, created_at: new Date().toISOString() });
+  ecSave(arr);
+  closeEcModal();
+  renderEventCalendar();
+}
+function deleteEcRow() {
+  if (!EC_STATE.editingId) return;
+  if (!confirm('이 행사를 삭제하시겠습니까?')) return;
+  ecSave(ecLoad().filter(x => x.id !== EC_STATE.editingId));
+  closeEcModal();
+  renderEventCalendar();
+}
+
 function renderMargin() {
   const grid = $('#margin-grid'); if (!grid) return;
   const empty = $('#margin-empty');
@@ -5307,6 +5630,38 @@ async function boot() {
       const group = h.closest('.nav-group');
       group.classList.toggle('open');
     });
+  });
+
+  // ───── 행사 일정 캘린더 바인딩 ─────
+  $('#ec-prev')?.addEventListener('click', () => {
+    EC_STATE.month--;
+    if (EC_STATE.month < 1) { EC_STATE.month = 12; EC_STATE.year--; }
+    renderEventCalendar();
+  });
+  $('#ec-next')?.addEventListener('click', () => {
+    EC_STATE.month++;
+    if (EC_STATE.month > 12) { EC_STATE.month = 1; EC_STATE.year++; }
+    renderEventCalendar();
+  });
+  $('#ec-today')?.addEventListener('click', () => {
+    const t = new Date();
+    EC_STATE.year = t.getFullYear(); EC_STATE.month = t.getMonth() + 1;
+    renderEventCalendar();
+  });
+  $('#ec-add')?.addEventListener('click', () => openEcModal(null));
+  $('#ec-cancel')?.addEventListener('click', closeEcModal);
+  $('#ec-save')?.addEventListener('click', saveEcModal);
+  $('#ec-delete-btn')?.addEventListener('click', deleteEcRow);
+  $('#ec-search')?.addEventListener('input', e => { EC_STATE.search = e.target.value; renderEventCalendar(); });
+  document.querySelectorAll('#ec-status-filter .ec-sf').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('#ec-status-filter .ec-sf').forEach(x => x.classList.remove('active'));
+      b.classList.add('active'); EC_STATE.statusFilter = b.dataset.status || '';
+      renderEventCalendar();
+    });
+  });
+  $('#ec-note')?.addEventListener('input', e => {
+    ecSaveNote(EC_STATE.year, EC_STATE.month, e.target.value);
   });
 
   // ───── 마진계산기 / 행사 마진계산기 검색·필터 바인딩 ─────
