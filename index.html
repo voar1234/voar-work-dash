@@ -1697,7 +1697,9 @@
           </div>
           <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
             <input id="ec-search" type="search" placeholder="🔍 행사명·제품 검색 (예: 포스D14)" autocomplete="off"
-                   style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;min-width:220px">
+                   style="padding:9px 14px;border:2px solid #3b82f6;border-radius:8px;font-size:13px;font-weight:600;min-width:280px;background:#eff6ff;color:#1e3a8a;box-shadow:0 2px 6px rgba(59,130,246,0.25);outline:none"
+                   onfocus="this.style.background='#fff';this.style.borderColor='#1d4ed8';this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.3)'"
+                   onblur="this.style.background='#eff6ff';this.style.borderColor='#3b82f6';this.style.boxShadow='0 2px 6px rgba(59,130,246,0.25)'">
             <div id="ec-status-filter" style="display:flex;gap:4px;background:#f3f4f6;padding:3px;border-radius:6px">
               <button class="ec-sf active" data-status="">전체</button>
               <button class="ec-sf" data-status="upcoming">🗓 예정</button>
