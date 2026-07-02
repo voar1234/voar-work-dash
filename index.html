@@ -1696,8 +1696,8 @@
             <div class="pc-info-label">행사명·기간·참여제품·행사가 · 캘린더 클릭으로 추가 · 다일 행사는 바 연결</div>
           </div>
           <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-            <input id="ec-search" type="search" placeholder="🔍 행사명·제품 검색" autocomplete="off"
-                   style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;min-width:180px">
+            <input id="ec-search" type="search" placeholder="🔍 행사명·제품 검색 (예: 포스D14)" autocomplete="off"
+                   style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;min-width:220px">
             <div id="ec-status-filter" style="display:flex;gap:4px;background:#f3f4f6;padding:3px;border-radius:6px">
               <button class="ec-sf active" data-status="">전체</button>
               <button class="ec-sf" data-status="upcoming">🗓 예정</button>
@@ -1714,12 +1714,10 @@
                  style="flex:1;border:none;background:transparent;font-size:13px;color:#92400e;outline:none">
         </div>
 
-        <!-- 상단 요약 -->
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
-          <div class="kpi-card"><div class="kpi-label">전체 행사</div><div class="kpi-value" id="ec-kpi-total">0</div></div>
-          <div class="kpi-card"><div class="kpi-label">🔴 진행 중</div><div class="kpi-value" id="ec-kpi-ongoing" style="color:#dc2626">0</div></div>
-          <div class="kpi-card"><div class="kpi-label">🗓 이번 주 예정</div><div class="kpi-value" id="ec-kpi-upcoming" style="color:#ea580c">0</div></div>
-          <div class="kpi-card"><div class="kpi-label">📅 이번 달 총</div><div class="kpi-value" id="ec-kpi-month" style="color:#7c3aed">0</div></div>
+        <!-- 상품명 검색 결과 (검색어 있을 때만 표시) -->
+        <div id="ec-search-results" style="display:none;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;margin-bottom:14px">
+          <div style="font-size:12px;font-weight:700;color:#1e40af;margin-bottom:8px">🔎 <span id="ec-search-query">검색어</span> 참여 행사 <span id="ec-search-count" style="color:#3b82f6;font-weight:500;font-size:11px">(0건)</span></div>
+          <div id="ec-search-list"></div>
         </div>
 
         <!-- 캘린더 헤더 -->
@@ -4946,24 +4944,83 @@ function renderEventCalendar() {
   const sf = EC_STATE.statusFilter;
   const today = todayIso();
 
+  // 검색: 이벤트명 + items의 상품명 모두 검사
+  function evMatchesQuery(ev, qStr) {
+    if (!qStr) return true;
+    if ((ev.name || '').toLowerCase().includes(qStr)) return true;
+    if ((ev.products || '').toLowerCase().includes(qStr)) return true;  // 옛 데이터
+    const items = ecMigrateItems(ev);
+    return items.some(it => (it.name || '').toLowerCase().includes(qStr));
+  }
   // 필터
   let events = all.filter(ev => {
-    if (q && !((ev.name || '').toLowerCase().includes(q) || (ev.products || '').toLowerCase().includes(q))) return false;
+    if (!evMatchesQuery(ev, q)) return false;
     if (sf) { if (ecStatus(ev, today) !== sf) return false; }
     return true;
   });
 
-  // KPI
-  const monthStart = `${y}-${String(m).padStart(2,'0')}-01`;
-  const nextMonth = m === 12 ? { y: y+1, m: 1 } : { y, m: m+1 };
-  const monthEnd = `${nextMonth.y}-${String(nextMonth.m).padStart(2,'0')}-01`;
-  const inMonth = all.filter(ev => !(ev.end < monthStart || ev.start >= monthEnd));
-  const weekAhead = new Date(today); weekAhead.setDate(weekAhead.getDate() + 7);
-  const weekAheadIso = weekAhead.toISOString().slice(0,10);
-  $('#ec-kpi-total').textContent = all.length;
-  $('#ec-kpi-ongoing').textContent = all.filter(ev => ecStatus(ev, today) === 'ongoing').length;
-  $('#ec-kpi-upcoming').textContent = all.filter(ev => ev.start > today && ev.start <= weekAheadIso).length;
-  $('#ec-kpi-month').textContent = inMonth.length;
+  // 상품명 검색 결과 리스트 (검색어 있을 때만)
+  const searchResBox = $('#ec-search-results');
+  const searchList = $('#ec-search-list');
+  if (q) {
+    // 검색어와 매칭되는 행사 전체 (필터·상태 무관, 전체 정렬)
+    const hits = all.filter(ev => evMatchesQuery(ev, q))
+                    .sort((a, b) => a.start.localeCompare(b.start));
+    $('#ec-search-query').textContent = q;
+    $('#ec-search-count').textContent = `(${hits.length}건)`;
+    searchList.innerHTML = '';
+    if (!hits.length) {
+      searchList.append(el('div', {style:'padding:8px;color:var(--text-soft);font-size:12px'}, '검색 결과 없음'));
+    } else {
+      for (const ev of hits) {
+        const items = ecMigrateItems(ev);
+        const matchedItems = items.filter(it => (it.name || '').toLowerCase().includes(q));
+        const status = ecStatus(ev, today);
+        const statusBadge = { upcoming:'🗓 예정', ongoing:'🔴 진행', ended:'✅ 종료' }[status];
+        const color = EC_CHANNEL_COLORS[ev.channel] || '#6b7280';
+        const days = Math.round((new Date(ev.end) - new Date(ev.start))/86400000) + 1;
+        const card = el('div', {
+          style:'background:#fff;border:1px solid #dbeafe;border-radius:6px;padding:10px 12px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;gap:10px',
+          onclick: () => openEcDetail(ev),
+        },
+          el('span', {style:`width:6px;align-self:stretch;background:${color};border-radius:3px`}),
+          el('div', {style:'flex:1;min-width:0'},
+            el('div', {style:'display:flex;align-items:center;gap:8px;flex-wrap:wrap'},
+              el('b', {style:'font-size:13px'}, ev.name),
+              el('span', {style:`padding:1px 7px;border-radius:5px;background:${color};color:#fff;font-size:10px;font-weight:700`}, ev.channel || '기타'),
+              el('span', {style:'font-size:10px;color:var(--text-soft)'}, statusBadge),
+            ),
+            el('div', {style:'font-size:11px;color:var(--text-soft);margin-top:3px'},
+              `📅 ${ev.start} ~ ${ev.end} (${days}일)`
+            ),
+            matchedItems.length ? el('div', {style:'font-size:11px;color:#1e40af;margin-top:4px'},
+              matchedItems.map(it => {
+                const ep = Number(it.eventPrice) || 0;
+                const sp = Number(it.salePrice) || 0;
+                const pct = sp && ep ? Math.round((sp-ep)/sp*1000)/10 : null;
+                return `▸ ${it.name}` + (ep ? ` — 행사가 ₩${ep.toLocaleString()}` : '') + (pct != null ? ` (−${pct}%)` : '');
+              }).join(' · ')
+            ) : null,
+          ),
+          el('button', {
+            class: 'btn',
+            style: 'padding:4px 10px;font-size:11px',
+            onclick: (e) => {
+              e.stopPropagation();
+              // 캘린더를 그 행사 시작월로 이동
+              const d = new Date(ev.start);
+              EC_STATE.year = d.getFullYear(); EC_STATE.month = d.getMonth() + 1;
+              renderEventCalendar();
+            },
+          }, '📆 이동'),
+        );
+        searchList.append(card);
+      }
+    }
+    searchResBox.style.display = 'block';
+  } else {
+    searchResBox.style.display = 'none';
+  }
 
   // 캘린더 그리드 생성 — 첫 날짜의 요일부터 6주
   const firstDay = new Date(y, m - 1, 1);
