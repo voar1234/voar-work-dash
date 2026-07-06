@@ -1774,8 +1774,13 @@
         <div style="background:#fff;border:1px solid var(--line-strong);border-radius:8px;padding:12px;margin-bottom:14px">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
             <div style="font-size:12px;font-weight:700">🎁 행사 상품 목록 <span id="ec-items-count" style="color:var(--text-soft);font-weight:500;font-size:11px">(0)</span></div>
-            <button type="button" class="btn primary" id="ec-add-item" style="padding:5px 12px;font-size:12px">+ 상품 추가</button>
+            <div style="display:flex;gap:6px">
+              <input type="file" id="ec-excel-file" accept=".xlsx,.xls" style="display:none">
+              <button type="button" class="btn" id="ec-excel-btn" style="padding:5px 12px;font-size:12px;background:#10b981;color:#fff;border-color:#059669" title="마진계산기 엑셀 업로드 - 상품·판매가·행사가 자동 입력">📊 엑셀 업로드</button>
+              <button type="button" class="btn primary" id="ec-add-item" style="padding:5px 12px;font-size:12px">+ 상품 추가</button>
+            </div>
           </div>
+          <div id="ec-excel-status" style="display:none;padding:6px 10px;margin-bottom:8px;font-size:11px;border-radius:4px"></div>
           <div style="overflow-x:auto">
             <table style="width:100%;border-collapse:collapse;font-size:12px" id="ec-items-table">
               <thead>
@@ -4907,25 +4912,82 @@ const EC_CHANNEL_COLORS = {
   '기타':     '#6b7280',
 };
 const EC_STATE = { year: null, month: null, search: '', statusFilter: '', editingId: null };
+let _EC_EVENTS_CACHE = null;  // 서버에서 불러온 후 캐시
+let _EC_NOTES_CACHE = null;   // {"YYYY-MM": "메모"}
+
+async function bootstrapEvents() {
+  // 1) 로컬(localStorage) 데이터부터 확보 (오프라인·초기 렌더 대비)
+  let local = [];
+  try { local = JSON.parse(localStorage.getItem(EC_STORE_KEY) || '[]'); } catch {}
+  let localNotes = {};
+  // 기존 개별 노트 키들 병합 (voar_event_note_YYYY-MM)
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith(EC_NOTE_KEY_PREFIX)) {
+        localNotes[k.slice(EC_NOTE_KEY_PREFIX.length)] = localStorage.getItem(k) || '';
+      }
+    }
+  } catch {}
+  _EC_EVENTS_CACHE = local;
+  _EC_NOTES_CACHE = localNotes;
+
+  // 2) 서버에서 로드 시도 (localhost) — 실패 시 로컬 유지
+  try {
+    const res = await fetch('/api/events?ts=' + Date.now());
+    if (res.ok) {
+      const server = await res.json();
+      if (Array.isArray(server)) {
+        // 서버 > 로컬 병합: id 기준 union, 서버 우선
+        const map = new Map();
+        for (const e of local)  map.set(e.id, e);
+        for (const e of server) map.set(e.id, e);  // 서버 우선
+        _EC_EVENTS_CACHE = Array.from(map.values());
+        // 로컬에도 저장해서 다음 오프라인 대비
+        try { localStorage.setItem(EC_STORE_KEY, JSON.stringify(_EC_EVENTS_CACHE)); } catch {}
+        // 서버에도 병합 결과 다시 저장 (로컬 → 서버 반영)
+        if (_EC_EVENTS_CACHE.length > server.length) {
+          try { fetch('/api/events', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(_EC_EVENTS_CACHE)}); } catch {}
+        }
+      }
+    }
+  } catch {}
+  try {
+    const res = await fetch('/api/event-notes?ts=' + Date.now());
+    if (res.ok) {
+      const server = await res.json();
+      if (server && typeof server === 'object') {
+        _EC_NOTES_CACHE = { ...localNotes, ...server };
+      }
+    }
+  } catch {}
+}
 
 function ecInit() {
   const today = new Date();
   if (EC_STATE.year == null) { EC_STATE.year = today.getFullYear(); EC_STATE.month = today.getMonth() + 1; }
 }
 function ecLoad() {
+  if (_EC_EVENTS_CACHE) return _EC_EVENTS_CACHE;
   try { return JSON.parse(localStorage.getItem(EC_STORE_KEY) || '[]'); } catch { return []; }
 }
 function ecSave(list) {
+  _EC_EVENTS_CACHE = list;
   try { localStorage.setItem(EC_STORE_KEY, JSON.stringify(list)); } catch {}
-  // 로컬 서버에도 저장 (외부 URL 동기화용)
   try { fetch('/api/events', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(list)}); } catch {}
 }
 function ecLoadNote(yr, mo) {
-  return localStorage.getItem(EC_NOTE_KEY_PREFIX + `${yr}-${String(mo).padStart(2,'0')}`) || '';
+  const key = `${yr}-${String(mo).padStart(2,'0')}`;
+  if (_EC_NOTES_CACHE && key in _EC_NOTES_CACHE) return _EC_NOTES_CACHE[key];
+  return localStorage.getItem(EC_NOTE_KEY_PREFIX + key) || '';
 }
 function ecSaveNote(yr, mo, v) {
-  const k = EC_NOTE_KEY_PREFIX + `${yr}-${String(mo).padStart(2,'0')}`;
+  const key = `${yr}-${String(mo).padStart(2,'0')}`;
+  const k = EC_NOTE_KEY_PREFIX + key;
   localStorage.setItem(k, v);
+  if (!_EC_NOTES_CACHE) _EC_NOTES_CACHE = {};
+  _EC_NOTES_CACHE[key] = v;
+  try { fetch('/api/event-notes', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(_EC_NOTES_CACHE)}); } catch {}
 }
 function ecStatus(ev, todayIsoStr) {
   if (ev.start > todayIsoStr) return 'upcoming';
@@ -5224,6 +5286,55 @@ function ecUpdateItemsCount() {
   const n = $('#ec-items-body').children.length;
   $('#ec-items-count').textContent = `(${n})`;
   $('#ec-items-empty').hidden = n > 0;
+}
+
+async function ecUploadExcel(file) {
+  const status = $('#ec-excel-status');
+  const show = (msg, kind='info') => {
+    status.style.display = 'block';
+    status.textContent = msg;
+    status.style.background = kind === 'ok' ? '#d1fae5' : kind === 'err' ? '#fee2e2' : '#dbeafe';
+    status.style.color = kind === 'ok' ? '#065f46' : kind === 'err' ? '#991b1b' : '#1e40af';
+  };
+  if (file.size > 20 * 1024 * 1024) { show('파일이 너무 큽니다 (최대 20MB)', 'err'); return; }
+  show(`📄 ${file.name} 분석 중...`);
+  try {
+    const b64 = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result.split(',')[1]);
+      r.onerror = () => rej(new Error('파일 읽기 실패'));
+      r.readAsDataURL(file);
+    });
+    const resp = await fetch('/api/parse-event-excel', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ content_base64: b64 }),
+    });
+    const r = await resp.json();
+    if (!resp.ok || !r.ok) { show('분석 실패: ' + (r.error || resp.status), 'err'); return; }
+    // 행사명·기간 자동 입력 (비어 있을 때만)
+    if (r.start && !$('#ec-start').value) $('#ec-start').value = r.start;
+    if (r.end   && !$('#ec-end').value)   $('#ec-end').value   = r.end;
+    if (!$('#ec-name').value) {
+      // 파일명에서 확장자 제거해서 힌트로
+      const hint = file.name.replace(/\.(xlsx|xls)$/i, '').slice(0, 40);
+      $('#ec-name').value = hint;
+    }
+    // 상품 목록 추가 (기존 빈 행은 유지, 데이터는 append)
+    const tbody = $('#ec-items-body');
+    for (const it of r.items) {
+      tbody.append(ecRenderItemsRow({
+        name: it.name,
+        salePrice: it.salePrice || '',
+        midPrice:  it.midPrice  || '',
+        eventPrice: it.eventPrice || '',
+      }));
+    }
+    ecUpdateItemsCount();
+    show(`✅ ${r.count}개 상품 추가됨 · 기간 ${r.start || '?'} ~ ${r.end || '?'}`, 'ok');
+    setTimeout(() => { status.style.display = 'none'; }, 6000);
+  } catch (err) {
+    show('업로드 실패: ' + err.message, 'err');
+  }
 }
 function ecCollectItems() {
   const items = [];
@@ -5984,6 +6095,7 @@ async function boot() {
   await bootstrapNotes();
   await bootstrapReviews();
   await bootstrapIncoming();
+  await bootstrapEvents();
   // 텍스트 마이그레이션 (1회): 오늘의집 → 네이버
   try {
     const _t = loadTodos();
@@ -6045,6 +6157,12 @@ async function boot() {
   $('#ec-add-item')?.addEventListener('click', () => {
     $('#ec-items-body').append(ecRenderItemsRow());
     ecUpdateItemsCount();
+  });
+  $('#ec-excel-btn')?.addEventListener('click', () => $('#ec-excel-file').click());
+  $('#ec-excel-file')?.addEventListener('change', async (e) => {
+    const f = e.target.files[0]; e.target.value = '';
+    if (!f) return;
+    await ecUploadExcel(f);
   });
   $('#ec-prod-search')?.addEventListener('input', e => ecRenderProductList(e.target.value));
   // 팝오버 외부 클릭 시 닫힘
