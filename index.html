@@ -1268,6 +1268,7 @@
           <button class="nav-item" data-page="monitoring"><span class="nav-emoji">📡</span> 모니터링</button>
           <button class="nav-item" data-page="review-analysis"><span class="nav-emoji">💬</span> 리뷰분석</button>
           <button class="nav-item" data-page="reviews"><span class="nav-emoji">💝</span> 리뷰이벤트</button>
+          <button class="nav-item" data-page="keyword-research"><span class="nav-emoji">🎯</span> 키워드조사</button>
         </div>
       </div>
 
@@ -1346,7 +1347,10 @@
             <h2 style="margin:0;font-size:16px;font-weight:600">💝 리뷰이벤트 발송 관리</h2>
             <div class="pc-info-label" style="margin-top:4px">작성일 + 30일 = 발송 가능일 → 그 후 첫 수요일 일괄 발송 · 신세계 상품권 1만원씩 (각 채널별) · <span style="color:#7c3aed;font-weight:600">※ 매주 수요일 일괄 발송</span></div>
           </div>
-          <button class="btn primary" id="add-review-btn">+ 새 고객 추가</button>
+          <div style="display:flex;gap:8px">
+            <button class="btn" id="rv-export-btn" style="background:#10b981;color:#fff;border-color:#059669" title="고객명·전화번호만 엑셀(CSV)로 다운로드">📥 엑셀 다운로드</button>
+            <button class="btn primary" id="add-review-btn">+ 새 고객 추가</button>
+          </div>
         </div>
 
         <div class="kpi-row" style="margin-bottom:16px">
@@ -1880,6 +1884,20 @@
       </div>
     </section>
 
+    <!-- ─── Page: 키워드조사 (키워드_카테고리_대시보드 iframe 임베드) ─── -->
+    <section class="page" id="page-keyword-research">
+      <div class="panel" style="padding:0;overflow:hidden;">
+        <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:#fafbfc;">
+          <div>
+            <h2 style="margin:0 0 2px 0;font-size:16px;font-weight:600">🎯 키워드조사</h2>
+            <div class="pc-info-label">신제품 출시 키워드 → 네이버쇼핑 카테고리 매칭 + PC/모바일 월간 조회수</div>
+          </div>
+          <a href="키워드_카테고리_대시보드.html" target="_blank" style="font-size:12px;color:var(--text-mute);text-decoration:none;padding:6px 12px;border:1px solid var(--border);border-radius:8px;">↗ 새 창에서 열기</a>
+        </div>
+        <iframe id="keywordResearchFrame" src="about:blank" style="width:100%;height:calc(100vh - 200px);min-height:700px;border:0;display:block;" title="키워드 카테고리 대시보드"></iframe>
+      </div>
+    </section>
+
     <!-- ─── Page: 설정 ─── -->
     <section class="page" id="page-settings">
       <div class="panel">
@@ -2144,6 +2162,7 @@ function switchPage(name) {
     ranking:          '🏆 순위 관리',
     monitoring:       '📡 모니터링',
     'review-analysis':'💬 리뷰분석',
+    'keyword-research':'🎯 키워드조사',
     todos:            '✅ TO DO LIST',
     calendar:         '📅 입고 캘린더',
     settings:         '⚙️ 설정',
@@ -2165,6 +2184,11 @@ function switchPage(name) {
   if (name === 'event-schedule') renderEventCalendar();
   if (name === 'todos') renderTodos();
   if (name === 'calendar') renderCalendar();
+  if (name === 'keyword-research') {
+    // iframe: 매번 새 타임스탬프로 로드해 캐시 우회 (신제품 자주 추가되니 최신 버전 보장)
+    const fr = document.getElementById('keywordResearchFrame');
+    if (fr) fr.src = '키워드_카테고리_대시보드.html?v=' + Date.now();
+  }
 }
 
 // ───────── 긴급알림 ─────────
@@ -3812,6 +3836,35 @@ function mergeTodos(a, b) {
 // ───────── 리뷰이벤트 ─────────
 let _REVIEWS_CACHE = null;
 let _RV_EDITING_ID = null;  // 편집 중인 row id
+
+function rvExportCsv() {
+  const list = _REVIEWS_CACHE || [];
+  if (!list.length) { alert('내보낼 고객이 없습니다.'); return; }
+  // 발송불가 처리된 건은 제외 (실제로 상품권 발송 안 가는 대상)
+  const rows = list.filter(r => !r.발송불가);
+  // CSV 이스케이프
+  const esc = v => {
+    const s = (v ?? '').toString();
+    if (/[",\n\r]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
+    return s;
+  };
+  const lines = ['고객명,전화번호'];
+  for (const r of rows) {
+    const name = (r.고객명 || '').trim();
+    const phone = (r.전화번호 || '').replace(/[^0-9]/g, '');  // 하이픈·공백·기타 제거
+    if (!name && !phone) continue;
+    lines.push(`${esc(name)},${esc(phone)}`);
+  }
+  // UTF-8 BOM 추가 → Excel 한글 깨짐 방지
+  const blob = new Blob(['﻿' + lines.join('\r\n')], {type:'text/csv;charset=utf-8'});
+  const d = new Date();
+  const ymd = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `리뷰이벤트_고객명단_${ymd}.csv`;
+  document.body.append(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 100);
+}
 
 // ───── Supabase 동기화 (CS팀 공유용) ─────
 const SUPABASE_URL = 'https://vgzodlljefanuipohevy.supabase.co';
@@ -6359,6 +6412,7 @@ async function boot() {
 
   // 리뷰이벤트
   $('#add-review-btn')?.addEventListener('click', () => openReviewModal(null));
+  $('#rv-export-btn')?.addEventListener('click', rvExportCsv);
   $('#rv-cancel')?.addEventListener('click', closeReviewModal);
   $('#rv-save')?.addEventListener('click', saveReviewModal);
   $('#rv-delete-btn')?.addEventListener('click', deleteReview);
