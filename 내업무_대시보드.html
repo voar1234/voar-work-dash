@@ -1348,6 +1348,7 @@
             <div class="pc-info-label" style="margin-top:4px">작성일 + 30일 = 발송 가능일 → 그 후 첫 수요일 일괄 발송 · 신세계 상품권 1만원씩 (각 채널별) · <span style="color:#7c3aed;font-weight:600">※ 매주 수요일 일괄 발송</span></div>
           </div>
           <div style="display:flex;gap:8px">
+            <button class="btn" id="rv-hide-done-btn" style="background:#f3f4f6;color:#374151" title="발송 완료된 고객 숨김/보기 토글">👁 발송완료 숨기기</button>
             <button class="btn" id="rv-export-btn" style="background:#10b981;color:#fff;border-color:#059669" title="고객명·전화번호만 엑셀(CSV)로 다운로드">📥 엑셀 다운로드</button>
             <button class="btn primary" id="add-review-btn">+ 새 고객 추가</button>
           </div>
@@ -3836,6 +3837,30 @@ function mergeTodos(a, b) {
 // ───────── 리뷰이벤트 ─────────
 let _REVIEWS_CACHE = null;
 let _RV_EDITING_ID = null;  // 편집 중인 row id
+const RV_HIDE_DONE_KEY = 'voar_rv_hide_done_v1';
+let RV_HIDE_DONE = localStorage.getItem(RV_HIDE_DONE_KEY) === '1';
+
+function rvToggleHideDone() {
+  RV_HIDE_DONE = !RV_HIDE_DONE;
+  localStorage.setItem(RV_HIDE_DONE_KEY, RV_HIDE_DONE ? '1' : '0');
+  rvUpdateHideDoneBtn();
+  renderReviews();
+}
+function rvUpdateHideDoneBtn() {
+  const btn = $('#rv-hide-done-btn');
+  if (!btn) return;
+  if (RV_HIDE_DONE) {
+    btn.textContent = '👁 발송완료 보이기';
+    btn.style.background = '#7c3aed';
+    btn.style.color = '#fff';
+    btn.style.borderColor = '#6d28d9';
+  } else {
+    btn.textContent = '👁 발송완료 숨기기';
+    btn.style.background = '#f3f4f6';
+    btn.style.color = '#374151';
+    btn.style.borderColor = '';
+  }
+}
 
 function rvExportCsv() {
   const list = _REVIEWS_CACHE || [];
@@ -4085,10 +4110,13 @@ function renderReviews() {
       }, statusText)
     );
 
-    // 발송불가 행은 노란색 하이라이트
-    const rowStyle = blocked
-      ? 'cursor:pointer;background:#fef9c3'
-      : 'cursor:pointer';
+    // 발송완료 숨기기 토글 필터
+    if (RV_HIDE_DONE && allSent) continue;
+
+    // 행 스타일: 발송완료 = 연회색 · 발송불가 = 노란색 · 그 외 기본
+    let rowStyle = 'cursor:pointer';
+    if (allSent)      rowStyle = 'cursor:pointer;background:#f3f4f6;color:#9ca3af';
+    else if (blocked) rowStyle = 'cursor:pointer;background:#fef9c3';
     const tr = el('tr', { style: rowStyle, onclick: () => openReviewModal(r) },
       el('td', null, r.작성일 || '-'),
       el('td', null, r.고객명 || '-'),
@@ -6413,6 +6441,8 @@ async function boot() {
   // 리뷰이벤트
   $('#add-review-btn')?.addEventListener('click', () => openReviewModal(null));
   $('#rv-export-btn')?.addEventListener('click', rvExportCsv);
+  $('#rv-hide-done-btn')?.addEventListener('click', rvToggleHideDone);
+  rvUpdateHideDoneBtn();
   $('#rv-cancel')?.addEventListener('click', closeReviewModal);
   $('#rv-save')?.addEventListener('click', saveReviewModal);
   $('#rv-delete-btn')?.addEventListener('click', deleteReview);
