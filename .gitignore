@@ -35,6 +35,10 @@ __pycache__/
 *.pyc
 manuals/
 
+# 육아 인스타 스튜디오 — index.html만 공개. 원본 데이터·설치 SQL은 내부 전용.
+baby/data/
+baby/supabase_setup.sql
+
 # 다른 프로젝트 산출물 (별도 호스팅)
 리뷰이벤트_CS.html
 키워드_카테고리_대시보드.html

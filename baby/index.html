@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>보아르 육아 인스타 스튜디오</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --panel: #ffffff;
+    --line: #e6e8ec;
+    --line-strong: #d2d6dc;
+    --text: #1a1d23;
+    --text-mute: #6b7280;
+    --text-soft: #9ca3af;
+    --accent: #2c2f36;
+    --brand: #2f7d6d;
+    --brand-soft: #e6f2ef;
+    --red: #ef4444;
+    --orange: #f59e0b;
+    --green: #10b981;
+    --blue: #3b82f6;
+    --purple: #8b5cf6;
+    --pink: #ec4899;
+    --yellow-bg: #fef3c7;
+    --red-bg: #fee2e2;
+    --green-bg: #d1fae5;
+    --blue-bg: #dbeafe;
+    --purple-bg: #ede9fe;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: 'Noto Sans KR', 'Inter', system-ui, sans-serif;
+    background: var(--bg); color: var(--text);
+    font-size: 14px; line-height: 1.5;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; }
+
+  .app { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+
+  /* ───────── Sidebar ───────── */
+  aside.sidebar {
+    background: #fff; border-right: 1px solid var(--line);
+    padding: 24px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  }
+  .brand { padding: 0 24px 18px; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
+  .brand .logo { font-weight: 700; font-size: 17px; letter-spacing: -.6px; text-align: center; white-space: nowrap; }
+  .brand .logo .em { font-size: 26px; display: block; margin-bottom: 4px; }
+  .brand .sub { font-size: 10px; color: var(--text-soft); text-align: center; letter-spacing: 1.5px; margin-top: 6px; }
+  .brand .owner { font-size: 12px; color: var(--text-mute); text-align: center; margin-top: 10px;
+                  border-top: 1px solid var(--line); padding-top: 10px; }
+  nav.menu { padding: 0 12px; }
+  nav.menu button.nav-item {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; padding: 10px 12px; margin: 2px 0;
+    background: transparent; border: 0; border-radius: 8px;
+    color: var(--text-mute); font-size: 14px; cursor: pointer;
+    text-align: left; transition: background .15s, color .15s;
+  }
+  nav.menu button.nav-item:hover { background: #f3f4f6; color: var(--text); }
+  nav.menu button.nav-item.active { background: var(--accent); color: #fff; }
+  nav.menu .nav-emoji { width: 18px; text-align: center; }
+  nav.menu .nav-badge {
+    margin-left: auto; padding: 1px 7px; border-radius: 999px;
+    background: var(--red); color: #fff; font-size: 10px; font-weight: 700;
+  }
+  nav.menu .nav-badge.soft { background: var(--line-strong); color: var(--text-mute); }
+  .sync-box {
+    margin: 12px 12px 0; padding: 12px; border-radius: 8px;
+    background: #fafbfc; border: 1px solid var(--line);
+  }
+  .side-note {
+    margin: 18px 12px 0; padding: 12px; border-radius: 8px;
+    background: #fffbeb; border: 1px solid #fde68a;
+    font-size: 11px; color: #92400e; line-height: 1.6;
+  }
+
+  /* ───────── Main ───────── */
+  main { padding: 28px 32px 60px; max-width: 1400px; }
+  .page-head { margin-bottom: 22px; }
+  .page-head h1 { margin: 0 0 4px; font-size: 22px; font-weight: 700; letter-spacing: -.4px; }
+  .page-head p { margin: 0; color: var(--text-mute); font-size: 13px; }
+
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 12px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 18px;
+  }
+  .card > h2 {
+    margin: 0 0 14px; font-size: 15px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card > h2 .hint { font-size: 11px; color: var(--text-soft); font-weight: 400; margin-left: auto; }
+
+  .grid { display: grid; gap: 14px; }
+  .g2 { grid-template-columns: repeat(2, 1fr); }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 1100px) { .g4 { grid-template-columns: repeat(2,1fr);} .g3{grid-template-columns:repeat(2,1fr);} }
+
+  /* KPI */
+  .kpi { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .kpi .label { font-size: 11px; color: var(--text-soft); letter-spacing: .5px; margin-bottom: 8px; }
+  .kpi .value { font-size: 26px; font-weight: 700; letter-spacing: -1px; font-family: 'Inter', sans-serif; }
+  .kpi .value .unit { font-size: 13px; font-weight: 500; color: var(--text-mute); margin-left: 3px; }
+  .kpi .delta { font-size: 11px; margin-top: 6px; color: var(--text-mute); }
+  .kpi .bar { height: 5px; background: #eef0f3; border-radius: 99px; margin-top: 10px; overflow: hidden; }
+  .kpi .bar > i { display: block; height: 100%; background: var(--brand); border-radius: 99px; }
+  .kpi.muted .value { color: var(--text-soft); }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { padding: 9px 10px; text-align: left; border-bottom: 1px solid var(--line); }
+  th { font-size: 11px; color: var(--text-soft); font-weight: 600; letter-spacing: .3px;
+       background: #fafbfc; position: sticky; top: 0; }
+  td.num, th.num { text-align: right; font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; }
+  tbody tr:hover { background: #fafbfc; }
+
+  .tag {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    font-size: 11px; font-weight: 500; white-space: nowrap;
+  }
+  .t-green { background: var(--green-bg); color: #065f46; }
+  .t-blue  { background: var(--blue-bg);  color: #1e40af; }
+  .t-red   { background: var(--red-bg);   color: #991b1b; }
+  .t-yellow{ background: var(--yellow-bg);color: #92400e; }
+  .t-purple{ background: var(--purple-bg);color: #5b21b6; }
+  .t-gray  { background: #f1f2f4;         color: var(--text-mute); }
+
+  .btn {
+    padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line-strong);
+    background: #fff; color: var(--text); font-size: 13px; cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+  .btn:hover { background: #f3f4f6; }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.primary:hover { background: #3a3e47; }
+  .btn.brand { background: var(--brand); color: #fff; border-color: var(--brand); }
+  .btn.brand:hover { filter: brightness(1.08); }
+  .btn.sm { padding: 5px 10px; font-size: 12px; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+
+  input[type=text], input[type=number], input[type=date], select, textarea {
+    padding: 8px 11px; border: 1px solid var(--line-strong); border-radius: 8px;
+    font-family: inherit; font-size: 13px; background: #fff; color: var(--text);
+  }
+  textarea { resize: vertical; min-height: 80px; width: 100%; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--brand-soft); border-color: var(--brand); }
+
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .spacer { flex: 1; }
+
+  /* 소재 카드 */
+  .idea-card {
+    border: 1px solid var(--line); border-radius: 10px; padding: 14px;
+    background: #fff; transition: border-color .15s, box-shadow .15s; cursor: pointer;
+  }
+  .idea-card:hover { border-color: var(--brand); box-shadow: 0 2px 10px rgba(47,125,109,.10); }
+  .idea-card .ic-top { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+  .idea-card .ic-title { font-weight: 600; font-size: 14px; line-height: 1.45; margin-bottom: 8px; }
+  .idea-card .ic-meta { font-size: 11px; color: var(--text-soft); display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* 슬롯 */
+  .slot {
+    display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+    border: 1px solid var(--line); border-radius: 10px; margin-bottom: 8px; background: #fff;
+  }
+  .slot.empty { border-style: dashed; background: #fcfcfd; }
+  .slot .date { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; width: 108px; }
+  .slot .dow { color: var(--text-soft); font-size: 11px; }
+  .slot .title { flex: 1; font-size: 13px; }
+  .slot .title.ph { color: var(--text-soft); font-style: italic; }
+
+  /* 축 바 */
+  .pillar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .pillar-row .pl-name { width: 130px; font-size: 13px; }
+  .pillar-row .pl-bar { flex: 1; height: 22px; background: #f1f2f4; border-radius: 6px; overflow: hidden; position: relative; }
+  .pillar-row .pl-bar > i { display: block; height: 100%; border-radius: 6px; }
+  .pillar-row .pl-val { width: 80px; text-align: right; font-size: 12px; color: var(--text-mute);
+                        font-family:'Inter',sans-serif; font-variant-numeric: tabular-nums; }
+
+  .empty-state { text-align: center; padding: 48px 20px; color: var(--text-soft); }
+  .empty-state .es-emoji { font-size: 40px; margin-bottom: 12px; }
+  .empty-state .es-title { font-size: 15px; font-weight: 600; color: var(--text-mute); margin-bottom: 6px; }
+  .empty-state .es-desc { font-size: 13px; line-height: 1.7; max-width: 520px; margin: 0 auto; }
+
+  .callout {
+    border-radius: 10px; padding: 14px 16px; font-size: 13px; line-height: 1.7; margin-bottom: 14px;
+    border: 1px solid;
+  }
+  .callout.warn { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+  .callout.info { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+  .callout.ok   { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+  .callout b { font-weight: 600; }
+
+  .step { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .step:last-child { border-bottom: 0; }
+  .step .n {
+    width: 24px; height: 24px; flex: none; border-radius: 999px; background: var(--accent); color: #fff;
+    font-size: 12px; font-weight: 700; display: grid; place-items: center; font-family: 'Inter', sans-serif;
+  }
+  .step.done .n { background: var(--green); }
+  .step .st-body { flex: 1; }
+  .step .st-title { font-weight: 600; font-size: 13px; margin-bottom: 3px; }
+  .step .st-desc { font-size: 12px; color: var(--text-mute); line-height: 1.6; }
+
+  .hidden { display: none !important; }
+  .mono { font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; }
+  .muted { color: var(--text-mute); }
+  .soft { color: var(--text-soft); }
+  .fs11 { font-size: 11px; } .fs12 { font-size: 12px; } .fs13 { font-size: 13px; }
+  .mt8{margin-top:8px}.mt14{margin-top:14px}.mt20{margin-top:20px}.mb8{margin-bottom:8px}.mb14{margin-bottom:14px}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+  외부 호스팅 감지 + 비밀번호 잠금
+  - localhost / 127.0.0.1 / file → 본인 PC. 잠금 없음.
+  - 그 외(GitHub Pages 등) → 잠금 화면.
+  ⚠️ 클라이언트 잠금은 "우연한 열람 차단"이지 보안이 아닙니다.
+     페이지 소스를 열면 데이터가 보입니다. 진짜 차단이 필요하면 서버 인증이 필요합니다.
+═══════════════════════════════════════════════════════════ -->
+<style>
+  #lockBg {
+    position: fixed; inset: 0; background: rgba(15,23,42,.96); z-index: 99999;
+    display: none; align-items: center; justify-content: center;
+  }
+  #lockBg.show { display: flex; }
+  #lockBg .lock-card {
+    background: #fff; border-radius: 14px; padding: 36px 32px; max-width: 380px; width: 92vw;
+    text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,.3);
+  }
+  #lockBg .lock-emoji { font-size: 44px; line-height: 1; margin-bottom: 8px; }
+  #lockBg .lock-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  #lockBg .lock-sub { font-size: 12px; color: #6b7280; margin-bottom: 18px; }
+  #lockBg input {
+    width: 100%; padding: 12px 14px; border: 1.5px solid #e5e7eb; border-radius: 8px;
+    font-size: 15px; font-family: inherit;
+  }
+  #lockBg input:focus { outline: 2px solid var(--brand); border-color: var(--brand); }
+  #lockBg button {
+    margin-top: 12px; width: 100%; padding: 11px; background: var(--brand); color: #fff;
+    border: 0; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer;
+    font-family: inherit;
+  }
+  #lockBg .lock-err { color: #dc2626; font-size: 12px; margin-top: 8px; min-height: 16px; }
+  #lockBanner {
+    position: fixed; top: 0; left: 0; right: 0; background: linear-gradient(90deg,#2f7d6d,#1f5a4e);
+    color: #fff; text-align: center; padding: 5px 10px; font-size: 11px; font-weight: 600;
+    z-index: 9998; display: none;
+  }
+  #lockBanner.show { display: block; }
+  body.remote-mode { padding-top: 26px; }
+</style>
+<div id="lockBanner">🌐 외부 접속 모드 · 보아르 육아 인스타 스튜디오</div>
+<div id="lockBg" role="dialog" aria-modal="true">
+  <div class="lock-card">
+    <div class="lock-emoji">🍼</div>
+    <div class="lock-title">보아르 육아 인스타 스튜디오</div>
+    <div class="lock-sub">접속 비밀번호를 입력하세요</div>
+    <input type="password" id="lockPw" autocomplete="current-password" placeholder="비밀번호">
+    <button id="lockBtn">잠금 해제</button>
+    <div class="lock-err" id="lockErr"></div>
+  </div>
+</div>
+<script>
+(function () {
+  const PW_HASH = 'b45a86de8fdcbf924f15507c8794d80b7a761f4dc9b372d29c3c26dcbe76b747'; // 업무 대시보드와 동일
+  const TOKEN_KEY = 'voar_baby_studio_remote_token_v1';
+  const TTL_DAYS = 30;
+  const h = location.hostname;
+  const isLocal = !h || h === 'localhost' || h === '127.0.0.1' || location.protocol === 'file:';
+  if (isLocal) return;                       // 본인 PC — 잠금 없음
+
+  document.body.classList.add('remote-mode');
+
+  async function sha256(s) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  function tokenValid() {
+    try {
+      const t = JSON.parse(localStorage.getItem(TOKEN_KEY) || 'null');
+      return t && t.h === PW_HASH && (Date.now() - t.ts) < TTL_DAYS * 86400000;
+    } catch (_) { return false; }
+  }
+  const bg = document.getElementById('lockBg');
+  function unlock() { bg.classList.remove('show'); document.getElementById('lockBanner').classList.add('show'); }
+
+  if (tokenValid()) { unlock(); return; }
+
+  bg.classList.add('show');
+  setTimeout(() => document.getElementById('lockPw').focus(), 50);
+
+  async function tryUnlock() {
+    const inp = document.getElementById('lockPw');
+    const err = document.getElementById('lockErr');
+    if (!inp.value.trim()) return;
+    if (await sha256(inp.value.trim()) === PW_HASH) {
+      localStorage.setItem(TOKEN_KEY, JSON.stringify({ h: PW_HASH, ts: Date.now() }));
+      err.textContent = ''; unlock();
+    } else {
+      err.textContent = '비밀번호가 일치하지 않습니다.'; inp.select();
+    }
+  }
+  document.getElementById('lockBtn').addEventListener('click', tryUnlock);
+  document.getElementById('lockPw').addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+})();
+</script>
+
+<div class="app">
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo"><span class="em">🍼</span>육아 인스타 스튜디오</div>
+      <div class="sub">VOAR · BABY</div>
+      <div class="owner">김민채 · 영업MD</div>
+    </div>
+    <nav class="menu" id="menu">
+      <button class="nav-item active" data-tab="dash"><span class="nav-emoji">📊</span>대시보드</button>
+      <button class="nav-item" data-tab="cal"><span class="nav-emoji">📅</span>캘린더<span class="nav-badge soft" id="badge-cal">0</span></button>
+      <button class="nav-item" data-tab="idea"><span class="nav-emoji">✨</span>소재<span class="nav-badge soft" id="badge-idea">0</span></button>
+      <button class="nav-item" data-tab="make"><span class="nav-emoji">✍️</span>제작</button>
+      <button class="nav-item" data-tab="pub"><span class="nav-emoji">📤</span>발행</button>
+      <button class="nav-item" data-tab="comp"><span class="nav-emoji">🔍</span>경쟁사</button>
+      <button class="nav-item" data-tab="prod"><span class="nav-emoji">📦</span>제품<span class="nav-badge soft">17</span></button>
+    </nav>
+    <div class="side-note">
+      <b>1단계 원칙</b><br>
+      제품 노출보다 <b>팔로워 성장</b>이 우선.<br>
+      순수 정보 콘텐츠로 저장·공유를 먼저 쌓습니다.
+    </div>
+
+    <div class="sync-box">
+      <div class="row" style="justify-content:space-between">
+        <span class="fs11 soft">저장 상태</span>
+        <span class="tag t-gray" id="sync-badge">💾 로컬만</span>
+      </div>
+      <div class="row mt8">
+        <button class="btn sm" id="btn-export" style="flex:1">⬇ 백업</button>
+        <button class="btn sm" id="btn-import" style="flex:1">⬆ 복원</button>
+        <input type="file" id="file-import" accept="application/json,.json" class="hidden">
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══════════ MAIN ══════════ -->
+  <main>
+
+  <!-- ───── 대시보드 ───── -->
+  <section id="tab-dash">
+    <div class="page-head">
+      <h1>📊 대시보드</h1>
+      <p>1차 목표는 팔로워 성장. 제품 노출은 기반이 쌓인 뒤 단계적으로 올립니다.</p>
+    </div>
+
+    <div class="callout warn" id="conn-warn">
+      <b>⚠️ 인스타그램 미연결</b> — 계정을 연결해야 팔로워·저장·도달 지표가 자동으로 채워집니다.
+      <b>발행</b> 탭에서 연결 절차를 확인하세요.
+    </div>
+
+    <div class="grid g4 mb14">
+      <div class="kpi muted">
+        <div class="label">팔로워</div>
+        <div class="value" id="k-fol">—</div>
+        <div class="delta" id="k-fol-d">계정 연결 전</div>
+        <div class="bar"><i id="k-fol-bar" style="width:0%"></i></div>
+      </div>
+      <div class="kpi muted">
+        <div class="label">평균 저장수 / 게시물</div>
+        <div class="value" id="k-save">—</div>
+        <div class="delta">정보 계정의 핵심 지표</div>
+      </div>
+      <div class="kpi muted">
+        <div class="label">도달 (30일)</div>
+        <div class="value" id="k-reach">—</div>
+        <div class="delta">계정 연결 전</div>
+      </div>
+      <div class="kpi">
+        <div class="label">이번 주 발행</div>
+        <div class="value mono"><span id="k-pub">0</span><span class="unit">/ <span id="k-pub-goal">5</span></span></div>
+        <div class="delta" id="k-pub-d">주 5회 목표</div>
+        <div class="bar"><i id="k-pub-bar" style="width:0%"></i></div>
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <h2>🎯 팔로워 목표<span class="hint">시작일 기준</span></h2>
+        <table>
+          <thead><tr><th>구간</th><th class="num">목표</th><th class="num">현재</th><th>상태</th></tr></thead>
+          <tbody id="goal-body"></tbody>
+        </table>
+        <div class="fs11 soft mt14">
+          정보 계정 기준 현실적인 곡선입니다. 초기 100명까지가 가장 느리고, 저장률이 붙기 시작하면 탐색탭 도달로 가속됩니다.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🧭 콘텐츠 축 비중<span class="hint">목표 vs 실제</span></h2>
+        <div id="pillar-bars"></div>
+        <div class="fs11 soft mt14">
+          <b>재우기</b>가 가장 큰 비중 — 초보 부모 검색량 1위이자 저장·공유가 가장 잘 터지고, 보아르 확장 카테고리(수면등·가습기)와 맞물립니다.<br>
+          <b>출산준비</b>는 비중은 작아도 <b>구매 직전 고객</b>이 모이는 축입니다. 이 구간에서 잡은 팔로워가 실제 매출로 전환됩니다.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📌 지금 해야 할 것</h2>
+      <div id="todo-list"></div>
+    </div>
+  </section>
+
+  <!-- ───── 캘린더 ───── -->
+  <section id="tab-cal" class="hidden">
+    <div class="page-head">
+      <h1>📅 캘린더</h1>
+      <p>주 5회 발행 슬롯. 팔로워 성장 구간에서는 빈도가 곧 성장 속도입니다.</p>
+    </div>
+
+    <div class="card">
+      <h2>⚙️ 발행 설정</h2>
+      <div class="row">
+        <label class="fs13">주당 발행</label>
+        <select id="cfg-perweek">
+          <option value="2">주 2회</option>
+          <option value="3">주 3회</option>
+          <option value="4">주 4회</option>
+          <option value="5" selected>주 5회 (권장)</option>
+          <option value="7">매일</option>
+        </select>
+        <label class="fs13" style="margin-left:12px">발행 시각</label>
+        <select id="cfg-time">
+          <option value="12:30">12:30 (점심)</option>
+          <option value="20:30" selected>20:30 (밤 · 권장)</option>
+          <option value="21:30">21:30</option>
+          <option value="22:00">22:00</option>
+        </select>
+        <div class="spacer"></div>
+        <button class="btn sm" id="btn-regen-slots">슬롯 다시 생성</button>
+      </div>
+      <div class="fs11 soft mt14">
+        육아 계정은 <b>밤 20:00~22:00</b>이 가장 강합니다. 아이 재우고 난 뒤 부모가 폰을 드는 시간입니다.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🗓 예정 슬롯<span class="hint">앞으로 4주</span></h2>
+      <div id="slot-list"></div>
+    </div>
+  </section>
+
+  <!-- ───── 소재 ───── -->
+  <section id="tab-idea" class="hidden">
+    <div class="page-head">
+      <h1>✨ 소재</h1>
+      <p>민채님이 주제를 던지면 여기에 쌓입니다. 축·시기를 붙여두면 캘린더 배정과 제작이 자동으로 이어집니다. 범위는 <b>임신 막달 ~ 36개월</b>.</p>
+    </div>
+
+    <div class="card">
+      <h2>➕ 주제 던지기</h2>
+      <div class="row mb8">
+        <input type="text" id="in-topic" placeholder="예: 신생아 밤중수유 언제 끊나요" style="flex:1;min-width:280px">
+        <select id="in-pillar"></select>
+        <select id="in-age">
+          <option value="임신 막달">임신 막달 (출산준비)</option>
+          <option value="신생아 0~1개월">신생아 0~1개월</option>
+          <option value="0~6개월">0~6개월</option>
+          <option value="7~12개월">7~12개월</option>
+          <option value="13~24개월">13~24개월</option>
+          <option value="25~36개월">25~36개월</option>
+          <option value="전체 공통" selected>전체 공통</option>
+        </select>
+        <button class="btn brand" id="btn-add-idea">추가</button>
+      </div>
+      <div class="fs11 soft">
+        타깃은 <b>임신 막달(출산준비) ~ 36개월</b>입니다. 출산준비기가 육아템을 한 번에 몰아 사는 구간이라,
+        여기서 잡은 팔로워가 그대로 0~36개월 구매 고객으로 이어집니다.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📚 소재 목록<span class="hint" id="idea-count">0건</span></h2>
+      <div class="row mb14">
+        <select id="flt-pillar"><option value="">전체 축</option></select>
+        <select id="flt-status">
+          <option value="">전체 상태</option>
+          <option value="아이디어">아이디어</option>
+          <option value="초안">초안</option>
+          <option value="제작완료">제작완료</option>
+          <option value="예약">예약</option>
+          <option value="발행">발행</option>
+        </select>
+      </div>
+      <div class="grid g3" id="idea-grid"></div>
+      <div id="idea-empty" class="empty-state">
+        <div class="es-emoji">✨</div>
+        <div class="es-title">아직 소재가 없습니다</div>
+        <div class="es-desc">위에 주제를 던져주세요. 축과 월령만 붙여두면 나머지는 제가 채웁니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── 제작 ───── -->
+  <section id="tab-make" class="hidden">
+    <div class="page-head">
+      <h1>✍️ 제작</h1>
+      <p>카드뉴스 · 캡션 · 해시태그를 만듭니다.</p>
+    </div>
+    <div class="card">
+      <div class="empty-state">
+        <div class="es-emoji">✍️</div>
+        <div class="es-title">소재를 먼저 고르세요</div>
+        <div class="es-desc">
+          <b>소재</b> 탭에서 카드를 클릭하면 여기서 제작이 시작됩니다.<br><br>
+          제작 원칙: <b>한글 문구는 AI 이미지에 넣지 않습니다.</b> 배경만 생성하고 한글은 템플릿이 위에 얹습니다 —
+          AI가 만든 한글은 반드시 깨지기 때문입니다.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── 발행 ───── -->
+  <section id="tab-pub" class="hidden">
+    <div class="page-head">
+      <h1>📤 발행</h1>
+      <p>인스타그램 자동 업로드. 연결되면 민채님 손이 완전히 빠집니다.</p>
+    </div>
+
+    <div class="callout warn">
+      <b>⚠️ 아직 계정이 연결되지 않았습니다.</b> 아래 3단계는 계정 소유자 인증이 필요해서 민채님이 한 번만 해주셔야 합니다. 5분이면 끝납니다.
+    </div>
+
+    <div class="card">
+      <h2>🔌 연결 절차</h2>
+      <div class="step">
+        <div class="n">1</div>
+        <div class="st-body">
+          <div class="st-title">인스타 계정을 프로페셔널(비즈니스)로 전환</div>
+          <div class="st-desc">설정 → 계정 유형 및 도구 → 프로페셔널 계정으로 전환. 개인 계정은 API 업로드가 불가능합니다.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <div class="st-body">
+          <div class="st-title">페이스북 페이지 생성 후 인스타와 연결</div>
+          <div class="st-desc">Graph API의 필수 조건입니다. 페이지는 비워둬도 되고, 운영하지 않아도 됩니다.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <div class="st-body">
+          <div class="st-title">계정 아이디 전달 + 액세스 토큰 발급</div>
+          <div class="st-desc">토큰은 제가 발급 절차를 안내합니다. <b>비밀번호는 제가 직접 입력하지 않습니다</b> — 민채님이 입력하시는 화면에서만 진행됩니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>⚖️ 발행 방식 비교</h2>
+      <table>
+        <thead><tr><th>방식</th><th>예약발행</th><th>PC 꺼져도</th><th>세팅</th><th>권장</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>Graph API</b></td>
+            <td><span class="tag t-green">가능</span></td>
+            <td><span class="tag t-green">가능</span></td>
+            <td>위 1~3단계 필요</td>
+            <td><span class="tag t-green">✅ 권장</span></td>
+          </tr>
+          <tr>
+            <td><b>브라우저 자동화</b></td>
+            <td><span class="tag t-yellow">제한적</span></td>
+            <td><span class="tag t-red">불가</span></td>
+            <td>없음 — 즉시 시작</td>
+            <td><span class="tag t-gray">임시</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fs11 soft mt14">
+        아이디만 주시면 <b>브라우저 자동화로 즉시 시작</b>하고, Graph API는 병행 세팅하는 걸 권합니다.
+        어차피 콘텐츠 제작은 계정 없이도 진행할 수 있습니다.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📮 발행 큐</h2>
+      <div class="empty-state">
+        <div class="es-emoji">📮</div>
+        <div class="es-title">대기 중인 발행이 없습니다</div>
+        <div class="es-desc">제작이 끝난 소재가 캘린더 슬롯에 배정되면 여기에 쌓입니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── 경쟁사 ───── -->
+  <section id="tab-comp" class="hidden">
+    <div class="page-head">
+      <h1>🔍 경쟁사</h1>
+      <p>육아 정보 계정을 등록하면 어떤 주제·포맷이 터지는지 역산합니다.</p>
+    </div>
+
+    <div class="card">
+      <h2>➕ 벤치마킹 계정 등록</h2>
+      <div class="row mb8">
+        <input type="text" id="in-comp" placeholder="계정 아이디 (@ 없이)" style="flex:1;min-width:240px">
+        <input type="text" id="in-comp-memo" placeholder="메모 (예: 수면교육 전문, 팔로워 8만)" style="flex:2;min-width:240px">
+        <button class="btn brand" id="btn-add-comp">추가</button>
+      </div>
+      <div class="fs11 soft">
+        해시태그 랭킹은 여기 등록된 계정에서 역산합니다 — 인스타가 태그별 검색량을 공개하지 않기 때문입니다.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📋 등록 계정<span class="hint" id="comp-count">0개</span></h2>
+      <table>
+        <thead><tr><th>계정</th><th>메모</th><th class="num">팔로워</th><th>상태</th><th></th></tr></thead>
+        <tbody id="comp-body"></tbody>
+      </table>
+      <div id="comp-empty" class="empty-state">
+        <div class="es-emoji">🔍</div>
+        <div class="es-title">등록된 계정이 없습니다</div>
+        <div class="es-desc">0~36개월 육아 정보 계정 위주로 5~10개 등록하면 분석 정확도가 올라갑니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── 제품 ───── -->
+  <section id="tab-prod" class="hidden">
+    <div class="page-head">
+      <h1>📦 제품</h1>
+      <p>ERP 연동 · 보아르 육아 라인업 17품목. 2단계(제품 노출) 진입 시 콘텐츠와 연결됩니다.</p>
+    </div>
+
+    <div class="grid g4 mb14">
+      <div class="kpi"><div class="label">육아 품목</div><div class="value mono">17</div><div class="delta">제품 171개</div></div>
+      <div class="kpi"><div class="label">12개월 매출</div><div class="value mono" id="p-amt">—</div><div class="delta">2025-08 ~ 2026-08</div></div>
+      <div class="kpi"><div class="label">판매중</div><div class="value mono" id="p-live">—</div><div class="delta">진행 3 · 드랍 1</div></div>
+      <div class="kpi"><div class="label">수유 라인 비중</div><div class="value mono" id="p-feed">—</div><div class="delta">매출 기준 쏠림도</div></div>
+    </div>
+
+    <div class="callout info">
+      <b>💡 라인업 진단</b> — 매출의 대부분이 <b>수유·젖병위생</b>에 몰려 있습니다.
+      확장의 방향은 수유 라인을 더 파는 게 아니라, 육아 여정에서 <b>비어 있는 구간(수면·목욕·외출·건강)</b>으로 넓히는 것입니다.
+      콘텐츠 축을 그 구간에 미리 깔아두면, 신제품이 나왔을 때 이미 그 주제로 모인 팔로워가 있습니다.
+    </div>
+
+    <div class="card">
+      <h2>🧭 육아 여정별 커버리지</h2>
+      <table>
+        <thead><tr><th>여정</th><th class="num">품목</th><th class="num">12M 매출</th><th>현재 제품</th><th>확장 후보</th></tr></thead>
+        <tbody id="journey-body"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>📋 라인업 전체<span class="hint">12개월 매출순</span></h2>
+      <table>
+        <thead><tr>
+          <th>품목명</th><th>모델</th><th>축</th><th class="num">판매가</th>
+          <th class="num">12M 수량</th><th class="num">12M 매출</th><th>상태</th>
+        </tr></thead>
+        <tbody id="prod-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  </main>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   보아르 육아 인스타 스튜디오
+   - 데이터: localStorage (키: voar_baby_studio_v1)
+   - ERP 라인업: 2026-08-03 추출 스냅샷
+   ═══════════════════════════════════════════════════════════ */
+
+const STORE_KEY = 'voar_baby_studio_v1';
+
+/* ───────── 원격 저장 (Supabase) ─────────
+   상급자도 보는 대시보드라 localStorage 단독은 부적합.
+   localStorage는 브라우저마다 별개라, 다른 사람이 열면 빈 화면이 됨.
+   → Supabase를 정본(source of truth)으로 두고 localStorage는 캐시로만 사용. */
+const SUPABASE_URL = 'https://vgzodlljefanuipohevy.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Xj1aWpDLyfaAPxkn1q-ErA_94MEBT9V';
+const SB_TABLE = 'baby_studio';
+const SB_ROW  = 'main';
+const SB_HEAD = { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY,
+                  'Content-Type': 'application/json' };
+
+/* 옛 시기 라벨 → 현재 라벨 (출산준비 확장 전에 저장된 값 정리).
+   load() 보다 먼저 선언해야 함 — const는 호이스팅돼도 TDZ라 아래 두면 참조 시 예외. */
+const AGE_MIGRATE = { '0~36개월 공통': '전체 공통' };
+
+/* ───────── 콘텐츠 축 (0~36개월 기준) ───────── */
+const PILLARS = [
+  { id: 'prep',  name: '🤰 출산준비',  goal: 15, color: '#ec4899',
+    desc: '출산가방 · 신생아 준비물 · 조리원 · 산후조리 · 배냇짐' },
+  { id: 'sleep', name: '😴 재우기',   goal: 25, color: '#8b5cf6',
+    desc: '수면교육 · 통잠 · 백색소음 · 월령별 수면시간' },
+  { id: 'feed',  name: '🍼 먹이기',   goal: 20, color: '#3b82f6',
+    desc: '분유 온도 · 수유텀 · 젖병 위생 · 이유식' },
+  { id: 'bath',  name: '🛁 씻기기',   goal: 15, color: '#06b6d4',
+    desc: '목욕 온도 · 아토피 · 물놀이 안전' },
+  { id: 'out',   name: '🚗 외출',     goal: 15, color: '#f59e0b',
+    desc: '외출템 · 카시트 · 유모차 · 계절 대응' },
+  { id: 'health',name: '🩺 아플 때',  goal: 10, color: '#ef4444',
+    desc: '열 · 체온 · 응급 · 예방접종' },
+];
+
+/* ───────── ERP 라인업 스냅샷 (2026-08-03) ───────── */
+const LINEUP = [
+  { name:'보아르아가보틀휴대용분유포트', model:'VBNM-003', cat:'분유포트',    price:null,   status:'완료', mgmt:'사용',   qty:6273,  amt:388379448, pillar:'feed' },
+  { name:'보아르아가맘마쪽쪽이살균기',   model:'VST-008',  cat:'쪽쪽이살균기', price:34900,  status:'완료', mgmt:'사용',   qty:15824, amt:370236970, pillar:'feed' },
+  { name:'보아르아가맘마보틀워머',       model:'VST-003',  cat:'보틀워머',     price:57900,  status:'완료', mgmt:'사용',   qty:8431,  amt:334047069, pillar:'feed' },
+  { name:'보아르아가홀스스프링카',       model:'VTY-001',  cat:'스프링카',     price:109000, status:'완료', mgmt:'사용',   qty:3509,  amt:247309386, pillar:'play' },
+  { name:'보아르아가맘마퓨어분유포트',   model:'VPT-006',  cat:'분유포트',     price:79000,  status:'완료', mgmt:'사용',   qty:2809,  amt:127670868, pillar:'feed' },
+  { name:'보아르허니즈백색소음기',       model:'VPD-001',  cat:'백색소음기',   price:34900,  status:'완료', mgmt:'사용',   qty:5554,  amt:120665804, pillar:'sleep' },
+  { name:'보아르아가쑥쑥분유쉐이커',     model:'VBTW-002', cat:'분유쉐이커',   price:null,   status:'완료', mgmt:'사용',   qty:2143,  amt:61691980,  pillar:'feed' },
+  { name:'보아르아가온분유포트',         model:'VBNM-002', cat:'분유포트',     price:null,   status:'완료', mgmt:'사용',   qty:643,   amt:55670425,  pillar:'feed' },
+  { name:'보아르아가윈디유모차쿨시트',   model:'VCAA-001', cat:'유모차쿨시트', price:null,   status:'완료', mgmt:'사용',   qty:818,   amt:37820903,  pillar:'out' },
+  { name:'보아르아가맘마멀티분유포트',   model:'VPT-005',  cat:'분유포트',     price:129000, status:'완료', mgmt:'사용',   qty:525,   amt:36270161,  pillar:'feed' },
+  { name:'보아르아가퓨어UV젖병소독기',   model:'VSTZ-004', cat:'젖병소독기',   price:null,   status:'완료', mgmt:'사용',   qty:86,    amt:15512421,  pillar:'feed' },
+  { name:'보아르소프트리머',             model:'VPD-002',  cat:'네일트리머',   price:19900,  status:'완료', mgmt:'사용',   qty:49,    amt:198849,    pillar:'care' },
+  { name:'보아르아가맘마젖병소독기',     model:'VST-006',  cat:'젖병소독기',   price:129000, status:'완료', mgmt:'미사용', qty:61,    amt:212599,    pillar:'feed' },
+  { name:'보아르아가듀이분유포트',       model:'VHEP-007', cat:'분유포트',     price:0,      status:'진행', mgmt:'사용',   qty:0,     amt:0,         pillar:'feed' },
+  { name:'보아르아가담이유식포트워머',   model:'VBNM-005', cat:'이유식포트',   price:null,   status:'진행', mgmt:'사용',   qty:0,     amt:0,         pillar:'feed' },
+  { name:'보아르아가미니휴대용젖병소독기',model:'VSTZ-005', cat:'젖병소독기',  price:null,   status:'진행', mgmt:'사용',   qty:0,     amt:0,         pillar:'feed' },
+  { name:'보아르아가가드기저귀갈이대',   model:'VCAA-002', cat:'기저귀갈이대', price:null,   status:'인증 드랍', mgmt:'사용', qty:0,  amt:0,         pillar:'care' },
+];
+
+/* 여정별 확장 후보 */
+const JOURNEY = [
+  { key:'feed',  label:'🍼 먹이기',  cand:'—  (이미 포화)' },
+  { key:'sleep', label:'😴 재우기',  cand:'수면등 · 무드등 · 아기가습기' },
+  { key:'bath',  label:'🛁 씻기기',  cand:'아기욕조 · 목욕온도계 · 유아헤어드라이' },
+  { key:'out',   label:'🚗 외출',    cand:'유모차선풍기 · 카시트쿨링패드' },
+  { key:'health',label:'🩺 아플 때', cand:'비접촉체온계 · 콧물흡입기 · 가습기' },
+  { key:'play',  label:'🧸 놀이',    cand:'—' },
+  { key:'care',  label:'🧴 케어',    cand:'기저귀휴지통 · 유아손톱관리' },
+];
+
+const FOLLOWER_GOALS = [
+  { m:1, target:300 },
+  { m:3, target:1000 },
+  { m:6, target:5000 },
+  { m:12,target:20000 },
+];
+
+/* ───────── 상태 ───────── */
+let S = load();
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) {
+      const s = JSON.parse(raw);
+      (s.ideas || []).forEach(i => { if (AGE_MIGRATE[i.age]) i.age = AGE_MIGRATE[i.age]; });
+      return s;
+    }
+  } catch (e) {
+    // 읽기 실패 시 기본값으로 덮어쓰면 데이터가 날아감 → 원본을 백업해두고 진행
+    console.warn('저장소 읽기 실패', e);
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (raw) {
+        localStorage.setItem(STORE_KEY + '_backup_' + Date.now(), raw);
+        alert('저장 데이터를 읽지 못했습니다. 원본은 백업해뒀습니다 (개발자도구 → localStorage 확인).');
+      }
+    } catch (_) { /* 백업까지 실패하면 어쩔 수 없음 */ }
+  }
+  return { ideas: [], comps: [], slots: [], cfg: { perWeek: 5, time: '20:30' },
+           followers: null, startDate: todayStr() };
+}
+function save(opts) {
+  S.updatedAt = new Date().toISOString();
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); }
+  catch (e) { alert('로컬 저장 실패: ' + e.message); }
+  if (!opts || !opts.localOnly) schedulePush();
+}
+
+/* ───────── 동기화 ───────── */
+let syncTimer = null, syncBusy = false;
+function setSync(state, msg) {
+  const el = document.getElementById('sync-badge');
+  if (!el) return;
+  const MAP = {
+    ok:      ['t-green',  '☁️ 저장됨'],
+    syncing: ['t-blue',   '⏳ 저장 중'],
+    error:   ['t-red',    '⚠️ 원격 저장 실패'],
+    notable: ['t-yellow', '⚠️ 테이블 없음'],
+    local:   ['t-gray',   '💾 로컬만'],
+  };
+  const [cls, label] = MAP[state] || MAP.local;
+  el.className = 'tag ' + cls;
+  el.textContent = label;
+  el.title = msg || '';
+}
+function schedulePush() {
+  clearTimeout(syncTimer);
+  setSync('syncing');
+  syncTimer = setTimeout(pushRemote, 1200);   // 연타 입력 시 마지막 것만 전송
+}
+async function pushRemote() {
+  if (syncBusy) { schedulePush(); return; }
+  syncBusy = true;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${SB_TABLE}?on_conflict=id`, {
+      method: 'POST',
+      headers: { ...SB_HEAD, Prefer: 'resolution=merge-duplicates' },
+      body: JSON.stringify([{ id: SB_ROW, data: S, updated_at: S.updatedAt }]),
+    });
+    if (res.status === 404) { setSync('notable', 'Supabase에 baby_studio 테이블이 없습니다'); return; }
+    if (!res.ok) { setSync('error', `HTTP ${res.status} ${await res.text()}`); return; }
+    setSync('ok', '마지막 저장: ' + new Date().toLocaleTimeString('ko-KR'));
+    saveLocalHistory();
+    maybeSnapshot();
+  } catch (e) {
+    setSync('error', '네트워크 오류: ' + e.message);
+  } finally { syncBusy = false; }
+}
+
+/* ── 스냅샷 이력 ──
+   현재 상태만 백업하면 "잘못된 값이 덮어써진" 경우를 되돌릴 수 없음.
+   10분에 한 번 시점 스냅샷을 남기고 최신 20개만 유지. */
+const SNAP_INTERVAL_MS = 10 * 60 * 1000;
+const SNAP_KEEP = 20;
+let lastSnapAt = 0;
+async function maybeSnapshot() {
+  const now = Date.now();
+  if (now - lastSnapAt < SNAP_INTERVAL_MS) return;
+  lastSnapAt = now;
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/${SB_TABLE}`, {
+      method: 'POST', headers: SB_HEAD,
+      body: JSON.stringify([{ id: 'snap_' + new Date().toISOString(), data: S, updated_at: S.updatedAt }]),
+    });
+    // 오래된 스냅샷 정리
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/${SB_TABLE}?id=like.snap_*&select=id&order=id.desc`,
+      { headers: SB_HEAD });
+    if (!res.ok) return;
+    const rows = await res.json();
+    const old = rows.slice(SNAP_KEEP).map(r => r.id);
+    for (const id of old) {
+      await fetch(`${SUPABASE_URL}/rest/v1/${SB_TABLE}?id=eq.${encodeURIComponent(id)}`,
+                  { method: 'DELETE', headers: SB_HEAD });
+    }
+  } catch (e) { console.warn('스냅샷 실패', e); }
+}
+
+/* ── 로컬 롤링 백업 (최근 5회) ──
+   원격이 죽어도, 코드 버그로 상태가 초기화돼도 되돌릴 여지를 남김. */
+function saveLocalHistory() {
+  try {
+    const key = STORE_KEY + '_history';
+    const hist = JSON.parse(localStorage.getItem(key) || '[]');
+    hist.unshift({ at: S.updatedAt, data: S });
+    localStorage.setItem(key, JSON.stringify(hist.slice(0, 5)));
+  } catch (e) { console.warn('로컬 이력 저장 실패', e); }
+}
+async function pullRemote() {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/${SB_TABLE}?id=eq.${SB_ROW}&select=data,updated_at`,
+      { headers: SB_HEAD });
+    if (res.status === 404) { setSync('notable', 'baby_studio 테이블 없음'); return null; }
+    if (!res.ok) { setSync('error', `HTTP ${res.status}`); return null; }
+    const rows = await res.json();
+    return rows[0] || null;
+  } catch (e) { setSync('error', e.message); return null; }
+}
+/* 부팅: 원격이 더 최신이면 원격을 채택. 아니면 로컬을 원격에 올림. */
+async function boot() {
+  const remote = await pullRemote();
+  if (remote && remote.data) {
+    const rt = remote.updated_at || remote.data.updatedAt || '';
+    const lt = S.updatedAt || '';
+    if (rt > lt) {
+      S = remote.data;
+      (S.ideas || []).forEach(i => { if (AGE_MIGRATE[i.age]) i.age = AGE_MIGRATE[i.age]; });
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (_) {}
+      renderAll();
+      setSync('ok', '원격 데이터를 불러왔습니다');
+      return;
+    }
+  }
+  if (remote !== null || !S.updatedAt) pushRemote();
+}
+/* 60초마다 원격 확인 — 다른 사람이 수정한 내용 반영 */
+setInterval(async () => {
+  if (syncBusy || syncTimer) return;
+  const remote = await pullRemote();
+  if (remote && remote.data && (remote.updated_at || '') > (S.updatedAt || '')) {
+    S = remote.data;
+    renderAll();
+    setSync('ok', '다른 화면의 변경사항을 반영했습니다');
+  }
+}, 60000);
+
+/* ───────── 파일 백업 (3중 안전장치) ───────── */
+function exportJson() {
+  const blob = new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `육아인스타_백업_${todayStr()}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+function importJson(file) {
+  const fr = new FileReader();
+  fr.onload = () => {
+    let obj;
+    try { obj = JSON.parse(fr.result); }
+    catch (e) { alert('JSON 파싱 실패: ' + e.message); return; }
+    if (!obj || !Array.isArray(obj.ideas)) { alert('형식이 올바르지 않습니다 (ideas 배열 없음)'); return; }
+    if (!confirm(`소재 ${obj.ideas.length}건 / 경쟁사 ${(obj.comps||[]).length}개로 덮어씁니다. 진행할까요?`)) return;
+    S = obj;
+    (S.ideas || []).forEach(i => { if (AGE_MIGRATE[i.age]) i.age = AGE_MIGRATE[i.age]; });
+    save(); renderAll();
+    alert('복원 완료');
+  };
+  fr.readAsText(file);
+}
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function fmt(n) { return (n ?? 0).toLocaleString('ko-KR'); }
+function fmtWon(n) {
+  if (!n) return '0';
+  if (n >= 100000000) return (n/100000000).toFixed(2) + '억';
+  if (n >= 10000) return Math.round(n/10000).toLocaleString('ko-KR') + '만';
+  return fmt(n);
+}
+function uid() { return 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+/* ───────── 탭 전환 ───────── */
+const TABS = ['dash','cal','idea','make','pub','comp','prod'];
+document.getElementById('menu').addEventListener('click', (e) => {
+  const btn = e.target.closest('.nav-item');
+  if (!btn) return;
+  const tab = btn.dataset.tab;
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b === btn));
+  TABS.forEach(t => document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab));
+  window.scrollTo(0, 0);
+});
+
+/* ───────── 대시보드 ───────── */
+function renderDash() {
+  // 목표 테이블
+  const start = new Date(S.startDate);
+  const body = FOLLOWER_GOALS.map(g => {
+    const d = new Date(start); d.setMonth(d.getMonth() + g.m);
+    const cur = S.followers;
+    const reached = cur != null && cur >= g.target;
+    const past = new Date() > d;
+    let tag;
+    if (reached) tag = '<span class="tag t-green">달성</span>';
+    else if (cur == null) tag = '<span class="tag t-gray">측정 전</span>';
+    else if (past) tag = '<span class="tag t-red">미달</span>';
+    else tag = '<span class="tag t-blue">진행중</span>';
+    return `<tr>
+      <td>${g.m}개월 <span class="soft fs11">(${d.toISOString().slice(0,10)})</span></td>
+      <td class="num">${fmt(g.target)}</td>
+      <td class="num">${cur == null ? '—' : fmt(cur)}</td>
+      <td>${tag}</td></tr>`;
+  }).join('');
+  document.getElementById('goal-body').innerHTML = body;
+
+  // 팔로워 KPI
+  const first = FOLLOWER_GOALS[1].target; // 3개월 1,000 기준
+  if (S.followers != null) {
+    document.getElementById('k-fol').textContent = fmt(S.followers);
+    document.getElementById('k-fol').parentElement.classList.remove('muted');
+    document.getElementById('k-fol-d').textContent = `3개월 목표 ${fmt(first)}명 대비`;
+    document.getElementById('k-fol-bar').style.width = Math.min(100, S.followers / first * 100) + '%';
+  }
+
+  // 콘텐츠 축 비중
+  const total = S.ideas.length;
+  document.getElementById('pillar-bars').innerHTML = PILLARS.map(p => {
+    const n = S.ideas.filter(i => i.pillar === p.id).length;
+    const pct = total ? Math.round(n / total * 100) : 0;
+    return `<div class="pillar-row">
+      <div class="pl-name">${p.name}</div>
+      <div class="pl-bar">
+        <i style="width:${Math.max(pct, total ? 2 : 0)}%;background:${p.color}"></i>
+      </div>
+      <div class="pl-val">${pct}% <span class="soft">/ ${p.goal}%</span></div>
+    </div>`;
+  }).join('');
+
+  // 이번주 발행
+  const perWeek = S.cfg.perWeek;
+  document.getElementById('k-pub-goal').textContent = perWeek;
+  const pubbed = S.ideas.filter(i => i.status === '발행').length;
+  document.getElementById('k-pub').textContent = pubbed;
+  document.getElementById('k-pub-bar').style.width = Math.min(100, pubbed / perWeek * 100) + '%';
+
+  // TODO
+  const todos = [];
+  if (!S.instaId) todos.push(['인스타 계정 아이디 전달 + 비즈니스 전환', '발행 탭의 1~3단계. 이게 끝나야 자동 업로드가 붙습니다.', 'red']);
+  if (S.comps.length === 0) todos.push(['벤치마킹 계정 5~10개 등록', '해시태그 랭킹 역산의 재료가 됩니다.', 'orange']);
+  if (S.ideas.length < 20) todos.push([`소재 ${20 - S.ideas.length}건 더 확보`, '첫 달 4주치(주 5회 = 20건)를 미리 쌓아두면 발행이 끊기지 않습니다.', 'orange']);
+  if (S.followers == null) todos.push(['팔로워 초기값 기록', '계정 연결 전이라면 수동으로라도 시작점을 남겨야 성장률이 계산됩니다.', 'gray']);
+  todos.push(['확정 신제품 5개 등록', 'ERP에 진행중인 3건 외 나머지 2건 확인 필요.', 'gray']);
+
+  document.getElementById('todo-list').innerHTML = todos.map((t, i) => `
+    <div class="step">
+      <div class="n" style="background:${t[2]==='red'?'var(--red)':t[2]==='orange'?'var(--orange)':'var(--text-soft)'}">${i+1}</div>
+      <div class="st-body"><div class="st-title">${t[0]}</div><div class="st-desc">${t[1]}</div></div>
+    </div>`).join('');
+}
+
+/* ───────── 캘린더 ───────── */
+function genSlots() {
+  const perWeek = Number(S.cfg.perWeek);
+  // 주 N회 → 요일 배정 (월0 ... 일6 기준으로 균등 분산)
+  // getDay(): 0=일 1=월 2=화 3=수 4=목 5=금 6=토
+  const DOW_MAP = {
+    2: [2, 5],               // 화 금
+    3: [1, 3, 5],            // 월 수 금
+    4: [1, 2, 4, 5],         // 월 화 목 금
+    5: [1, 2, 3, 4, 6],      // 월 화 수 목 토
+    7: [0, 1, 2, 3, 4, 5, 6],
+  };
+  const dows = DOW_MAP[perWeek] || DOW_MAP[5];
+  const out = [];
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + 1); // 내일부터
+  for (let i = 0; i < 28 && out.length < perWeek * 4; i++) {
+    const day = new Date(d); day.setDate(d.getDate() + i);
+    if (dows.includes(day.getDay())) {
+      out.push({
+        date: `${day.getFullYear()}-${String(day.getMonth()+1).padStart(2,'0')}-${String(day.getDate()).padStart(2,'0')}`,
+        time: S.cfg.time, ideaId: null,
+      });
+    }
+  }
+  return out;
+}
+const DOW_KO = ['일','월','화','수','목','금','토'];
+function renderCal() {
+  document.getElementById('cfg-perweek').value = S.cfg.perWeek;
+  document.getElementById('cfg-time').value = S.cfg.time;
+  if (!S.slots.length) S.slots = genSlots();
+
+  document.getElementById('slot-list').innerHTML = S.slots.map(s => {
+    const idea = S.ideas.find(i => i.id === s.ideaId);
+    const dow = DOW_KO[new Date(s.date).getDay()];
+    return `<div class="slot ${idea ? '' : 'empty'}">
+      <div class="date">${s.date}<span class="dow"> ${dow}</span></div>
+      <div class="mono soft fs12">${s.time}</div>
+      <div class="title ${idea ? '' : 'ph'}">${idea ? idea.topic : '미배정'}</div>
+      ${idea ? `<span class="tag t-blue">${idea.status}</span>` : '<span class="tag t-gray">비어있음</span>'}
+    </div>`;
+  }).join('');
+  document.getElementById('badge-cal').textContent = S.slots.filter(s => !s.ideaId).length;
+}
+
+/* ───────── 소재 ───────── */
+function fillPillarSelects() {
+  const opts = PILLARS.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+  document.getElementById('in-pillar').innerHTML = opts;
+  document.getElementById('flt-pillar').innerHTML =
+    '<option value="">전체 축</option>' + opts;
+}
+function renderIdeas() {
+  const fp = document.getElementById('flt-pillar').value;
+  const fs = document.getElementById('flt-status').value;
+  const list = S.ideas.filter(i => (!fp || i.pillar === fp) && (!fs || i.status === fs));
+
+  document.getElementById('idea-count').textContent = `${S.ideas.length}건`;
+  document.getElementById('badge-idea').textContent = S.ideas.length;
+  document.getElementById('idea-empty').classList.toggle('hidden', S.ideas.length > 0);
+
+  const STATUS_TAG = { '아이디어':'t-gray', '초안':'t-yellow', '제작완료':'t-blue', '예약':'t-purple', '발행':'t-green' };
+  document.getElementById('idea-grid').innerHTML = list.map(i => {
+    const p = PILLARS.find(x => x.id === i.pillar);
+    return `<div class="idea-card" data-id="${i.id}">
+      <div class="ic-top">
+        <span class="tag" style="background:${p ? p.color+'22' : '#f1f2f4'};color:${p ? p.color : 'var(--text-mute)'}">${p ? p.name : '미분류'}</span>
+        <span class="tag ${STATUS_TAG[i.status] || 't-gray'}">${i.status}</span>
+      </div>
+      <div class="ic-title">${escapeHtml(i.topic)}</div>
+      <div class="ic-meta"><span>👶 ${i.age}</span><span>📅 ${i.created}</span></div>
+    </div>`;
+  }).join('');
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ───────── 경쟁사 ───────── */
+function renderComp() {
+  document.getElementById('comp-count').textContent = `${S.comps.length}개`;
+  document.getElementById('comp-empty').classList.toggle('hidden', S.comps.length > 0);
+  document.getElementById('comp-body').innerHTML = S.comps.map(c => `
+    <tr>
+      <td><b>@${escapeHtml(c.handle)}</b></td>
+      <td class="fs12 muted">${escapeHtml(c.memo || '')}</td>
+      <td class="num">${c.followers == null ? '—' : fmt(c.followers)}</td>
+      <td><span class="tag t-gray">수집 전</span></td>
+      <td><button class="btn sm" data-del-comp="${c.id}">삭제</button></td>
+    </tr>`).join('');
+}
+
+/* ───────── 제품 ───────── */
+function renderProd() {
+  const totalAmt = LINEUP.reduce((a, b) => a + b.amt, 0);
+  const feedAmt  = LINEUP.filter(x => x.pillar === 'feed').reduce((a, b) => a + b.amt, 0);
+  const live     = LINEUP.filter(x => x.status === '완료' && x.mgmt === '사용').length;
+
+  document.getElementById('p-amt').textContent  = fmtWon(totalAmt);
+  document.getElementById('p-live').textContent = live;
+  document.getElementById('p-feed').textContent = Math.round(feedAmt / totalAmt * 100) + '%';
+
+  // 여정별
+  document.getElementById('journey-body').innerHTML = JOURNEY.map(j => {
+    const items = LINEUP.filter(x => x.pillar === j.key);
+    const amt = items.reduce((a, b) => a + b.amt, 0);
+    const names = items.map(x => x.cat).filter((v, i, a) => a.indexOf(v) === i).join(', ') || '—';
+    const gap = items.length === 0;
+    return `<tr>
+      <td><b>${j.label}</b></td>
+      <td class="num">${items.length}</td>
+      <td class="num">${amt ? fmtWon(amt) : '—'}</td>
+      <td class="fs12 ${gap ? 'soft' : 'muted'}">${gap ? '<span class="tag t-red">비어있음</span>' : names}</td>
+      <td class="fs12 muted">${j.cand}</td>
+    </tr>`;
+  }).join('');
+
+  // 라인업
+  const P = { feed:'🍼 먹이기', sleep:'😴 재우기', out:'🚗 외출', play:'🧸 놀이', care:'🧴 케어' };
+  document.getElementById('prod-body').innerHTML = LINEUP.map(x => {
+    let st;
+    if (x.status === '진행') st = '<span class="tag t-yellow">출시 준비</span>';
+    else if (x.status === '인증 드랍') st = '<span class="tag t-red">드랍</span>';
+    else if (x.mgmt === '미사용') st = '<span class="tag t-gray">미사용</span>';
+    else st = '<span class="tag t-green">판매중</span>';
+    return `<tr>
+      <td>${x.name}</td>
+      <td class="mono fs12 muted">${x.model}</td>
+      <td class="fs12">${P[x.pillar] || '—'}</td>
+      <td class="num">${x.price ? fmt(x.price) : '—'}</td>
+      <td class="num">${x.qty ? fmt(x.qty) : '—'}</td>
+      <td class="num"><b>${x.amt ? fmtWon(x.amt) : '—'}</b></td>
+      <td>${st}</td>
+    </tr>`;
+  }).join('');
+}
+
+/* ───────── 이벤트 ───────── */
+document.getElementById('btn-add-idea').addEventListener('click', () => {
+  const topic = document.getElementById('in-topic').value.trim();
+  if (!topic) { alert('주제를 입력하세요'); return; }
+  S.ideas.unshift({
+    id: uid(), topic,
+    pillar: document.getElementById('in-pillar').value,
+    age: document.getElementById('in-age').value,
+    status: '아이디어', created: todayStr(),
+  });
+  document.getElementById('in-topic').value = '';
+  save(); renderIdeas(); renderDash();
+});
+document.getElementById('in-topic').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('btn-add-idea').click();
+});
+document.getElementById('flt-pillar').addEventListener('change', renderIdeas);
+document.getElementById('flt-status').addEventListener('change', renderIdeas);
+
+document.getElementById('btn-add-comp').addEventListener('click', () => {
+  const handle = document.getElementById('in-comp').value.trim().replace(/^@/, '');
+  if (!handle) { alert('계정 아이디를 입력하세요'); return; }
+  S.comps.push({ id: uid(), handle, memo: document.getElementById('in-comp-memo').value.trim(), followers: null });
+  document.getElementById('in-comp').value = '';
+  document.getElementById('in-comp-memo').value = '';
+  save(); renderComp(); renderDash();
+});
+document.getElementById('comp-body').addEventListener('click', e => {
+  const id = e.target.dataset?.delComp;
+  if (!id) return;
+  S.comps = S.comps.filter(c => c.id !== id);
+  save(); renderComp(); renderDash();
+});
+
+document.getElementById('cfg-perweek').addEventListener('change', e => {
+  S.cfg.perWeek = Number(e.target.value); S.slots = genSlots(); save(); renderCal(); renderDash();
+});
+document.getElementById('cfg-time').addEventListener('change', e => {
+  S.cfg.time = e.target.value;
+  S.slots.forEach(s => { if (!s.ideaId) s.time = S.cfg.time; });
+  save(); renderCal();
+});
+document.getElementById('btn-regen-slots').addEventListener('click', () => {
+  S.slots = genSlots(); save(); renderCal();
+});
+
+/* ───────── 백업 UI ───────── */
+document.getElementById('btn-export').addEventListener('click', exportJson);
+document.getElementById('btn-import').addEventListener('click', () => document.getElementById('file-import').click());
+document.getElementById('file-import').addEventListener('change', e => {
+  if (e.target.files[0]) importJson(e.target.files[0]);
+  e.target.value = '';
+});
+
+/* ───────── 초기 렌더 ───────── */
+function renderAll() {
+  renderDash(); renderCal(); renderIdeas(); renderComp(); renderProd();
+}
+fillPillarSelects();
+renderAll();
+save({ localOnly: true });   // 부팅 시엔 원격을 먼저 확인한 뒤 올림
+boot();
+</script>
+</body>
+</html>
