@@ -1283,6 +1283,10 @@
     <header class="topbar">
       <div class="page-title" id="pageTitle">📊 제품현황</div>
       <div class="topbar-right">
+        <button id="proposalNotifyBtn" onclick="openProposalNotifyPanel()" title="컨펌된 행사제안 알림"
+                style="display:none;background:#ef4444;color:#fff;border:none;padding:8px 14px;border-radius:999px;font-family:inherit;font-weight:600;cursor:pointer;font-size:13px;">
+          🔔 새 알림 <span id="proposalNotifyCount">0</span>
+        </button>
         <span class="badge" id="dataMeta">데이터 없음</span>
         <span class="badge db-off" id="dbStatus"><span class="dot"></span><span id="dbStatusText">DB 미연결</span></span>
         <span class="edit-lock-pill" id="editLockBanner" title="클릭하여 수정 모드 토글">🔒 보기 전용</span>
@@ -3862,23 +3866,48 @@ function rvUpdateHideDoneBtn() {
   }
 }
 
+// 리뷰이벤트 발송 상태 판정 — renderReviews와 동일 로직 (필터·표시 일관성)
+function rvComputeSendState(r) {
+  const oldBlocked = !!r.발송불가;
+  const blockedMom   = (r.발송불가_맘카페 !== undefined) ? !!r.발송불가_맘카페   : oldBlocked;
+  const blockedInsta = (r.발송불가_인스타 !== undefined) ? !!r.발송불가_인스타 : oldBlocked;
+  const blocked = blockedMom && blockedInsta;
+  const needMom   = !!(r.후기링크_맘카페 && r.후기링크_맘카페.trim()) && !blockedMom;
+  const needInsta = !!(r.후기링크_인스타 && r.후기링크_인스타.trim()) && !blockedInsta;
+  const anyNeeded = needMom || needInsta;
+  const momOk   = !needMom   || r.발송완료_맘카페;
+  const instaOk = !needInsta || r.발송완료_인스타;
+  const allSent = !blocked && anyNeeded && momOk && instaOk;
+  return { blocked, allSent };
+}
+
 function rvExportCsv() {
   const list = _REVIEWS_CACHE || [];
   if (!list.length) { alert('내보낼 고객이 없습니다.'); return; }
-  // 발송불가 처리된 건은 제외 (실제로 상품권 발송 안 가는 대상)
-  const rows = list.filter(r => !r.발송불가);
+  // 발송불가 + 발송완료 자동 제외 (실제 발송이 필요한 대상만)
+  const rows = list.filter(r => {
+    const s = rvComputeSendState(r);
+    return !s.blocked && !s.allSent;
+  });
+  if (!rows.length) { alert('발송 대상 없음 (모두 발송완료·발송불가).'); return; }
   // CSV 이스케이프
   const esc = v => {
     const s = (v ?? '').toString();
     if (/[",\n\r]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
     return s;
   };
-  const lines = ['고객명,전화번호'];
+  // A열 전화번호, B열 고객명
+  const lines = ['전화번호,고객명'];
+  let dropped = 0;
   for (const r of rows) {
     const name = (r.고객명 || '').trim();
     const phone = (r.전화번호 || '').replace(/[^0-9]/g, '');  // 하이픈·공백·기타 제거
-    if (!name && !phone) continue;
-    lines.push(`${esc(name)},${esc(phone)}`);
+    if (!phone && !name) { dropped++; continue; }
+    // ⚠ 전화번호 leading zero 보존:
+    //   그냥 "01012345678" 이면 Excel 이 숫자로 인식해서 앞 0 제거함.
+    //   ="01012345678" (수식) 형태로 감싸면 Excel 이 텍스트로 표시.
+    const phoneCell = phone ? `="${phone}"` : '';
+    lines.push(`${phoneCell},${esc(name)}`);
   }
   // UTF-8 BOM 추가 → Excel 한글 깨짐 방지
   const blob = new Blob(['﻿' + lines.join('\r\n')], {type:'text/csv;charset=utf-8'});
@@ -3886,7 +3915,7 @@ function rvExportCsv() {
   const ymd = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `리뷰이벤트_고객명단_${ymd}.csv`;
+  a.download = `리뷰이벤트_발송대상_${ymd}.csv`;
   document.body.append(a); a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 100);
 }
@@ -6504,6 +6533,195 @@ async function boot() {
 }
 
 document.addEventListener('DOMContentLoaded', boot);
+
+// ══════════════════════════════════════════════════
+// 행사제안 컨펌/반려 알림 · 팝업 3회 재노출 · 행사일정 등록
+// ══════════════════════════════════════════════════
+const PROPOSAL_CURRENT_USER = '김민채'; // TODO: 로그인 도입 시 동적으로
+
+let PROPOSAL_PENDING = [];
+let PROPOSAL_QUEUE_INDEX = 0;
+
+async function fetchProposalNotifications() {
+  try {
+    const res = await fetch(`/api/event-proposals/pending-popup?proposer=${encodeURIComponent(PROPOSAL_CURRENT_USER)}`);
+    if (!res.ok) return;
+    const data = await res.json();
+    PROPOSAL_PENDING = data.pending || [];
+    updateProposalNotifyBadge();
+  } catch (e) { console.warn('proposal notify fetch fail', e); }
+}
+
+function updateProposalNotifyBadge() {
+  const btn = document.getElementById('proposalNotifyBtn');
+  const cnt = document.getElementById('proposalNotifyCount');
+  if (!btn || !cnt) return;
+  if (PROPOSAL_PENDING.length > 0) {
+    btn.style.display = '';
+    cnt.textContent = PROPOSAL_PENDING.length;
+  } else {
+    btn.style.display = 'none';
+  }
+}
+
+function openProposalNotifyPanel() {
+  if (PROPOSAL_PENDING.length === 0) return;
+  PROPOSAL_QUEUE_INDEX = 0;
+  showNextProposalPopup();
+}
+
+function showNextProposalPopup() {
+  if (PROPOSAL_QUEUE_INDEX >= PROPOSAL_PENDING.length) {
+    closeProposalPopup();
+    fetchProposalNotifications();
+    return;
+  }
+  const p = PROPOSAL_PENDING[PROPOSAL_QUEUE_INDEX];
+  renderProposalPopup(p);
+}
+
+function renderProposalPopup(p) {
+  let ov = document.getElementById('proposalPopupOverlay');
+  if (!ov) {
+    ov = document.createElement('div');
+    ov.id = 'proposalPopupOverlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;';
+    document.body.appendChild(ov);
+  }
+
+  const isRejected = p.status === 'rejected';
+  const remainingViews = 3 - (p.popup_shown_count || 0);
+  const normalPrice = p.normal_price ? Number(p.normal_price).toLocaleString() : '—';
+  const eventPrice = p.event_price ? Number(p.event_price).toLocaleString() : '—';
+  const discount = (p.normal_price && p.event_price)
+    ? Math.round((1 - p.event_price / p.normal_price) * 100)
+    : null;
+
+  ov.innerHTML = `
+    <div style="background:#fff;border-radius:14px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden;">
+      <div style="padding:20px 24px;border-bottom:1px solid ${isRejected ? '#fecaca' : '#e6e8ec'};background:${isRejected ? '#fef2f2' : '#f0fdf4'};">
+        <h3 style="font-size:17px;font-weight:700;color:${isRejected ? '#991b1b' : '#166534'};display:flex;align-items:center;gap:8px;">
+          ${isRejected ? '❌ 행사제안이 반려됐어요' : '✅ 행사제안이 컨펌됐어요'}
+        </h3>
+        <div style="font-size:12px;color:#6b7280;margin-top:4px;">
+          ${p.confirmer ? `${escapeHTMLp(p.confirmer)} · ` : ''}${(p.confirmed_at || '').substring(0, 16).replace('T', ' ')}
+          ${!isRejected ? ` · 알림 ${(p.popup_shown_count || 0) + 1}/3회` : ''}
+        </div>
+      </div>
+      <div style="padding:22px 24px;">
+        <div style="display:grid;grid-template-columns:80px 1fr;gap:8px 14px;font-size:13.5px;">
+          <div style="color:#9ca3af;">프로젝트</div><div><b>${escapeHTMLp(p.project)}</b></div>
+          <div style="color:#9ca3af;">제품</div><div><b>${escapeHTMLp(p.product_name)}</b> ${p.model ? `<span style="color:#9ca3af;">(${escapeHTMLp(p.model)})</span>` : ''}</div>
+          <div style="color:#9ca3af;">정상가</div><div>${normalPrice}원</div>
+          <div style="color:#9ca3af;">행사가</div><div style="color:#03c75a;font-weight:700;">${eventPrice}원 ${discount !== null ? `<span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:4px;font-size:11px;margin-left:6px;">-${discount}%</span>` : ''}</div>
+          ${p.note ? `<div style="color:#9ca3af;">메모</div><div>${escapeHTMLp(p.note)}</div>` : ''}
+          ${isRejected && p.reject_reason ? `<div style="color:#9ca3af;">반려 사유</div><div style="background:#fee2e2;color:#991b1b;padding:8px 12px;border-radius:6px;">${escapeHTMLp(p.reject_reason)}</div>` : ''}
+        </div>
+
+        ${!isRejected ? `
+          <div style="margin-top:20px;padding-top:20px;border-top:1px dashed #e5e7eb;">
+            <div style="font-weight:600;margin-bottom:12px;">📅 행사일정에 등록</div>
+            <label style="display:block;font-size:12px;font-weight:600;color:#4b5563;margin-bottom:6px;">행사명 *</label>
+            <input type="text" id="popupEventName" placeholder="예: 3월 봄맞이 특가전" value="${escapeHTMLp(p.project)}" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-family:inherit;font-size:13.5px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:#4b5563;margin-bottom:6px;">시작일 *</label>
+                <input type="date" id="popupStartDate" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-family:inherit;font-size:13.5px;">
+              </div>
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:#4b5563;margin-bottom:6px;">종료일 *</label>
+                <input type="date" id="popupEndDate" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-family:inherit;font-size:13.5px;">
+              </div>
+            </div>
+            <label style="display:block;font-size:12px;font-weight:600;color:#4b5563;margin-bottom:6px;margin-top:10px;">채널 *</label>
+            <select id="popupChannel" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-family:inherit;font-size:13.5px;background:#fff;">
+              <option value="">채널 선택</option>
+              <option value="네이버쇼핑">네이버쇼핑</option>
+              <option value="쿠팡">쿠팡</option>
+              <option value="11번가">11번가</option>
+              <option value="G마켓">G마켓</option>
+              <option value="옥션">옥션</option>
+              <option value="자사몰">자사몰</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+        ` : ''}
+      </div>
+      <div style="padding:16px 24px;border-top:1px solid #e6e8ec;display:flex;justify-content:space-between;gap:10px;">
+        <button onclick="dismissProposalPopup()" style="background:transparent;color:#6b7280;border:1px solid #d1d5db;padding:8px 16px;border-radius:10px;font-family:inherit;font-size:13px;cursor:pointer;">
+          ${isRejected ? '확인' : `나중에 (${remainingViews - 1}회 더 알림)`}
+        </button>
+        ${!isRejected ? `
+          <button onclick="submitSchedule('${p.id}')" style="background:#03c75a;color:#fff;border:none;padding:8px 20px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;">
+            📅 행사일정 등록
+          </button>
+        ` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function closeProposalPopup() {
+  const ov = document.getElementById('proposalPopupOverlay');
+  if (ov) ov.remove();
+}
+
+async function dismissProposalPopup() {
+  const p = PROPOSAL_PENDING[PROPOSAL_QUEUE_INDEX];
+  if (!p) { closeProposalPopup(); return; }
+  // 팝업 봤음 카운트 +1
+  try {
+    await fetch('/api/event-proposals/popup-shown', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ id: p.id })
+    });
+  } catch(e) {}
+  PROPOSAL_QUEUE_INDEX++;
+  showNextProposalPopup();
+}
+
+async function submitSchedule(proposalId) {
+  const p = PROPOSAL_PENDING.find(x => x.id === proposalId);
+  if (!p) return;
+  const event_name = document.getElementById('popupEventName').value.trim();
+  const start_date = document.getElementById('popupStartDate').value;
+  const end_date = document.getElementById('popupEndDate').value;
+  const channel = document.getElementById('popupChannel').value;
+  if (!event_name || !start_date || !end_date || !channel) {
+    alert('행사명·시작일·종료일·채널은 필수입니다.');
+    return;
+  }
+  if (start_date > end_date) {
+    alert('종료일이 시작일보다 빠릅니다.');
+    return;
+  }
+  try {
+    const res = await fetch('/api/event-schedule', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        proposal_id: proposalId,
+        event_name, start_date, end_date, channel,
+        product_name: p.product_name, model: p.model,
+        event_price: p.event_price, proposer: p.proposer,
+        note: p.note
+      })
+    });
+    if (!res.ok) throw new Error('등록 실패');
+    alert(`✅ 행사일정 등록 완료\n"${event_name}" (${start_date} ~ ${end_date})`);
+    PROPOSAL_QUEUE_INDEX++;
+    showNextProposalPopup();
+  } catch (e) { alert(e.message); }
+}
+
+function escapeHTMLp(s) {
+  return (s || '').toString().replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+// 페이지 로드 5초 후 첫 체크 + 이후 30초마다 폴링
+setTimeout(fetchProposalNotifications, 5000);
+setInterval(fetchProposalNotifications, 30000);
 </script>
 
 </body>
