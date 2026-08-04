@@ -867,42 +867,45 @@ function saveLocalHistory() {
     localStorage.setItem(key, JSON.stringify(hist.slice(0, 5)));
   } catch (e) { console.warn('로컬 이력 저장 실패', e); }
 }
+/* 반환: { ok, row }
+   ok=false → 통신/테이블 오류 (원격 상태를 알 수 없음, 덮어쓰기 금지)
+   ok=true, row=null → 테이블은 정상인데 아직 저장된 행이 없음 (올려야 함) */
 async function pullRemote() {
   try {
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/${SB_TABLE}?id=eq.${SB_ROW}&select=data,updated_at`,
       { headers: SB_HEAD });
-    if (res.status === 404) { setSync('notable', 'baby_studio 테이블 없음'); return null; }
-    if (!res.ok) { setSync('error', `HTTP ${res.status}`); return null; }
+    if (res.status === 404) { setSync('notable', 'baby_studio 테이블 없음'); return { ok: false, row: null }; }
+    if (!res.ok) { setSync('error', `HTTP ${res.status}`); return { ok: false, row: null }; }
     const rows = await res.json();
-    return rows[0] || null;
-  } catch (e) { setSync('error', e.message); return null; }
+    return { ok: true, row: rows[0] || null };
+  } catch (e) { setSync('error', e.message); return { ok: false, row: null }; }
 }
-/* 부팅: 원격이 더 최신이면 원격을 채택. 아니면 로컬을 원격에 올림. */
+function adoptRemote(row, msg) {
+  S = row.data;
+  (S.ideas || []).forEach(i => { if (AGE_MIGRATE[i.age]) i.age = AGE_MIGRATE[i.age]; });
+  if (!S.updatedAt) S.updatedAt = row.updated_at || '';
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (_) {}
+  renderAll();
+  setSync('ok', msg);
+}
+/* 부팅: 원격이 더 최신이면 원격 채택, 아니면 로컬을 올림.
+   원격 상태를 못 읽었으면(ok=false) 아무것도 하지 않음 — 잘못 덮어쓰는 게 최악. */
 async function boot() {
-  const remote = await pullRemote();
-  if (remote && remote.data) {
-    const rt = remote.updated_at || remote.data.updatedAt || '';
-    const lt = S.updatedAt || '';
-    if (rt > lt) {
-      S = remote.data;
-      (S.ideas || []).forEach(i => { if (AGE_MIGRATE[i.age]) i.age = AGE_MIGRATE[i.age]; });
-      try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (_) {}
-      renderAll();
-      setSync('ok', '원격 데이터를 불러왔습니다');
-      return;
-    }
-  }
-  if (remote !== null || !S.updatedAt) pushRemote();
+  const { ok, row } = await pullRemote();
+  if (!ok) return;
+  const rt = row ? (row.updated_at || row.data?.updatedAt || '') : '';
+  const lt = S.updatedAt || '';
+  if (row && row.data && rt > lt) { adoptRemote(row, '원격 데이터를 불러왔습니다'); return; }
+  pushRemote();   // 행이 없거나 로컬이 더 최신 → 올림
 }
 /* 60초마다 원격 확인 — 다른 사람이 수정한 내용 반영 */
 setInterval(async () => {
   if (syncBusy || syncTimer) return;
-  const remote = await pullRemote();
-  if (remote && remote.data && (remote.updated_at || '') > (S.updatedAt || '')) {
-    S = remote.data;
-    renderAll();
-    setSync('ok', '다른 화면의 변경사항을 반영했습니다');
+  const { ok, row } = await pullRemote();
+  if (!ok || !row || !row.data) return;
+  if ((row.updated_at || '') > (S.updatedAt || '')) {
+    adoptRemote(row, '다른 화면의 변경사항을 반영했습니다');
   }
 }, 60000);
 
