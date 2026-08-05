@@ -605,11 +605,24 @@
     </div>
 
     <div class="card">
-      <h2>📮 발행 큐</h2>
-      <div class="empty-state">
+      <h2>🔒 발행 승인 모드<span class="hint" id="mode-hint"></span></h2>
+      <div class="callout ok" id="mode-box">
+        <b>🔒 수동 승인 모드</b> — 여기서 <b>「발행 승인」</b>을 누른 게시물만 올라갑니다.
+        승인 전에는 어떤 것도 자동으로 발행되지 않습니다.
+      </div>
+      <label class="row fs13" style="gap:8px;cursor:pointer">
+        <input type="checkbox" id="chk-auto">
+        <span>자동 발행 허용 <span class="soft fs12">— 켜면 승인 없이 예정 시각에 바로 발행됩니다</span></span>
+      </label>
+    </div>
+
+    <div class="card">
+      <h2>📮 발행 큐<span class="hint" id="queue-count">0건</span></h2>
+      <div id="queue-list"></div>
+      <div id="queue-empty" class="empty-state">
         <div class="es-emoji">📮</div>
         <div class="es-title">대기 중인 발행이 없습니다</div>
-        <div class="es-desc">제작이 끝난 소재가 캘린더 슬롯에 배정되면 여기에 쌓입니다.</div>
+        <div class="es-desc">제작이 끝난 게시물이 여기에 올라오면, 카드와 캡션을 확인하고 승인하실 수 있습니다.</div>
       </div>
     </div>
   </section>
@@ -1273,6 +1286,81 @@ document.getElementById('setup-checks').addEventListener('change', e => {
   save(); renderInsta(); renderDash();
 });
 
+/* ───────── 발행 큐 (승인 게이트) ─────────
+   autoPublish 가 false면 status='approved' 로 바뀐 것만 발행 스크립트가 가져감.
+   기본값 false — 사용자가 명시적으로 켜기 전까지 자동 발행 없음. */
+const Q_TAG = {
+  pending:   ['t-yellow', '승인 대기'],
+  approved:  ['t-blue',   '승인됨 · 발행 대기'],
+  published: ['t-green',  '발행 완료'],
+  rejected:  ['t-red',    '반려'],
+};
+function renderQueue() {
+  S.queue = S.queue || [];
+  S.autoPublish = S.autoPublish === true;
+
+  document.getElementById('chk-auto').checked = S.autoPublish;
+  const box = document.getElementById('mode-box');
+  const hint = document.getElementById('mode-hint');
+  if (S.autoPublish) {
+    box.className = 'callout warn';
+    box.innerHTML = '<b>⚠️ 자동 발행 켜짐</b> — 승인 없이 예정 시각에 바로 발행됩니다. 확인이 필요하면 아래 체크를 해제하세요.';
+    hint.textContent = '자동';
+  } else {
+    box.className = 'callout ok';
+    box.innerHTML = '<b>🔒 수동 승인 모드</b> — 여기서 <b>「발행 승인」</b>을 누른 게시물만 올라갑니다. 승인 전에는 어떤 것도 자동으로 발행되지 않습니다.';
+    hint.textContent = '수동 승인';
+  }
+
+  const waiting = S.queue.filter(q => q.status === 'pending').length;
+  document.getElementById('queue-count').textContent =
+    `${S.queue.length}건` + (waiting ? ` · 승인 대기 ${waiting}` : '');
+  document.getElementById('queue-empty').classList.toggle('hidden', S.queue.length > 0);
+
+  document.getElementById('queue-list').innerHTML = S.queue.map(q => {
+    const [cls, label] = Q_TAG[q.status] || Q_TAG.pending;
+    const thumbs = (q.images || []).slice(0, 6).map(u =>
+      `<img src="${escapeHtml(u)}" style="width:64px;height:80px;object-fit:cover;border-radius:6px;border:1px solid var(--line)">`).join('');
+    const cap = escapeHtml(q.caption || '').replace(/\n/g, '<br>');
+    return `<div class="card" style="box-shadow:none;margin-bottom:12px">
+      <div class="row mb8">
+        <b class="fs13">${escapeHtml(q.title || '(제목 없음)')}</b>
+        <span class="tag ${cls}">${label}</span>
+        <span class="soft fs11">${escapeHtml(q.scheduledAt || '')}</span>
+        <div class="spacer"></div>
+        ${q.permalink ? `<a class="btn sm" href="${escapeHtml(q.permalink)}" target="_blank" rel="noopener">게시물 보기</a>` : ''}
+        ${q.status === 'pending' ? `
+          <button class="btn sm brand" data-q-ok="${q.id}">✅ 발행 승인</button>
+          <button class="btn sm" data-q-no="${q.id}">반려</button>` : ''}
+        ${q.status === 'approved' ? `<button class="btn sm" data-q-cancel="${q.id}">승인 취소</button>` : ''}
+      </div>
+      <div class="row mb8">${thumbs}</div>
+      <details><summary class="fs12 muted" style="cursor:pointer">캡션 전문 보기</summary>
+        <div class="fs12 muted mt8" style="line-height:1.8">${cap}</div></details>
+    </div>`;
+  }).join('');
+}
+document.getElementById('chk-auto').addEventListener('change', e => {
+  if (e.target.checked && !confirm('자동 발행을 켜면 승인 없이 게시물이 올라갑니다.\n정말 켤까요?')) {
+    e.target.checked = false; return;
+  }
+  S.autoPublish = e.target.checked;
+  save(); renderQueue();
+});
+document.getElementById('queue-list').addEventListener('click', e => {
+  const t = e.target;
+  const set = (id, st) => {
+    const q = S.queue.find(x => x.id === id);
+    if (!q) return;
+    q.status = st;
+    if (st === 'approved') q.approvedAt = new Date().toISOString();
+    save(); renderQueue();
+  };
+  if (t.dataset.qOk)     set(t.dataset.qOk, 'approved');
+  if (t.dataset.qNo)     set(t.dataset.qNo, 'rejected');
+  if (t.dataset.qCancel) set(t.dataset.qCancel, 'pending');
+});
+
 /* ───────── 백업 UI ───────── */
 document.getElementById('btn-export').addEventListener('click', exportJson);
 document.getElementById('btn-import').addEventListener('click', () => document.getElementById('file-import').click());
@@ -1283,7 +1371,7 @@ document.getElementById('file-import').addEventListener('change', e => {
 
 /* ───────── 초기 렌더 ───────── */
 function renderAll() {
-  renderDash(); renderCal(); renderIdeas(); renderComp(); renderProd(); renderInsta();
+  renderDash(); renderCal(); renderIdeas(); renderComp(); renderProd(); renderInsta(); renderQueue();
 }
 fillPillarSelects();
 renderAll();
