@@ -209,6 +209,30 @@
   .step .st-title { font-weight: 600; font-size: 13px; margin-bottom: 3px; }
   .step .st-desc { font-size: 12px; color: var(--text-mute); line-height: 1.6; }
 
+  /* 큐 썸네일 */
+  .q-thumb {
+    width: 64px; height: 80px; object-fit: cover; border-radius: 6px;
+    border: 1px solid var(--line); cursor: zoom-in;
+    transition: transform .12s, box-shadow .12s;
+  }
+  .q-thumb:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,.14); }
+
+  /* 이미지 확대 팝업 */
+  #lb { position: fixed; inset: 0; background: rgba(20,16,10,.9); z-index: 100000;
+        display: none; align-items: center; justify-content: center; }
+  #lb.show { display: flex; }
+  #lb img { max-width: 88vw; max-height: 86vh; border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+  #lb .lb-close { position: absolute; top: 18px; right: 24px; color: #fff;
+                  font-size: 30px; cursor: pointer; background: none; border: 0; line-height: 1; }
+  #lb .lb-nav { position: absolute; top: 50%; transform: translateY(-50%);
+                background: rgba(255,255,255,.14); color: #fff; border: 0;
+                width: 52px; height: 76px; font-size: 26px; cursor: pointer; border-radius: 8px; }
+  #lb .lb-nav:hover { background: rgba(255,255,255,.28); }
+  #lb .lb-prev { left: 24px; } #lb .lb-next { right: 24px; }
+  #lb .lb-count { position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%);
+                  color: #fff; font-size: 13px; letter-spacing: 1px; opacity: .85; }
+
   .hidden { display: none !important; }
   .mono { font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; }
   .muted { color: var(--text-mute); }
@@ -313,6 +337,15 @@
   document.getElementById('lockPw').addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
 })();
 </script>
+
+<!-- 이미지 확대 팝업 -->
+<div id="lb" role="dialog" aria-modal="true">
+  <button class="lb-close" id="lb-close" aria-label="닫기">×</button>
+  <button class="lb-nav lb-prev" id="lb-prev" aria-label="이전">‹</button>
+  <img id="lb-img" alt="">
+  <button class="lb-nav lb-next" id="lb-next" aria-label="다음">›</button>
+  <div class="lb-count" id="lb-count"></div>
+</div>
 
 <div class="app">
   <!-- ══════════ SIDEBAR ══════════ -->
@@ -1286,6 +1319,41 @@ document.getElementById('setup-checks').addEventListener('change', e => {
   save(); renderInsta(); renderDash();
 });
 
+/* ───────── 이미지 확대 팝업 ───────── */
+let lbList = [], lbIdx = 0;
+function lbOpen(list, i) {
+  lbList = list; lbIdx = i;
+  document.getElementById('lb').classList.add('show');
+  lbShow();
+}
+function lbShow() {
+  document.getElementById('lb-img').src = lbList[lbIdx];
+  document.getElementById('lb-count').textContent = `${lbIdx + 1} / ${lbList.length}`;
+  const one = lbList.length < 2;
+  document.getElementById('lb-prev').style.display = one ? 'none' : '';
+  document.getElementById('lb-next').style.display = one ? 'none' : '';
+}
+function lbMove(step) {
+  lbIdx = (lbIdx + step + lbList.length) % lbList.length;
+  lbShow();
+}
+function lbClose() {
+  document.getElementById('lb').classList.remove('show');
+  document.getElementById('lb-img').src = '';
+}
+document.getElementById('lb-close').addEventListener('click', lbClose);
+document.getElementById('lb-prev').addEventListener('click', e => { e.stopPropagation(); lbMove(-1); });
+document.getElementById('lb-next').addEventListener('click', e => { e.stopPropagation(); lbMove(1); });
+document.getElementById('lb').addEventListener('click', e => {
+  if (e.target.id === 'lb') lbClose();      // 배경 클릭 시 닫기
+});
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lb').classList.contains('show')) return;
+  if (e.key === 'Escape') lbClose();
+  if (e.key === 'ArrowLeft') lbMove(-1);
+  if (e.key === 'ArrowRight') lbMove(1);
+});
+
 /* ───────── 발행 큐 (승인 게이트) ─────────
    autoPublish 가 false면 status='approved' 로 바뀐 것만 발행 스크립트가 가져감.
    기본값 false — 사용자가 명시적으로 켜기 전까지 자동 발행 없음. */
@@ -1319,15 +1387,17 @@ function renderQueue() {
 
   document.getElementById('queue-list').innerHTML = S.queue.map(q => {
     const [cls, label] = Q_TAG[q.status] || Q_TAG.pending;
-    const thumbs = (q.images || []).slice(0, 6).map(u =>
-      `<img src="${escapeHtml(u)}" style="width:64px;height:80px;object-fit:cover;border-radius:6px;border:1px solid var(--line)">`).join('');
+    const thumbs = (q.images || []).map((u, i) =>
+      `<img class="q-thumb" src="${escapeHtml(u)}" data-lb="${q.id}" data-lb-i="${i}"
+            title="클릭하면 크게 보기">`).join('');
     const cap = escapeHtml(q.caption || '').replace(/\n/g, '<br>');
     const editable = q.status === 'pending' || q.status === 'rejected';
     // 카드별 수정 메모 입력칸 — 이미지는 브라우저에서 다시 그릴 수 없어서,
     // "뭐가 틀렸는지"를 받아두고 내가 그걸 보고 다시 만든다.
     const noteRows = (q.images || []).map((u, i) => `
       <div class="row mb8" style="align-items:flex-start">
-        <img src="${escapeHtml(u)}" style="width:56px;height:70px;object-fit:cover;border-radius:6px;border:1px solid var(--line)">
+        <img class="q-thumb" src="${escapeHtml(u)}" data-lb="${q.id}" data-lb-i="${i}"
+             style="width:56px;height:70px" title="클릭하면 크게 보기">
         <span class="fs12 soft" style="width:34px;padding-top:24px">${i + 1}장</span>
         <input type="text" data-note-q="${q.id}" data-note-i="${i}"
                value="${escapeHtml((q.cardNotes || [])[i] || '')}"
@@ -1382,6 +1452,16 @@ document.getElementById('chk-auto').addEventListener('change', e => {
 });
 document.getElementById('queue-list').addEventListener('click', e => {
   const t = e.target;
+
+  // 썸네일 클릭 → 확대 팝업
+  if (t.dataset.lb) {
+    const q = S.queue.find(x => x.id === t.dataset.lb);
+    if (q && q.images && q.images.length) {
+      lbOpen(q.images, Number(t.dataset.lbI) || 0);
+      return;
+    }
+  }
+
   const set = (id, st) => {
     const q = S.queue.find(x => x.id === id);
     if (!q) return;
