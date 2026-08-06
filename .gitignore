@@ -38,6 +38,7 @@ manuals/
 # 육아 인스타 스튜디오 — index.html만 공개. 원본 데이터·설치 SQL은 내부 전용.
 baby/data/
 baby/supabase_setup.sql
+# 단, 게시물 첨부용 배포 파일은 공개 (아래 *.xlsx 차단 규칙보다 뒤에 다시 선언)
 
 # 다른 프로젝트 산출물 (별도 호스팅)
 리뷰이벤트_CS.html
@@ -49,3 +50,7 @@ README_담당자용.txt
 팀원_안내.txt
 
 # GitHub Pages는 index.html을 사용. 메인 대시보드 복사본을 index.html로 push.
+
+# 인스타 배포용 첨부파일은 예외로 공개
+!baby/posts/**/files/
+!baby/posts/**/files/*.xlsx
