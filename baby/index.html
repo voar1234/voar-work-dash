@@ -1322,21 +1322,54 @@ function renderQueue() {
     const thumbs = (q.images || []).slice(0, 6).map(u =>
       `<img src="${escapeHtml(u)}" style="width:64px;height:80px;object-fit:cover;border-radius:6px;border:1px solid var(--line)">`).join('');
     const cap = escapeHtml(q.caption || '').replace(/\n/g, '<br>');
+    const editable = q.status === 'pending' || q.status === 'rejected';
+    // 카드별 수정 메모 입력칸 — 이미지는 브라우저에서 다시 그릴 수 없어서,
+    // "뭐가 틀렸는지"를 받아두고 내가 그걸 보고 다시 만든다.
+    const noteRows = (q.images || []).map((u, i) => `
+      <div class="row mb8" style="align-items:flex-start">
+        <img src="${escapeHtml(u)}" style="width:56px;height:70px;object-fit:cover;border-radius:6px;border:1px solid var(--line)">
+        <span class="fs12 soft" style="width:34px;padding-top:24px">${i + 1}장</span>
+        <input type="text" data-note-q="${q.id}" data-note-i="${i}"
+               value="${escapeHtml((q.cardNotes || [])[i] || '')}"
+               placeholder="이 장에서 고칠 부분 (비워두면 그대로)" style="flex:1">
+      </div>`).join('');
+
     return `<div class="card" style="box-shadow:none;margin-bottom:12px">
       <div class="row mb8">
         <b class="fs13">${escapeHtml(q.title || '(제목 없음)')}</b>
         <span class="tag ${cls}">${label}</span>
         <span class="soft fs11">${escapeHtml(q.scheduledAt || '')}</span>
         <div class="spacer"></div>
+        ${q.attachment ? `<a class="btn sm" href="${escapeHtml(q.attachment)}" target="_blank" rel="noopener">📎 첨부파일</a>` : ''}
         ${q.permalink ? `<a class="btn sm" href="${escapeHtml(q.permalink)}" target="_blank" rel="noopener">게시물 보기</a>` : ''}
+        ${editable ? `<button class="btn sm" data-q-edit="${q.id}">✏️ 수정</button>` : ''}
         ${q.status === 'pending' ? `
           <button class="btn sm brand" data-q-ok="${q.id}">✅ 발행 승인</button>
           <button class="btn sm" data-q-no="${q.id}">반려</button>` : ''}
         ${q.status === 'approved' ? `<button class="btn sm" data-q-cancel="${q.id}">승인 취소</button>` : ''}
       </div>
       <div class="row mb8">${thumbs}</div>
+      ${q.note ? `<div class="fs11 soft mb8">📌 ${escapeHtml(q.note)}</div>` : ''}
       <details><summary class="fs12 muted" style="cursor:pointer">캡션 전문 보기</summary>
         <div class="fs12 muted mt8" style="line-height:1.8">${cap}</div></details>
+
+      <div id="edit-${q.id}" class="hidden mt14" style="border-top:1px solid var(--line);padding-top:14px">
+        <div class="fs12 mb8"><b>제목</b></div>
+        <input type="text" id="et-${q.id}" value="${escapeHtml(q.title || '')}" style="width:100%" class="mb14">
+
+        <div class="fs12 mb8"><b>캡션</b> <span class="soft">— 직접 고치면 그대로 발행됩니다</span></div>
+        <textarea id="ec-${q.id}" style="min-height:220px" class="mb14">${escapeHtml(q.caption || '')}</textarea>
+
+        <div class="fs12 mb8"><b>카드 수정 요청</b>
+          <span class="soft">— 이미지는 여기서 다시 못 그립니다. 뭐가 틀렸는지 적어주시면 제가 고쳐서 다시 올립니다.</span></div>
+        ${noteRows}
+
+        <div class="row mt14">
+          <button class="btn brand sm" data-q-save="${q.id}">저장</button>
+          <button class="btn sm" data-q-close="${q.id}">닫기</button>
+          <span class="fs11 soft" id="es-${q.id}"></span>
+        </div>
+      </div>
     </div>`;
   }).join('');
 }
@@ -1359,6 +1392,30 @@ document.getElementById('queue-list').addEventListener('click', e => {
   if (t.dataset.qOk)     set(t.dataset.qOk, 'approved');
   if (t.dataset.qNo)     set(t.dataset.qNo, 'rejected');
   if (t.dataset.qCancel) set(t.dataset.qCancel, 'pending');
+
+  if (t.dataset.qEdit)  document.getElementById('edit-' + t.dataset.qEdit).classList.toggle('hidden');
+  if (t.dataset.qClose) document.getElementById('edit-' + t.dataset.qClose).classList.add('hidden');
+
+  if (t.dataset.qSave) {
+    const id = t.dataset.qSave;
+    const q = S.queue.find(x => x.id === id);
+    if (!q) return;
+    q.title = document.getElementById('et-' + id).value.trim();
+    q.caption = document.getElementById('ec-' + id).value;
+    q.cardNotes = [...document.querySelectorAll(`[data-note-q="${id}"]`)]
+      .map(el => el.value.trim());
+    q.editedAt = new Date().toISOString();
+    // 수정 요청이 하나라도 있으면 "재작업 필요" 표시
+    q.needsRework = q.cardNotes.some(n => n);
+    save();
+    const st = document.getElementById('es-' + id);
+    if (st) {
+      st.textContent = q.needsRework
+        ? '저장됨 — 카드 수정 요청이 전달됩니다'
+        : '저장됨';
+      setTimeout(renderQueue, 900);
+    }
+  }
 });
 
 /* ───────── 백업 UI ───────── */
