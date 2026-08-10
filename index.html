@@ -6726,3 +6726,753 @@ setInterval(fetchProposalNotifications, 30000);
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>양성준 대시보드 · 행사운영</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Inter:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-grad: linear-gradient(135deg, #f7f8fa 0%, #eef1f5 100%);
+    --card: #fff;
+    --border: #e6e8ec;
+    --border-strong: #d1d5db;
+    --text: #1a1d23;
+    --text-sub: #4b5563;
+    --text-mute: #9ca3af;
+    --text-soft: #6b7280;
+    --accent: #03c75a;
+    --accent-dark: #00a44a;
+    --accent-soft: #e8f8ee;
+    --warn: #f59e0b;
+    --warn-soft: #fef3c7;
+    --danger: #ef4444;
+    --danger-soft: #fee2e2;
+    --danger-strong: #991b1b;
+    --info: #6366f1;
+    --info-soft: #eef2ff;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,.04);
+    --shadow-md: 0 4px 14px rgba(0,0,0,.06), 0 12px 32px rgba(0,0,0,.07);
+    --radius: 14px;
+    --radius-sm: 10px;
+    --red-bg: #fee2e2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', -apple-system, sans-serif;
+    background: var(--bg-grad);
+    background-attachment: fixed;
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+  }
+
+  /* ────────── Sidebar ────────── */
+  aside.sidebar {
+    background: #1a1d23;
+    color: #fff;
+    padding: 24px 16px;
+    display: flex; flex-direction: column;
+    min-height: 100vh;
+  }
+  aside .brand {
+    padding: 0 8px 24px 8px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    margin-bottom: 20px;
+  }
+  aside .brand .voar {
+    font-family: 'Inter', sans-serif; font-weight: 700;
+    color: var(--accent); font-size: 28px; letter-spacing: -0.5px;
+  }
+  aside .brand .user {
+    color: #cbd5e1; font-size: 13px; margin-top: 4px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  aside .brand .user select {
+    background: #262a33; color: #fff; border: 1px solid #374151;
+    padding: 4px 8px; border-radius: 6px; font-family: inherit;
+    font-size: 12px; cursor: pointer;
+  }
+
+  nav.menu { display: flex; flex-direction: column; gap: 4px; }
+  nav.menu button.nav-item {
+    background: transparent; border: none; color: #cbd5e1;
+    padding: 10px 12px; border-radius: 8px; font-family: inherit;
+    font-size: 14px; cursor: pointer; text-align: left;
+    display: flex; align-items: center; gap: 10px;
+    transition: background .15s;
+  }
+  nav.menu button.nav-item:hover { background: #262a33; color: #fff; }
+  nav.menu button.nav-item.active { background: var(--accent); color: #fff; font-weight: 600; }
+  nav.menu button.nav-item .nav-emoji { width: 18px; text-align: center; font-size: 15px; }
+  nav.menu button.nav-item .nav-badge {
+    margin-left: auto; background: var(--danger); color: #fff;
+    padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700;
+  }
+  .nav-group { margin-top: 6px; }
+  .nav-group-header {
+    background: transparent; border: none; color: #9ca3af;
+    padding: 10px 12px; font-family: inherit; font-size: 12px;
+    font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px; cursor: pointer; width: 100%;
+  }
+  .nav-group-header .group-emoji { font-size: 14px; }
+  .nav-group-header .group-caret { margin-left: auto; font-size: 10px; transition: transform .15s; }
+  .nav-group.open .nav-group-header .group-caret { transform: rotate(90deg); }
+  .nav-group-items { display: none; padding-left: 12px; flex-direction: column; gap: 2px; }
+  .nav-group.open .nav-group-items { display: flex; }
+  .nav-back {
+    margin-top: auto;
+    background: transparent; border: 1px solid #374151;
+    color: #cbd5e1; padding: 10px 12px; border-radius: 8px;
+    font-family: inherit; font-size: 13px; cursor: pointer;
+    text-align: center; text-decoration: none;
+  }
+  .nav-back:hover { background: #262a33; color: #fff; }
+
+  /* ────────── Main ────────── */
+  main.content { padding: 24px 32px; overflow-y: auto; min-height: 100vh; }
+  header.topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  header.topbar .page-title {
+    font-size: 22px; font-weight: 700; letter-spacing: -0.4px;
+  }
+  header.topbar .topbar-right { display: flex; gap: 10px; align-items: center; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 12px; font-weight: 600;
+    background: var(--info-soft); color: var(--info);
+  }
+  .btn {
+    background: var(--accent); color: #fff; border: none;
+    padding: 10px 16px; border-radius: 10px;
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: background .15s;
+  }
+  .btn:hover { background: var(--accent-dark); }
+  .btn.secondary { background: #f3f4f6; color: var(--text-sub); }
+  .btn.secondary:hover { background: #e5e7eb; }
+  .btn.small { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
+  .btn.danger { background: var(--danger); }
+  .btn.danger:hover { background: var(--danger-strong); }
+  .btn.ghost {
+    background: transparent; color: var(--text-sub);
+    border: 1px solid var(--border-strong);
+  }
+  .btn.ghost:hover { background: #f9fafb; color: var(--text); }
+
+  /* ────────── Page ────────── */
+  section.page { display: none; }
+  section.page.active { display: block; }
+  .panel {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px 24px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 18px;
+  }
+  .panel h2 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .panel .pc-info-label {
+    color: var(--text-mute); font-size: 12px; margin-bottom: 14px;
+  }
+
+  /* ────────── 필터 바 ────────── */
+  .filter-bar {
+    display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .filter-bar label {
+    font-size: 12px; font-weight: 600; color: var(--text-sub);
+  }
+  .filter-bar select, .filter-bar input {
+    padding: 8px 12px; border: 1px solid var(--border-strong);
+    border-radius: 8px; font-family: inherit; font-size: 13px;
+    background: #fff; color: var(--text);
+  }
+  .filter-bar select:focus, .filter-bar input:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(3,199,90,.12);
+  }
+  .filter-bar .grow { flex: 1; }
+
+  /* ────────── 통계 카드 ────────── */
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    margin-bottom: 18px;
+  }
+  .stat-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .stat-card .label {
+    font-size: 12px; font-weight: 600; color: var(--text-mute);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .stat-card .label .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+  .stat-card .value {
+    font-size: 28px; font-weight: 700; margin-top: 4px;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  }
+  .stat-card.pending .dot { background: var(--warn); }
+  .stat-card.pending .value { color: var(--warn); }
+  .stat-card.confirmed .dot { background: var(--accent); }
+  .stat-card.confirmed .value { color: var(--accent-dark); }
+  .stat-card.rejected .dot { background: var(--danger); }
+  .stat-card.rejected .value { color: var(--danger); }
+  .stat-card.total .dot { background: var(--info); }
+  .stat-card.total .value { color: var(--info); }
+
+  /* ────────── 테이블 ────────── */
+  table.data-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.data-table th {
+    background: #f8fafc; color: var(--text-mute);
+    padding: 12px 14px; text-align: left;
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+  }
+  table.data-table td {
+    padding: 14px; border-bottom: 1px solid #f3f4f6;
+    vertical-align: middle;
+  }
+  table.data-table tr:last-child td { border-bottom: 0; }
+  table.data-table tr.rejected {
+    background: #fff5f5;
+  }
+  table.data-table tr.rejected:hover { background: #ffeded; }
+  table.data-table tr:not(.rejected):hover { background: #fafbfc; }
+  table.data-table .num {
+    text-align: right; font-family: 'Inter', sans-serif;
+    font-weight: 600;
+  }
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 700;
+  }
+  .status-badge.pending { background: var(--warn-soft); color: #92400e; }
+  .status-badge.confirmed { background: var(--accent-soft); color: var(--accent-dark); }
+  .status-badge.rejected { background: var(--danger-soft); color: var(--danger-strong); }
+  .status-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor;
+  }
+  .row-actions {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .discount-tag {
+    display: inline-block; background: #fef3c7; color: #92400e;
+    padding: 2px 8px; border-radius: 4px; font-size: 11px;
+    font-weight: 700; margin-left: 6px;
+  }
+  .reject-reason {
+    font-size: 11px; color: var(--danger-strong);
+    background: var(--danger-soft); padding: 4px 8px; border-radius: 6px;
+    display: inline-block; margin-top: 4px;
+    max-width: 260px;
+  }
+  .empty-hint {
+    text-align: center; padding: 40px 20px;
+    color: var(--text-mute); font-size: 14px;
+  }
+
+  /* ────────── Modal ────────── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.5);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100; padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: #fff; border-radius: var(--radius);
+    max-width: 560px; width: 100%; max-height: 92vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,.3);
+  }
+  .modal-header {
+    padding: 20px 24px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .modal-header h3 { font-size: 17px; font-weight: 700; }
+  .modal-close {
+    background: transparent; border: none; font-size: 22px;
+    color: var(--text-mute); cursor: pointer;
+  }
+  .modal-body { padding: 20px 24px; }
+  .modal-body label {
+    display: block; font-size: 12px; font-weight: 600;
+    color: var(--text-sub); margin: 14px 0 6px;
+  }
+  .modal-body label:first-child { margin-top: 0; }
+  .modal-body input, .modal-body select, .modal-body textarea {
+    width: 100%; padding: 10px 12px;
+    border: 1px solid var(--border-strong); border-radius: 8px;
+    font-family: inherit; font-size: 13.5px; background: #fff;
+    color: var(--text);
+  }
+  .modal-body textarea { resize: vertical; min-height: 60px; }
+  .modal-body input:focus, .modal-body select:focus, .modal-body textarea:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(3,199,90,.12);
+  }
+  .modal-body .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .modal-footer {
+    padding: 16px 24px; border-top: 1px solid var(--border);
+    display: flex; justify-content: flex-end; gap: 10px;
+  }
+
+  @media (max-width: 900px) {
+    body { grid-template-columns: 1fr; }
+    aside.sidebar { min-height: auto; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">
+    <div class="voar">voar</div>
+    <div class="user">
+      <span>사용자:</span>
+      <select id="userSelect">
+        <option value="양성준">양성준</option>
+        <option value="김민채">김민채</option>
+        <option value="기타">기타</option>
+      </select>
+    </div>
+  </div>
+  <nav class="menu">
+    <div class="nav-group open" data-group="event-ops">
+      <button class="nav-group-header"><span class="group-emoji">🎁</span><span class="group-title">행사운영</span><span class="group-caret">▶</span></button>
+      <div class="nav-group-items">
+        <button class="nav-item active" data-page="proposals"><span class="nav-emoji">📝</span> 행사제안</button>
+      </div>
+    </div>
+  </nav>
+  <a href="index.html" class="nav-back">← 대시보드 허브</a>
+</aside>
+
+<main class="content">
+  <header class="topbar">
+    <div class="page-title" id="pageTitle">📝 행사제안</div>
+    <div class="topbar-right">
+      <span class="badge" id="lastUpdated">데이터 로드 중…</span>
+      <button class="btn" onclick="openProposalModal()">＋ 새 제안 등록</button>
+    </div>
+  </header>
+
+  <section class="page active" id="page-proposals">
+
+    <!-- 통계 카드 -->
+    <div class="stat-grid">
+      <div class="stat-card total">
+        <div class="label"><span class="dot"></span>전체</div>
+        <div class="value" id="stat-total">0</div>
+      </div>
+      <div class="stat-card pending">
+        <div class="label"><span class="dot"></span>대기중</div>
+        <div class="value" id="stat-pending">0</div>
+      </div>
+      <div class="stat-card confirmed">
+        <div class="label"><span class="dot"></span>컨펌완료</div>
+        <div class="value" id="stat-confirmed">0</div>
+      </div>
+      <div class="stat-card rejected">
+        <div class="label"><span class="dot"></span>반려</div>
+        <div class="value" id="stat-rejected">0</div>
+      </div>
+    </div>
+
+    <!-- 필터 -->
+    <div class="panel">
+      <div class="filter-bar">
+        <label>상태</label>
+        <select id="filterStatus" onchange="renderProposals()">
+          <option value="all">전체</option>
+          <option value="pending">대기중</option>
+          <option value="confirmed">컨펌완료</option>
+          <option value="rejected">반려</option>
+        </select>
+        <label>제안자</label>
+        <select id="filterProposer" onchange="renderProposals()">
+          <option value="all">전체</option>
+        </select>
+        <input class="grow" type="text" id="searchInput" placeholder="🔍 제품명·프로젝트 검색" oninput="renderProposals()">
+      </div>
+
+      <div id="proposalsTable"></div>
+    </div>
+
+  </section>
+</main>
+
+<!-- 제안 등록/수정 모달 -->
+<div class="modal-overlay" id="proposalModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">＋ 새 행사제안 등록</h3>
+      <button class="modal-close" onclick="closeProposalModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editingId">
+      <label>제안자 *</label>
+      <select id="fProposer">
+        <option value="김민채">김민채</option>
+        <option value="양성준">양성준</option>
+        <option value="기타">기타</option>
+      </select>
+      <label>프로젝트 *</label>
+      <input type="text" id="fProject" placeholder="예: 3월 봄맞이 행사">
+      <div class="row">
+        <div>
+          <label>제품명 *</label>
+          <input type="text" id="fProductName" placeholder="예: 슈트쏙 의류관리기">
+        </div>
+        <div>
+          <label>모델명</label>
+          <input type="text" id="fModel" placeholder="예: VCDM-002WH">
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>정상가 (원)</label>
+          <input type="number" id="fNormalPrice" placeholder="예: 129000">
+        </div>
+        <div>
+          <label>행사가 (원) *</label>
+          <input type="number" id="fEventPrice" placeholder="예: 89000">
+        </div>
+      </div>
+      <label>메모 (선택)</label>
+      <textarea id="fNote" placeholder="예: 봉투 사은품 포함, MD 딜 조건 등"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn secondary" onclick="closeProposalModal()">취소</button>
+      <button class="btn" onclick="submitProposal()" id="submitBtn">등록</button>
+    </div>
+  </div>
+</div>
+
+<!-- 반려 사유 모달 -->
+<div class="modal-overlay" id="rejectModal">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <h3>❌ 반려 사유</h3>
+      <button class="modal-close" onclick="closeRejectModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="rejectingId">
+      <label>반려 사유 *</label>
+      <textarea id="rejectReason" placeholder="예: 마진 확보 어려움 · 재고 부족 · 채널 정책 위반"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn secondary" onclick="closeRejectModal()">취소</button>
+      <button class="btn danger" onclick="submitReject()">반려 확정</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let PROPOSALS = [];
+let CURRENT_USER = 'localStorage 초기화 대기';
+
+async function init() {
+  // 사용자 저장/복원 (localStorage)
+  CURRENT_USER = localStorage.getItem('voar_current_user') || '양성준';
+  document.getElementById('userSelect').value = CURRENT_USER;
+  document.getElementById('userSelect').addEventListener('change', e => {
+    CURRENT_USER = e.target.value;
+    localStorage.setItem('voar_current_user', CURRENT_USER);
+    document.getElementById('fProposer').value = CURRENT_USER;
+  });
+  document.getElementById('fProposer').value = CURRENT_USER;
+
+  // 네비 그룹 토글
+  document.querySelectorAll('.nav-group-header').forEach(h => {
+    h.addEventListener('click', () => h.closest('.nav-group').classList.toggle('open'));
+  });
+
+  await loadProposals();
+}
+
+async function loadProposals() {
+  try {
+    const res = await fetch('/api/event-proposals');
+    const data = await res.json();
+    PROPOSALS = data.proposals || [];
+    populateProposerFilter();
+    renderProposals();
+    document.getElementById('lastUpdated').textContent = `${PROPOSALS.length}건 · ${new Date().toLocaleTimeString('ko-KR')}`;
+  } catch (e) {
+    console.error(e);
+    document.getElementById('proposalsTable').innerHTML = `<div class="empty-hint">서버 연결 실패 — server.py가 실행 중인지 확인하세요.</div>`;
+  }
+}
+
+function populateProposerFilter() {
+  const proposers = [...new Set(PROPOSALS.map(p => p.proposer).filter(Boolean))];
+  const sel = document.getElementById('filterProposer');
+  const current = sel.value;
+  sel.innerHTML = '<option value="all">전체</option>' + proposers.map(p => `<option value="${escapeHTML(p)}">${escapeHTML(p)}</option>`).join('');
+  sel.value = current;
+}
+
+function renderProposals() {
+  const status = document.getElementById('filterStatus').value;
+  const proposer = document.getElementById('filterProposer').value;
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+
+  let list = PROPOSALS.slice();
+  if (status !== 'all') list = list.filter(p => p.status === status);
+  if (proposer !== 'all') list = list.filter(p => p.proposer === proposer);
+  if (q) list = list.filter(p =>
+    (p.product_name || '').toLowerCase().includes(q) ||
+    (p.project || '').toLowerCase().includes(q) ||
+    (p.model || '').toLowerCase().includes(q)
+  );
+
+  // 최신순
+  list.sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
+
+  updateStats();
+
+  const el = document.getElementById('proposalsTable');
+  if (list.length === 0) {
+    el.innerHTML = `<div class="empty-hint">📭 해당 조건에 맞는 제안이 없습니다</div>`;
+    return;
+  }
+
+  el.innerHTML = `
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="width:11%">제안자</th>
+          <th style="width:16%">프로젝트</th>
+          <th style="width:20%">제품 / 모델</th>
+          <th style="width:11%" class="num">정상가</th>
+          <th style="width:11%" class="num">행사가</th>
+          <th style="width:11%">상태</th>
+          <th>액션</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${list.map(p => renderRow(p)).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderRow(p) {
+  const normalPrice = p.normal_price ? Number(p.normal_price).toLocaleString() : '—';
+  const eventPrice = p.event_price ? Number(p.event_price).toLocaleString() : '—';
+  const discount = (p.normal_price && p.event_price)
+    ? Math.round((1 - p.event_price / p.normal_price) * 100)
+    : null;
+  const statusBadge = {
+    pending: `<span class="status-badge pending"><span class="dot"></span>대기중</span>`,
+    confirmed: `<span class="status-badge confirmed"><span class="dot"></span>컨펌완료</span>`,
+    rejected: `<span class="status-badge rejected"><span class="dot"></span>반려</span>`
+  }[p.status] || p.status;
+
+  let actions = '';
+  if (p.status === 'pending') {
+    actions = `
+      <div class="row-actions">
+        <button class="btn small" onclick="confirmProposal('${p.id}')">✓ 컨펌</button>
+        <button class="btn small danger" onclick="openRejectModal('${p.id}')">✕ 반려</button>
+        <button class="btn small ghost" onclick="editProposal('${p.id}')">수정</button>
+        <button class="btn small ghost" onclick="deleteProposal('${p.id}')">삭제</button>
+      </div>`;
+  } else {
+    actions = `
+      <div class="row-actions">
+        <button class="btn small ghost" onclick="editProposal('${p.id}')">수정</button>
+        <button class="btn small ghost" onclick="deleteProposal('${p.id}')">삭제</button>
+      </div>`;
+  }
+
+  const rowClass = p.status === 'rejected' ? 'rejected' : '';
+  const rejectNote = (p.status === 'rejected' && p.reject_reason)
+    ? `<div class="reject-reason">사유: ${escapeHTML(p.reject_reason)}</div>` : '';
+  const confirmerNote = (p.status === 'confirmed' && p.confirmer)
+    ? `<div style="font-size:11px;color:var(--text-mute);margin-top:4px;">by ${escapeHTML(p.confirmer)}</div>` : '';
+
+  return `
+    <tr class="${rowClass}">
+      <td><b>${escapeHTML(p.proposer)}</b></td>
+      <td>${escapeHTML(p.project)}</td>
+      <td>
+        <div><b>${escapeHTML(p.product_name)}</b></div>
+        ${p.model ? `<div style="font-size:11px;color:var(--text-mute);">${escapeHTML(p.model)}</div>` : ''}
+        ${p.note ? `<div style="font-size:11px;color:var(--text-soft);margin-top:4px;">${escapeHTML(p.note)}</div>` : ''}
+      </td>
+      <td class="num">${normalPrice}</td>
+      <td class="num">${eventPrice}${discount !== null ? `<span class="discount-tag">-${discount}%</span>` : ''}</td>
+      <td>
+        ${statusBadge}
+        ${rejectNote}
+        ${confirmerNote}
+      </td>
+      <td>${actions}</td>
+    </tr>
+  `;
+}
+
+function updateStats() {
+  const total = PROPOSALS.length;
+  const pending = PROPOSALS.filter(p => p.status === 'pending').length;
+  const confirmed = PROPOSALS.filter(p => p.status === 'confirmed').length;
+  const rejected = PROPOSALS.filter(p => p.status === 'rejected').length;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('stat-confirmed').textContent = confirmed;
+  document.getElementById('stat-rejected').textContent = rejected;
+}
+
+/* 모달 열기/닫기 */
+function openProposalModal() {
+  document.getElementById('modalTitle').textContent = '＋ 새 행사제안 등록';
+  document.getElementById('editingId').value = '';
+  document.getElementById('fProposer').value = CURRENT_USER;
+  document.getElementById('fProject').value = '';
+  document.getElementById('fProductName').value = '';
+  document.getElementById('fModel').value = '';
+  document.getElementById('fNormalPrice').value = '';
+  document.getElementById('fEventPrice').value = '';
+  document.getElementById('fNote').value = '';
+  document.getElementById('submitBtn').textContent = '등록';
+  document.getElementById('proposalModal').classList.add('show');
+}
+function closeProposalModal() { document.getElementById('proposalModal').classList.remove('show'); }
+function openRejectModal(id) {
+  document.getElementById('rejectingId').value = id;
+  document.getElementById('rejectReason').value = '';
+  document.getElementById('rejectModal').classList.add('show');
+}
+function closeRejectModal() { document.getElementById('rejectModal').classList.remove('show'); }
+
+function editProposal(id) {
+  const p = PROPOSALS.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('modalTitle').textContent = '✏️ 제안 수정';
+  document.getElementById('editingId').value = id;
+  document.getElementById('fProposer').value = p.proposer;
+  document.getElementById('fProject').value = p.project;
+  document.getElementById('fProductName').value = p.product_name;
+  document.getElementById('fModel').value = p.model || '';
+  document.getElementById('fNormalPrice').value = p.normal_price || '';
+  document.getElementById('fEventPrice').value = p.event_price || '';
+  document.getElementById('fNote').value = p.note || '';
+  document.getElementById('submitBtn').textContent = '수정 저장';
+  document.getElementById('proposalModal').classList.add('show');
+}
+
+async function submitProposal() {
+  const id = document.getElementById('editingId').value;
+  const payload = {
+    proposer: document.getElementById('fProposer').value,
+    project: document.getElementById('fProject').value.trim(),
+    product_name: document.getElementById('fProductName').value.trim(),
+    model: document.getElementById('fModel').value.trim(),
+    normal_price: Number(document.getElementById('fNormalPrice').value) || null,
+    event_price: Number(document.getElementById('fEventPrice').value) || null,
+    note: document.getElementById('fNote').value.trim()
+  };
+  if (!payload.proposer || !payload.project || !payload.product_name || !payload.event_price) {
+    alert('제안자·프로젝트·제품명·행사가는 필수입니다.');
+    return;
+  }
+  try {
+    if (id) {
+      payload.id = id;
+      const res = await fetch('/api/event-proposals/update', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error('수정 실패');
+    } else {
+      const res = await fetch('/api/event-proposals', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error('등록 실패');
+    }
+    closeProposalModal();
+    await loadProposals();
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+async function confirmProposal(id) {
+  if (!confirm('이 제안을 컨펌하시겠어요?')) return;
+  try {
+    const res = await fetch('/api/event-proposals/confirm', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ id, confirmer: CURRENT_USER })
+    });
+    if (!res.ok) throw new Error('컨펌 실패');
+    await loadProposals();
+  } catch (e) { alert(e.message); }
+}
+
+async function submitReject() {
+  const id = document.getElementById('rejectingId').value;
+  const reason = document.getElementById('rejectReason').value.trim();
+  if (!reason) { alert('반려 사유를 입력해주세요.'); return; }
+  try {
+    const res = await fetch('/api/event-proposals/reject', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ id, confirmer: CURRENT_USER, reason })
+    });
+    if (!res.ok) throw new Error('반려 실패');
+    closeRejectModal();
+    await loadProposals();
+  } catch (e) { alert(e.message); }
+}
+
+async function deleteProposal(id) {
+  if (!confirm('이 제안을 삭제하시겠어요?')) return;
+  try {
+    const res = await fetch('/api/event-proposals', {
+      method: 'DELETE', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ id })
+    });
+    if (!res.ok) throw new Error('삭제 실패');
+    await loadProposals();
+  } catch (e) { alert(e.message); }
+}
+
+function escapeHTML(s) {
+  return (s || '').toString().replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+/* 모달 배경 클릭으로 닫기 */
+document.getElementById('proposalModal').addEventListener('click', e => {
+  if (e.target.id === 'proposalModal') closeProposalModal();
+});
+document.getElementById('rejectModal').addEventListener('click', e => {
+  if (e.target.id === 'rejectModal') closeRejectModal();
+});
+
+init();
+</script>
+
+</body>
+</html>
+
