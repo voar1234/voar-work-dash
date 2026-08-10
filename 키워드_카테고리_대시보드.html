@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>신제품 키워드 카테고리 대시보드</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Inter:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-grad: linear-gradient(135deg, #f7f8fa 0%, #eef1f5 100%);
+    --card: #fff;
+    --border: #e6e8ec;
+    --border-strong: #d1d5db;
+    --text: #1a1d23;
+    --text-sub: #4b5563;
+    --text-mute: #9ca3af;
+    --accent: #03c75a;
+    --accent-dark: #00a44a;
+    --accent-soft: #e8f8ee;
+    --warn: #f97316;
+    --warn-soft: #fff7ed;
+    --warn-border: #fdba74;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,.04);
+    --shadow-md: 0 4px 14px rgba(0,0,0,.06), 0 12px 32px rgba(0,0,0,.07);
+    --radius: 14px;
+    --radius-sm: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', -apple-system, sans-serif;
+    background: var(--bg-grad);
+    background-attachment: fixed;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1400px; margin: 0 auto; }
+
+  /* Header — 다크 + 그린 액센트 */
+  header {
+    background: #1a1d23;
+    color: #fff;
+    padding: 26px 32px;
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-md);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  header h1 {
+    font-size: 24px; font-weight: 700; margin-bottom: 4px;
+    letter-spacing: -0.3px;
+  }
+  header h1 .voar {
+    font-family: 'Inter', sans-serif; font-weight: 700;
+    color: var(--accent); margin-right: 8px;
+  }
+  header .sub { color: #9ca3af; font-size: 13px; letter-spacing: 0.5px; }
+  header button {
+    background: var(--accent); color: #fff;
+    border: none; padding: 12px 22px; border-radius: 10px;
+    font-weight: 600; cursor: pointer; font-size: 14px;
+    font-family: inherit;
+    transition: background .15s, transform .1s;
+  }
+  header button:hover { background: var(--accent-dark); transform: translateY(-1px); }
+
+  /* Category tabs */
+  .cat-tabs {
+    display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .cat-tab {
+    background: var(--card); border: 1px solid var(--border);
+    padding: 10px 18px; border-radius: 10px;
+    cursor: pointer; font-weight: 500; font-size: 14px;
+    color: var(--text-sub); transition: all 0.15s;
+    display: flex; align-items: center; gap: 8px;
+    font-family: inherit;
+  }
+  .cat-tab:hover { border-color: var(--accent); color: var(--accent); }
+  .cat-tab.active { background: var(--text); border-color: var(--text); color: #fff; }
+  .cat-tab .badge-count {
+    background: rgba(0,0,0,0.06); padding: 2px 9px; border-radius: 999px;
+    font-size: 11px; font-weight: 600;
+  }
+  .cat-tab.active .badge-count { background: rgba(255,255,255,0.18); color: #fff; }
+
+  /* View mode toggle */
+  .view-toggle {
+    display: inline-flex; background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 4px; margin-bottom: 16px;
+  }
+  .view-toggle button {
+    background: transparent; border: none; padding: 8px 16px;
+    border-radius: 7px; cursor: pointer; font-weight: 500;
+    color: var(--text-sub); font-size: 13px; font-family: inherit;
+    transition: all 0.15s;
+  }
+  .view-toggle button:hover { color: var(--text); }
+  .view-toggle button.active { background: var(--text); color: #fff; font-weight: 600; }
+
+  /* Control bar */
+  .controls {
+    background: var(--card);
+    padding: 16px 18px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .controls label { font-weight: 600; font-size: 13px; color: var(--text-sub); }
+  .controls select, .controls input {
+    padding: 10px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    background: #fff;
+  }
+  .controls select { min-width: 280px; cursor: pointer; }
+  .controls input { flex: 1; min-width: 280px; }
+  .controls select:focus, .controls input:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(3, 199, 90, 0.12);
+  }
+  .export-btn {
+    background: var(--text); color: #fff;
+    border: none; padding: 11px 18px; border-radius: 10px;
+    font-weight: 600; cursor: pointer; font-size: 13.5px;
+    font-family: inherit; white-space: nowrap;
+    transition: background .15s, transform .1s;
+  }
+  .export-btn:hover { background: #000; transform: translateY(-1px); }
+  .export-btn:active { transform: translateY(0); }
+
+  /* Summary cards */
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .card {
+    background: var(--card);
+    padding: 20px 22px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .card .label {
+    font-size: 12px; color: var(--text-mute);
+    margin-bottom: 8px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .card .label .dot {
+    width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+  }
+  .card .value {
+    font-size: 32px; font-weight: 700;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    letter-spacing: -1px;
+  }
+  .card.total .value { color: #6366f1; }
+  .card.total .dot { background: #6366f1; }
+  .card.p1 .value { color: #10b981; }
+  .card.p1 .dot { background: #10b981; }
+  .card.p2 .value { color: #f59e0b; }
+  .card.p2 .dot { background: #f59e0b; }
+  .card.p3 .value { color: #64748b; }
+  .card.p3 .dot { background: #94a3b8; }
+  .card.banned .value { color: #ef4444; }
+  .card.banned .dot { background: #ef4444; }
+
+  /* Product info banner — 2단 그리드 (5:5) */
+  .product-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+  .product-info {
+    background: var(--card);
+    padding: 26px 28px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+  }
+  .product-info h2 {
+    font-size: 22px; font-weight: 700; color: var(--text);
+    margin-bottom: 4px; letter-spacing: -0.4px; line-height: 1.3;
+  }
+  .product-info .model {
+    font-weight: 400; color: var(--text-mute); font-size: 12px;
+    font-family: 'Inter', sans-serif; letter-spacing: 0.5px;
+    margin-bottom: 14px; display: block;
+  }
+  .product-info .badge-row {
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .product-info .target {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent-soft); color: var(--accent-dark);
+    padding: 10px 14px; border-radius: 10px;
+    font-weight: 600; font-size: 13px;
+    border: 1px solid #b9e6c9;
+    margin-bottom: 18px; line-height: 1.4;
+  }
+  .product-info .target .ic { font-size: 16px; }
+  .product-info .section-label {
+    font-size: 11px; font-weight: 700; color: var(--text-mute);
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 12px; margin-top: 6px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .product-info .section-label::after {
+    content: ""; flex: 1; height: 1px; background: var(--border);
+  }
+  .product-info .features {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px;
+  }
+  .feature-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #f8fafc; color: var(--text-sub);
+    padding: 10px 14px; border-radius: 999px;
+    font-size: 13.5px; font-weight: 500;
+    border: 1px solid var(--border);
+    transition: all .15s;
+  }
+  .feature-chip:hover {
+    background: #fff; border-color: var(--accent);
+    color: var(--text); transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+  }
+  .feature-chip .ic {
+    font-size: 16px; line-height: 1;
+  }
+  .product-info .footer-meta {
+    margin-top: 20px; padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text-mute);
+    display: flex; gap: 18px; flex-wrap: wrap;
+  }
+  .product-info .footer-meta b {
+    color: var(--text-sub); font-weight: 600; margin-right: 4px;
+  }
+
+  /* 제품별 함정 패턴 박스 (제품 정보 우측) */
+  .product-traps {
+    background: #fff7ed;
+    border: 1px solid #fdba74;
+    border-radius: 12px;
+    padding: 20px 22px;
+    box-shadow: 0 2px 6px rgba(251, 146, 60, 0.1);
+    display: flex; flex-direction: column;
+  }
+  .product-traps .traps-title {
+    font-size: 16px; font-weight: 700; color: #9a3412;
+    margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  }
+  .product-traps .traps-title .count {
+    background: #fed7aa; color: #9a3412;
+    padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 700;
+  }
+  .product-traps .trap-list {
+    display: flex; flex-direction: column; gap: 10px;
+    max-height: 480px; overflow-y: auto; padding-right: 4px;
+  }
+  .product-traps .trap-item {
+    background: white; border-radius: 8px;
+    padding: 14px 16px;
+    line-height: 1.5;
+    border-left: 4px solid #f97316;
+  }
+  .product-traps .trap-item .tp {
+    color: #be185d; font-weight: 700; font-size: 14.5px;
+    display: block; margin-bottom: 8px;
+  }
+  .product-traps .trap-item .row {
+    display: flex; gap: 8px; font-size: 13px; line-height: 1.6;
+    margin-top: 4px;
+  }
+  .product-traps .trap-item .row .label {
+    flex-shrink: 0; font-weight: 700; color: #6b7280; min-width: 38px;
+  }
+  .product-traps .trap-item .row.good .val { color: #15803d; }
+  .product-traps .trap-item .row.bad .val { color: #991b1b; font-weight: 600; }
+  .product-traps .trap-item .nt {
+    color: #78350f; font-size: 12.5px; font-style: italic;
+    margin-top: 8px; display: block; line-height: 1.5;
+    padding-top: 8px; border-top: 1px dashed #fdba74;
+  }
+  .product-traps .empty-traps {
+    text-align: center; color: #9a3412; font-size: 13px; padding: 24px; opacity: 0.7;
+  }
+
+  @media (max-width: 1200px) {
+    .product-info-grid { grid-template-columns: 1fr; }
+  }
+  .cat-badge {
+    display: inline-block; padding: 4px 12px; border-radius: 6px;
+    font-size: 12px; font-weight: 700;
+  }
+  .cat-badge.생활가전 { background: #dbeafe; color: #1e40af; }
+  .cat-badge.육아 { background: #fce7f3; color: #be185d; }
+  .cat-badge.계절가전 { background: #fef3c7; color: #92400e; }
+  .cat-badge.주방가전 { background: #f3e8ff; color: #6b21a8; }
+  .manual-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;
+    padding: 6px 14px; border-radius: 6px; cursor: pointer;
+    font-size: 13px; font-weight: 600; text-decoration: none;
+  }
+  .manual-btn:hover { background: #e5e7eb; }
+  .manual-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+  .vol-btn {
+    background: var(--accent); color: #fff; border: none;
+    padding: 6px 14px; border-radius: 8px; cursor: pointer;
+    font-size: 13px; font-weight: 600; font-family: inherit;
+    transition: all .15s;
+  }
+  .vol-btn:hover { background: var(--accent-dark); }
+  .vol-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+
+  /* Group sections */
+  .group {
+    background: var(--card);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .group-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 14.5px;
+  }
+  .group-header .count {
+    background: rgba(0,0,0,0.06); color: var(--text-sub);
+    padding: 2px 10px; border-radius: 999px;
+    font-size: 12px; font-weight: 600;
+  }
+  .group-header .dot {
+    width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+  }
+  .group.A .group-header { background: #f0fdf4; color: #166534; }
+  .group.A .group-header .dot { background: #10b981; }
+  .group.B .group-header { background: #fffbeb; color: #92400e; }
+  .group.B .group-header .dot { background: #f59e0b; }
+  .group.C .group-header { background: #fef2f2; color: #991b1b; }
+  .group.C .group-header .dot { background: #ef4444; }
+  .group.D .group-header { background: #f8fafc; color: #475569; }
+  .group.D .group-header .dot { background: #94a3b8; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 14px 24px; text-align: left; font-size: 13.5px; vertical-align: top; }
+  th { background: #f8fafc; color: var(--text-mute); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  tbody tr { border-top: 1px solid #f3f4f6; }
+  tbody tr:hover { background: #fafbfc; }
+  .keyword { font-weight: 600; color: var(--text); }
+  .category { color: var(--text-sub); font-size: 13px; }
+  .volume { text-align: right; font-size: 13.5px; padding-right: 24px !important; }
+  .prod-tag {
+    display: inline-block; background: #eef2ff; color: #4338ca;
+    padding: 3px 9px; border-radius: 6px; font-size: 11px; font-weight: 600;
+  }
+  .badge {
+    display: inline-block; padding: 3px 9px; border-radius: 6px;
+    font-size: 11px; font-weight: 600;
+  }
+  .badge.match { background: #dcfce7; color: #15803d; }
+  .badge.partial { background: #fef3c7; color: #92400e; }
+  .badge.miss { background: #fee2e2; color: #991b1b; }
+  .badge.unknown { background: #e5e7eb; color: #4b5563; }
+  .note { color: var(--text-mute); font-size: 12px; font-style: italic; }
+
+  /* Empty state */
+  .empty {
+    text-align: center; padding: 60px 20px; color: #9ca3af;
+    background: white; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+  .empty h3 { color: #6b7280; margin-bottom: 8px; font-weight: 600; }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100; padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: white; border-radius: 14px;
+    max-width: 720px; width: 100%; max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .modal-header {
+    padding: 20px 24px; border-bottom: 1px solid #e5e7eb;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .modal-header h2 { font-size: 18px; }
+  .modal-close {
+    background: transparent; border: none; font-size: 24px;
+    cursor: pointer; color: #6b7280; padding: 4px 10px;
+  }
+  .modal-body { padding: 24px; }
+  .modal-body label {
+    display: block; font-weight: 600; font-size: 13px;
+    color: #374151; margin-bottom: 6px; margin-top: 16px;
+  }
+  .modal-body label:first-child { margin-top: 0; }
+  .modal-body input[type=text], .modal-body select {
+    width: 100%; padding: 10px 14px;
+    border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;
+    font-family: inherit;
+  }
+  .modal-body input[type=file] {
+    width: 100%; padding: 10px;
+    border: 2px dashed #d1d5db; border-radius: 8px;
+    cursor: pointer; background: #f9fafb;
+  }
+  .radio-group {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+  }
+  .radio-group label {
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px;
+    cursor: pointer; margin-top: 0; font-weight: 500;
+    transition: all 0.15s;
+  }
+  .radio-group label:has(input:checked) {
+    border-color: #03c75a; background: #f0fdf4; color: #15803d;
+  }
+  .radio-group input { margin: 0; }
+  .modal-footer {
+    padding: 16px 24px; border-top: 1px solid #e5e7eb;
+    display: flex; justify-content: flex-end; gap: 10px;
+  }
+  .btn {
+    padding: 10px 20px; border-radius: 8px; border: none;
+    font-weight: 700; cursor: pointer; font-size: 14px;
+  }
+  .btn.primary { background: #03c75a; color: white; }
+  .btn.primary:hover { background: #00a44a; }
+  .btn.secondary { background: #f3f4f6; color: #374151; }
+  .btn.secondary:hover { background: #e5e7eb; }
+
+  /* Request output */
+  .request-output {
+    background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px;
+    padding: 16px; margin-top: 16px;
+    font-family: 'Consolas', monospace; font-size: 13px;
+    white-space: pre-wrap; line-height: 1.6; color: #111827;
+    max-height: 280px; overflow-y: auto;
+  }
+  .copy-success {
+    color: #15803d; font-weight: 700; margin-top: 8px; display: none;
+  }
+  .copy-success.show { display: block; }
+
+  /* Guide section */
+  details.guide {
+    background: white; border-radius: 12px; margin-top: 24px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06); overflow: hidden;
+  }
+  details.guide summary {
+    padding: 18px 24px; cursor: pointer; font-weight: 700;
+    color: #374151; user-select: none;
+  }
+  details.guide summary:hover { background: #f9fafb; }
+  details.guide[open] summary { border-bottom: 1px solid #e5e7eb; }
+  .guide-body { padding: 24px; line-height: 1.8; color: #4b5563; }
+  .guide-body h3 { color: #111827; margin: 18px 0 10px; font-size: 15px; }
+  .guide-body h3:first-child { margin-top: 0; }
+  .guide-body code {
+    background: #f3f4f6; padding: 2px 8px; border-radius: 4px;
+    font-family: 'Consolas', monospace; font-size: 13px; color: #be185d;
+  }
+  .guide-body .quote {
+    background: #f9fafb; border-left: 3px solid #03c75a;
+    padding: 12px 16px; margin: 10px 0; border-radius: 4px;
+    color: #374151;
+  }
+  .guide-body ol, .guide-body ul { padding-left: 22px; margin: 8px 0; }
+  .guide-body li { margin-bottom: 6px; }
+
+  footer {
+    text-align: center; color: #9ca3af; font-size: 12px;
+    padding: 20px; margin-top: 16px;
+  }
+
+  /* Drag & drop overlay */
+  .dropzone-overlay {
+    position: fixed; inset: 0; background: rgba(3, 199, 90, 0.92);
+    z-index: 200; display: none; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .dropzone-overlay.show { display: flex; }
+  .dropzone-overlay .inner {
+    color: white; text-align: center;
+    border: 4px dashed white; border-radius: 20px;
+    padding: 60px 100px; font-size: 24px; font-weight: 700;
+  }
+  .dropzone-overlay .inner .big { font-size: 64px; margin-bottom: 16px; }
+  .dropzone-overlay .inner .sub { font-size: 16px; font-weight: 400; opacity: 0.9; margin-top: 12px; }
+
+  /* Status banner */
+  .status-banner {
+    background: #f0fdf4; border: 1px solid #86efac;
+    border-radius: 12px; padding: 16px 20px; margin: 16px 0;
+    display: none; align-items: center; gap: 12px;
+  }
+  .status-banner.show { display: flex; }
+  .status-banner .icon { font-size: 24px; }
+  .status-banner .text { flex: 1; color: #166534; }
+  .status-banner .text b { font-size: 15px; }
+  .status-banner .text .small { font-size: 13px; color: #15803d; }
+  .status-banner button {
+    background: #03c75a; color: white; border: none;
+    padding: 8px 14px; border-radius: 6px; cursor: pointer;
+    font-weight: 600; font-size: 13px;
+  }
+
+  /* Pulse on copy success */
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(3, 199, 90, 0); }
+    50% { box-shadow: 0 0 0 8px rgba(3, 199, 90, 0.3); }
+  }
+  .pulse { animation: pulse-glow 1.2s ease-in-out infinite; }
+
+  /* Trap patterns section */
+  details.traps {
+    background: #fff7ed; border: 1px solid #fdba74;
+    border-radius: 12px; margin-bottom: 24px; overflow: hidden;
+    box-shadow: 0 2px 6px rgba(251, 146, 60, 0.15);
+  }
+  details.traps summary {
+    padding: 16px 24px; cursor: pointer; font-weight: 700;
+    color: #9a3412; user-select: none; font-size: 15px;
+  }
+  details.traps summary:hover { background: #fed7aa; }
+  details.traps[open] summary { border-bottom: 1px solid #fdba74; }
+  details.traps .traps-body { padding: 16px 24px; }
+  details.traps .trap-search {
+    width: 100%; padding: 10px 14px; border: 1px solid #fdba74;
+    border-radius: 8px; font-size: 14px; margin-bottom: 14px;
+    font-family: inherit; background: white;
+  }
+  details.traps .trap-search:focus {
+    outline: none; border-color: #ea580c;
+    box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15);
+  }
+  details.traps table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
+  details.traps th { background: #fef3c7; color: #92400e; padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+  details.traps td { padding: 10px 14px; border-top: 1px solid #fef3c7; font-size: 13px; vertical-align: top; }
+  details.traps td.pattern { font-family: 'Consolas', monospace; color: #be185d; font-weight: 600; white-space: nowrap; }
+  details.traps td.cat-bad { color: #991b1b; font-weight: 600; }
+  details.traps td.source { color: #78350f; font-size: 12px; }
+  details.traps .legend { font-size: 13px; color: #78350f; margin-bottom: 12px; padding: 10px 14px; background: #fef3c7; border-radius: 6px; }
+
+  @media (max-width: 900px) {
+    .summary { grid-template-columns: repeat(2, 1fr); }
+    .controls { flex-direction: column; align-items: stretch; }
+    .radio-group { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<!-- Drag & drop overlay (전체 화면에 PDF 드래그하면 표시) -->
+<div class="dropzone-overlay" id="dropzoneOverlay">
+  <div class="inner">
+    <div class="big">📄</div>
+    <div>PDF를 여기에 놓으세요</div>
+    <div class="sub">자동으로 manuals/ 폴더에 저장되고 분석이 시작됩니다</div>
+  </div>
+</div>
+
+<div class="container">
+  <header>
+    <div>
+      <h1><span class="voar">voar</span>신제품 키워드 카테고리 대시보드</h1>
+      <div class="sub">네이버쇼핑 카테고리 매칭 · <span id="lastUpdated"></span></div>
+    </div>
+    <button onclick="openNewProductModal()">＋ 신제품 분석 요청</button>
+  </header>
+
+  <!-- 분석 진행 상태 배너 -->
+  <div class="status-banner" id="statusBanner">
+    <div class="icon" id="statusIcon">✅</div>
+    <div class="text" id="statusText"></div>
+    <button onclick="hideStatus()" id="statusBtn">확인</button>
+  </div>
+
+  <div class="cat-tabs" id="catTabs"></div>
+
+  <div class="view-toggle">
+    <button id="viewProduct" class="active" onclick="setViewMode('product')">📦 제품별 보기</button>
+    <button id="viewCategory" onclick="setViewMode('category')">📚 카테고리 통합 보기</button>
+  </div>
+
+  <div class="controls">
+    <label for="productSelect" id="productSelectLabel">제품:</label>
+    <select id="productSelect" onchange="render()"></select>
+    <input id="searchInput" type="text" placeholder="🔍 키워드 검색 (예: 슈트, 미니, 휴대용)" oninput="render()">
+    <button class="export-btn" onclick="exportToCSV()" title="현재 표시된 키워드를 엑셀(CSV)로 다운로드">
+      📥 엑셀 다운로드
+    </button>
+  </div>
+
+  <div id="productInfo"></div>
+  <div class="summary" id="summary"></div>
+  <div id="groups"></div>
+
+  <details class="guide">
+    <summary>📖 사용법 가이드</summary>
+    <div class="guide-body">
+      <h3>1. 화면 구성</h3>
+      <ul>
+        <li><b>카테고리 탭</b> — 상단의 생활가전/육아/계절가전/주방가전 선택. "전체" 선택 시 모든 카테고리 표시</li>
+        <li><b>뷰 모드</b>:
+          <ul>
+            <li>📦 <b>제품별 보기</b>: 드롭다운에서 제품 하나 선택해 그 제품의 키워드 확인</li>
+            <li>📚 <b>카테고리 통합 보기</b>: 선택된 카테고리의 모든 제품 키워드를 한 테이블에 표시 (제품명 칼럼 포함)</li>
+          </ul>
+        </li>
+        <li><b>키워드 검색</b>: 검색창 입력 시 실시간 필터링</li>
+        <li><b>그룹 색상</b>: 🟢 A 메인 / 🟡 B 인접 / ⚪ D 혼재 / 🔴 C 사용금지</li>
+      </ul>
+
+      <h3>2. 새 제품 추가 (사용자 액션 2개)</h3>
+      <ol>
+        <li>제품 설명서 PDF를 <b>화면 어디든 드래그앤드롭</b> (또는 우측 상단 🆕 버튼)</li>
+        <li>모달이 자동으로 열리면 <b>카테고리만 라디오 선택</b> + <b>📤 PDF 저장 + 분석 시작</b> 클릭</li>
+        <li><b>Claude 채팅창</b>에서 <b>아무 메시지나</b> 한 번만 보내세요 (예: "확인", "ㅇ", "네" — <span style="color:#03c75a;">"ㄱㄱ" 안 쳐도 됨</span>)</li>
+        <li>Claude가 <code>last_upload.json</code>의 <code>pending_analysis</code> 플래그를 보고 자동으로 4단계 분석 시작 + 대시보드 JSON 업데이트</li>
+        <li>대시보드 새로고침(F5)으로 결과 확인</li>
+      </ol>
+      <p style="color:#92400e;font-size:13px;margin-top:8px;">⚠️ <b>주의:</b> 이 기능은 <code>server.py</code>가 실행 중일 때만 작동해요. (단순 정적 서버는 PDF 업로드 안 받음)</p>
+
+      <h3>3. 설명서 보기</h3>
+      <p>제품 정보 카드의 <b>📄 설명서 보기</b> 버튼 클릭 시 PDF가 새 탭에서 열림 (브라우저에 따라 다운로드될 수 있음)</p>
+
+      <h3>4. 데이터 구조 (직접 편집)</h3>
+      <p>HTML 파일 안 <code>&lt;script id="productData"&gt;</code> 영역에 JSON 형식으로 누적 저장. 키워드 수동 수정 시 이 부분 편집.</p>
+    </div>
+  </details>
+
+  <footer>
+    데이터 출처: 네이버 쇼핑 카테고리 API + 실시간 쇼핑검색 교차검증<br>
+    오아 주식회사 온라인영업팀 · 신제품 출시 워크플로우
+  </footer>
+</div>
+
+<!-- 신제품 등록 모달 -->
+<div class="modal-overlay" id="newProductModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>📤 PDF 분석 시작</h2>
+      <button class="modal-close" onclick="closeNewProductModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <label for="newManual">제품 설명서 PDF *</label>
+      <input type="file" id="newManual" accept=".pdf" onchange="updateFilePath()">
+      <div id="filePathDisplay" style="margin-top:8px;font-size:13px;color:#374151;font-weight:600;">
+        💡 또는 PDF 파일을 화면 어디든 <b>드래그앤드롭</b> 하세요
+      </div>
+
+      <label>제품 카테고리 *</label>
+      <div class="radio-group">
+        <label><input type="radio" name="newCat" value="생활가전" checked> 생활가전</label>
+        <label><input type="radio" name="newCat" value="육아"> 육아</label>
+        <label><input type="radio" name="newCat" value="계절가전"> 계절가전</label>
+        <label><input type="radio" name="newCat" value="주방가전"> 주방가전</label>
+      </div>
+
+      <label for="newName">제품명 <span style="font-weight:400;color:#9ca3af;">(선택 - 비워두면 PDF에서 추출)</span></label>
+      <input type="text" id="newName" placeholder="예: 보아르 스팀 핸디 청소기">
+
+      <label for="newModel">모델명 <span style="font-weight:400;color:#9ca3af;">(선택)</span></label>
+      <input type="text" id="newModel" placeholder="예: VCDM-003WH">
+
+      <label for="newTarget">타겟 네이버쇼핑 카테고리 <span style="font-weight:400;color:#9ca3af;">(선택 - 비워두면 Claude가 추론)</span></label>
+      <input type="text" id="newTarget" placeholder="예: 핸디청소기">
+    </div>
+    <div class="modal-footer">
+      <button class="btn secondary" onclick="closeNewProductModal()">취소</button>
+      <button class="btn primary" id="uploadBtn" onclick="uploadAndAnalyze()">📤 PDF 저장 + 분석 시작</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 데이터: 새 제품 추가 시 Claude가 이 영역을 갱신함 -->
+<!-- ============================================== -->
+<script id="productData" type="application/json">
+{
+  "products": [
+    {
+      "id": "suitssok-vcdm002wh",
+      "name": "보아르 슈트쏙 의류관리기",
+      "model": "VCDM-002WH",
+      "product_category": "생활가전",
+      "category_target": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기",
+      "manual_path": "./manuals/260424_VCDM-002WH_슈트쏙의류관리기_설명서_HM_V1_웹용.pdf",
+      "analysis_date": "2026-05-19",
+      "features": "휴대용(498g) · 행거 거치형 · 열풍건조 · 슈트/정장 특화 · 수트커버 포함 · AC220V 230W",
+      "keywords": [
+        {"keyword": "의류관리기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "최상위 메인 키워드 (정확일치 110점)"},
+        {"keyword": "휴대용의류관리기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "제품 특성 1순위 부합"},
+        {"keyword": "미니의류관리기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "유사일치 38점"},
+        {"keyword": "소형의류관리기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "유사일치 38점"},
+        {"keyword": "1인의류관리기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "유사일치 38점"},
+        {"keyword": "걸이형의류관리기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "행거형 제품 특성 부합"},
+        {"keyword": "원룸의류관리기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "유사일치 38점"},
+        {"keyword": "호텔의류관리기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "유사일치 38점"},
+        {"keyword": "출장용의류관리기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "유사일치 35점"},
+        {"keyword": "여행용의류관리기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "유사일치 35점"},
+        {"keyword": "자취생의류관리기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "유사일치 35점"},
+        {"keyword": "트래블의류관리기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "검색량은 낮을 수 있음"},
+        {"keyword": "슈트관리기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "⭐ 제품 차별점 직격 (실검색 100% 의류관리기)"},
+        {"keyword": "정장관리기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "⭐ 제품 차별점 직격 (실검색 90% 의류관리기)"},
+        {"keyword": "양복관리기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "⭐ 제품 차별점 직격 (실검색 100% 의류관리기)"},
+        {"keyword": "옷살균기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "LG스타일러도 이 키워드로 노출됨"},
+        {"keyword": "의류살균기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "실검색 의류관리기 다수"},
+        {"keyword": "미니스타일러", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", "group": "A", "match": "match", "note": "경쟁 키워드, 트래픽 큼"},
+
+        {"keyword": "의류건조기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류건조기", "group": "B", "match": "partial", "note": "빅키워드지만 카테고리 미스매치"},
+        {"keyword": "휴대용의류건조기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류건조기", "group": "B", "match": "partial", "note": "검색량 높지만 카테고리 빠짐"},
+        {"keyword": "미니의류건조기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류건조기 + 미니건조기", "group": "B", "match": "partial", "note": "양쪽 카테고리 매칭"},
+        {"keyword": "포터블의류건조기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류건조기", "group": "B", "match": "partial", "note": "유사일치 35점"},
+        {"keyword": "휴대용스타일러", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류건조기", "group": "B", "match": "partial", "note": "실검색 100% 의류건조기 - 의외 결과"},
+        {"keyword": "옷걸이건조기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류건조기", "group": "B", "match": "partial", "note": "실검색 대다수 의류건조기"},
+
+        {"keyword": "옷건조기", "category": "의류건조기/의류관리기 혼재", "group": "D", "match": "unknown", "note": "보조 키워드 정도"},
+        {"keyword": "정장건조기", "category": "의류건조기 우세, 의류관리기 일부", "group": "D", "match": "unknown", "note": "슈트 컨셉 강조용"},
+        {"keyword": "미니건조기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 미니건조기", "group": "D", "match": "unknown", "note": "별도 미니건조기 카테고리"},
+        {"keyword": "슈트케어", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "검색량 약함, 상세페이지 컨셉용"},
+        {"keyword": "양복건조기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "미사용 권장"},
+        {"keyword": "1인가구의류관리기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "자취생/원룸/1인 으로 대체"},
+
+        {"keyword": "휴대용건조기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류건조기", "group": "B", "match": "partial", "note": "실검색 100% 의류건조기 — 의류관리기 타겟과 다른 세분류지만 가전 카테고리 안"},
+        {"keyword": "행거건조기", "category": "생활/건강 > 세탁용품 > 빨래건조대", "group": "C", "match": "miss", "note": "실검색 100% 빨래건조대로 빠짐"},
+        {"keyword": "옷냄새제거기", "category": "생활/건강 > 생활용품 > 제습/방향/탈취 > 옷장탈취제", "group": "C", "match": "miss", "note": "실검색 100% 옷장탈취제 — 가전 아닌 탈취제로 빠짐"},
+        {"keyword": "옷주름제거기", "category": "디지털/가전 > 생활가전 > 보풀제거기", "group": "C", "match": "miss", "note": "실검색 100% 보풀제거기 (같은 생활가전 안 다른 소분류)"},
+        {"keyword": "빨래건조기", "category": "디지털/가전 > 생활가전 > 세탁/건조기 > 의류건조기", "group": "B", "match": "partial", "note": "실검색 100% 의류건조기 — 의류관리기 아닌 의류건조기 세분류"}
+      ]
+    },
+    {
+      "id": "mono-vcmk003wh",
+      "name": "보아르 모노 반자동 커피머신",
+      "model": "VCMK-003WH",
+      "product_category": "주방가전",
+      "category_target": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신",
+      "manual_path": "./manuals/260319_VCMK-003WH_모노반자동커피머신_설명서_HM_V1_웹용.pdf",
+      "analysis_date": "2026-05-19",
+      "features": "반자동 에스프레소 머신 · 싱글/더블샷 추출 (10~60초 조절) · 스팀 기능 (우유거품, 라떼/카푸치노) · 1.5L 물탱크 · AC220-240V 1230-1465W · 가정용 컴팩트 (210×295×293mm, 3.3kg) · 필터바스켓 싱글+더블·탬퍼·청소솔 구성",
+      "keywords": [
+        {"keyword": "에스프레소머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "최상위 메인 키워드 (정확일치 110점)"},
+        {"keyword": "반자동커피머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "⭐ 제품 정체성 직격 (실검색 100% 에스프레소머신)"},
+        {"keyword": "에스프레소커피머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "타겟 카테고리명 직타 (유사 41점)"},
+        {"keyword": "반자동에스프레소머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "제품명 직결 (유사 38점)"},
+        {"keyword": "가정용에스프레소머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "가정용 강조 (유사 38점)"},
+        {"keyword": "홈카페에스프레소머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "트렌드 키워드 (유사 38점)"},
+        {"keyword": "가정용커피머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "빅키워드 (실검색 100%)"},
+        {"keyword": "홈카페머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "트렌드 키워드 (실검색 100%)"},
+        {"keyword": "라떼머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "⭐ 스팀 기능 차별점 (실검색 100%)"},
+        {"keyword": "카푸치노머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "⭐ 스팀 기능 차별점 (실검색 100%)"},
+        {"keyword": "미니커피머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "컴팩트 강조 (실검색 100%)"},
+        {"keyword": "자취생커피머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "1인가구 타겟 (실검색 90%)"},
+        {"keyword": "자동커피머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "자동/반자동 카테고리 동일 (실검색 100%)"},
+        {"keyword": "바리스타머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "홈바리스타 트렌드 (실검색 100%)"},
+        {"keyword": "커피머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "일반 빅키워드 (소분류 시작일치 100점)"},
+        {"keyword": "에스프레소", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "일반 키워드 (시작일치 90점)"},
+        {"keyword": "세미오토커피머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "반자동의 영어 표현 (사전미등록·추정)"},
+        {"keyword": "수동커피머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "사전미등록·추정 (검색량 낮음)"},
+        {"keyword": "홈바리스타머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", "group": "A", "match": "match", "note": "컨셉 키워드 (사전미등록·추정)"},
+
+        {"keyword": "커피메이커", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 커피메이커", "group": "B", "match": "partial", "note": "같은 소분류 다른 세분류 (정확 110점)"},
+        {"keyword": "드립커피머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 커피메이커", "group": "B", "match": "partial", "note": "드립 머신 위주 노출 (실검색 100% 커피메이커)"},
+
+        {"keyword": "1인커피머신", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "검색량 약함"},
+        {"keyword": "1인가구커피머신", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "자취생/원룸으로 대체 권장"},
+        {"keyword": "원룸커피머신", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "사전미등록"},
+        {"keyword": "사무실커피머신", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "사전미등록"},
+        {"keyword": "스팀커피머신", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "표준어 아님"},
+        {"keyword": "크레마머신", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "상세페이지 컨셉용"},
+        {"keyword": "홈카페", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "단독 검색 약함, 조합 키워드로 사용"},
+        {"keyword": "소형커피머신", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "미니커피머신 대체 사용"},
+        {"keyword": "전자동커피머신", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "자동커피머신은 잡히는데 의외로 미등록"},
+
+        {"keyword": "모카포트", "category": "생활/건강 > 주방용품 > 커피용품 > 드립포트", "group": "C", "match": "miss", "note": "가전 아닌 주방용품 (실검색 100%)"},
+        {"keyword": "밀크스티머", "category": "생활/건강 > 주방용품 > 커피용품 > 우유거품기", "group": "C", "match": "miss", "note": "액세서리 카테고리 (실검색 100%)"},
+        {"keyword": "우유거품기", "category": "생활/건강 > 주방용품 > 커피용품 > 우유거품기", "group": "C", "match": "miss", "note": "액세서리 카테고리 (정확 110점)"},
+        {"keyword": "캡슐커피머신", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 캡슐/POD머신", "group": "B", "match": "partial", "note": "같은 소분류 안 다른 세분류 (실검색 100% 캡슐/POD머신, 식품 아님)"},
+        {"keyword": "탬퍼", "category": "사전미등록·부속품 추정", "group": "C", "match": "miss", "note": "액세서리 카테고리"}
+      ]
+    },
+    {
+      "id": "watercling-vcvc022wh",
+      "name": "보아르 워터클링 무선 습식청소기",
+      "model": "VCVC-022WH",
+      "product_category": "생활가전",
+      "category_target": "디지털/가전 > 청소기 > 침구청소기",
+      "manual_path": "./manuals/260319_VCVC-022WH_워터클링무선습식청소기_설명서_HM_V1_웹용.pdf",
+      "analysis_date": "2026-05-21",
+      "features": "무선 습식청소기 · USB-C 충전 (3시간 충전 / 25분 사용) · 1.6kg 핸디형 · 정수통+오수통 분리 · 물 분사+흡입 동시 · 롤 브러시 회전 · 플렉시블 연장브러시 포함 · 침구/매트리스/소파/카시트/카펫 패브릭 얼룩 제거 특화 · DC5V/2A 110W · ⚠️ 진공청소기 아님 (반드시 물 분사 필수)",
+      "keywords": [
+        {"keyword": "침구청소기", "category": "디지털/가전 > 청소기 > 침구청소기", "group": "A", "match": "match", "note": "사용자 지정 타겟, 메인 키워드 (정확일치 120점)"},
+        {"keyword": "침대청소기", "category": "디지털/가전 > 청소기 > 침구청소기", "group": "A", "match": "match", "note": "타겟 카테고리 매칭 (유사 52점)"},
+        {"keyword": "습식청소기", "category": "디지털/가전 > 청소기 > 침구청소기", "group": "A", "match": "match", "note": "⭐ 제품 정체성 핵심 (실검색 디클·비쎌·한경희 모두 침구청소기 8/10)"},
+        {"keyword": "매트리스청소기", "category": "디지털/가전 > 청소기 > 침구청소기", "group": "A", "match": "match", "note": "⭐ 사용처 직격 (실검색 100% 침구청소기)"},
+        {"keyword": "이불청소기", "category": "디지털/가전 > 청소기 > 침구청소기", "group": "A", "match": "match", "note": "⭐ 사용처 직격 (실검색 100% 침구청소기)"},
+        {"keyword": "카펫청소기", "category": "디지털/가전 > 청소기 > 침구청소기", "group": "A", "match": "match", "note": "의외! 카펫 키워드도 침구청소기 매칭 (실검색 100%)"},
+        {"keyword": "스팟클리너", "category": "디지털/가전 > 청소기 > 침구청소기", "group": "A", "match": "match", "note": "비쎌 스팟클린·한경희 스팟클리너 (실검색 100% 침구청소기)"},
+        {"keyword": "스팟청소기", "category": "디지털/가전 > 청소기 > 침구청소기", "group": "A", "match": "match", "note": "비쎌 스팟클린 압도적 (실검색 100%)"},
+        {"keyword": "휴대용습식청소기", "category": "디지털/가전 > 청소기 > 침구청소기", "group": "A", "match": "match", "note": "본 제품 정체성 (실검색 100% 침구청소기)"},
+        {"keyword": "핸디습식청소기", "category": "디지털/가전 > 청소기 > 침구청소기", "group": "A", "match": "match", "note": "실검색 70% 침구청소기, 30% 업소용"},
+        {"keyword": "무선스팟클리너", "category": "디지털/가전 > 청소기 > 침구청소기", "group": "A", "match": "match", "note": "무선+스팟 조합 (실검색 100% 침구청소기)"},
+
+        {"keyword": "무선청소기", "category": "디지털/가전 > 청소기 > 무선청소기 (소분류)", "group": "B", "match": "partial", "note": "본 제품 형태 부합, 침구청소기 아닌 무선청소기 (정확 120점)"},
+        {"keyword": "핸디청소기", "category": "디지털/가전 > 청소기 > 무선청소기 > 핸디청소기", "group": "B", "match": "partial", "note": "제품 형태 직결 (정확 110점)"},
+        {"keyword": "무선습식청소기", "category": "디지털/가전 > 청소기 > 무선청소기 > 핸디스틱/진공/핸디", "group": "B", "match": "partial", "note": "제품명 직결, 무선청소기 카테고리 (유사 48점)"},
+        {"keyword": "진공청소기", "category": "디지털/가전 > 청소기 > 유선/무선 진공청소기", "group": "B", "match": "partial", "note": "⚠️ 본 제품은 사실 진공 아님(PDF 명시), 사용 자제"},
+        {"keyword": "물걸레청소기", "category": "디지털/가전 > 청소기 > 물걸레청소기", "group": "B", "match": "partial", "note": "별도 소분류 (정확 120점), 본 제품과 비슷하지만 다른 형태"},
+        {"keyword": "스팀청소기", "category": "디지털/가전 > 청소기 > 스팀청소기", "group": "B", "match": "partial", "note": "⚠️ 본 제품은 스팀 아님, 잘못 매칭될 위험"},
+        {"keyword": "물청소기", "category": "디지털/가전 > 청소기 (중분류 매칭)", "group": "B", "match": "partial", "note": "여러 소분류에 매칭, 모호함 (60점)"},
+        {"keyword": "소파청소기", "category": "디지털/가전 > 청소기 > 업소용청소기", "group": "B", "match": "partial", "note": "제품 사용처 맞지만 업소용으로 분류 (유사 46점)"},
+        {"keyword": "미니청소기", "category": "디지털/가전 > 청소기 > 무선청소기 > 핸디스틱청소기", "group": "B", "match": "partial", "note": "1.6kg 컴팩트 어필, 실검색 핸디스틱청소기"},
+        {"keyword": "1인가구청소기", "category": "디지털/가전 > 청소기 > 무선청소기 > 핸디스틱청소기", "group": "B", "match": "partial", "note": "실검색 100% 핸디스틱청소기 (시나리오 키워드)"},
+        {"keyword": "원룸청소기", "category": "디지털/가전 > 청소기 > 무선청소기 > 핸디스틱청소기", "group": "B", "match": "partial", "note": "실검색 100% 핸디스틱청소기"},
+        {"keyword": "자취생청소기", "category": "디지털/가전 > 청소기 > 유선청소기 > 진공/핸디스틱청소기", "group": "B", "match": "partial", "note": "실검색 유선청소기 (다른 형태)"},
+        {"keyword": "다용도청소기", "category": "디지털/가전 > 청소기 > 무선청소기 > 핸디스틱청소기", "group": "B", "match": "partial", "note": "실검색 100% 핸디스틱청소기"},
+        {"keyword": "워터청소기", "category": "디지털/가전 > 청소기 > 물걸레청소기", "group": "B", "match": "partial", "note": "본 제품(보아르 워터스핀)이 검색결과에 등장, 다만 다른 모델"},
+
+        {"keyword": "차량용청소기", "category": "생활/건강 > 자동차용품 > 편의용품 > 차량용청소기", "group": "C", "match": "miss", "note": "가전 아닌 자동차용품 카테고리 (정확 110점)"},
+        {"keyword": "패브릭청소기", "category": "가구/인테리어 > 거실가구 > 소파 > 패브릭소파", "group": "C", "match": "miss", "note": "청소기 아닌 소파 카테고리 (유사 36점)"},
+        {"keyword": "매트리스클리너", "category": "생활/건강 > 생활용품 > 세제/세정제 > 세탁보조제", "group": "C", "match": "miss", "note": "⚠️ ○○+클리너 함정 - 세제로 빠짐 (실검색 100%)"},
+        {"keyword": "패브릭클리너", "category": "생활/건강 > 청소용품 > 기타청소용품 (세정제 위주)", "group": "C", "match": "miss", "note": "⚠️ ○○+클리너 함정 - 세제로 빠짐 (실검색 100%)"},
+        {"keyword": "워터클리너", "category": "생활/건강 > 생활용품 > 세제/세정제", "group": "C", "match": "miss", "note": "⚠️ ○○+클리너 함정 - 세제로 빠짐 (실검색 100%)"},
+        {"keyword": "얼룩제거청소기", "category": "생활/건강 > 생활용품 > 세제/세정제", "group": "C", "match": "miss", "note": "⚠️ '얼룩제거'가 세제로 끌어감 (실검색 80% 세제)"},
+        {"keyword": "카시트청소기", "category": "생활/건강 > 자동차용품 > 편의용품 > 차량용청소기", "group": "C", "match": "miss", "note": "자동차용품 카테고리 (실검색 100%)"},
+        {"keyword": "휴대용청소기", "category": "생활/건강 > 자동차용품 > 편의용품 > 차량용청소기", "group": "C", "match": "miss", "note": "⚠️ 휴대용+청소기 함정 - 차량용청소기로 압도적 매칭 (실검색 100%)"},
+        {"keyword": "캠핑청소기", "category": "스포츠/레저 > 캠핑 > 기타캠핑용품", "group": "C", "match": "miss", "note": "캠핑용품 카테고리 (실검색 100%)"},
+        {"keyword": "분무청소기", "category": "생활/건강 > 청소용품 > 밀대/패드", "group": "C", "match": "miss", "note": "가전 아닌 청소용품 (실검색 100%)"}
+      ]
+    },
+    {
+      "id": "pepper-grinder-vbld011wh",
+      "name": "보아르 다이닝 전동 후추 그라인더",
+      "model": "VBLD-011WH",
+      "product_category": "주방가전",
+      "category_target": "디지털/가전 > 주방가전 > 분쇄기",
+      "manual_path": "./manuals/260326_VBLD-011WH_다이닝전동후추그라인더_설명서_HM_V1_웹용.pdf",
+      "analysis_date": "2026-05-22",
+      "features": "전동 후추·소금 겸용 그라인더 · 2대 세트 + 충전 거치대 구성 · USB-C 충전 (2시간 / 사용 1시간) · 입자 굵기 조절 가능 · Ø52.5×188mm, 238g · DC5V 2A 10W · 다이닝(식탁용) 컨셉",
+      "keywords": [
+        {"keyword": "분쇄기", "category": "디지털/가전 > 주방가전 > 분쇄기", "group": "A", "match": "match", "note": "타겟 메인 키워드 (정확일치 120점)"},
+        {"keyword": "후추그라인더", "category": "디지털/가전 > 주방가전 > 분쇄기", "group": "A", "match": "match", "note": "⭐ 제품명 직격 (실검색 100% 분쇄기)"},
+        {"keyword": "전동후추그라인더", "category": "디지털/가전 > 주방가전 > 분쇄기", "group": "A", "match": "match", "note": "⭐ 제품명 완전 일치 (실검색 100% 분쇄기)"},
+        {"keyword": "후추분쇄기", "category": "디지털/가전 > 주방가전 > 분쇄기", "group": "A", "match": "match", "note": "⭐ 안전한 한국어 형태 (실검색 100%)"},
+        {"keyword": "소금그라인더", "category": "디지털/가전 > 주방가전 > 분쇄기", "group": "A", "match": "match", "note": "소금 겸용 어필 (실검색 100% 분쇄기)"},
+        {"keyword": "소금분쇄기", "category": "디지털/가전 > 주방가전 > 분쇄기", "group": "A", "match": "match", "note": "실검색 100% 분쇄기"},
+        {"keyword": "솔트그라인더", "category": "디지털/가전 > 주방가전 > 분쇄기", "group": "A", "match": "match", "note": "의외! 영문이지만 분쇄기 매칭 (실검색 100%)"},
+        {"keyword": "전동분쇄기", "category": "디지털/가전 > 주방가전 > 분쇄기", "group": "A", "match": "match", "note": "실검색 100% 분쇄기"},
+        {"keyword": "양념분쇄기", "category": "디지털/가전 > 주방가전 > 분쇄기", "group": "A", "match": "match", "note": "실검색 100% 분쇄기"},
+        {"keyword": "향신료분쇄기", "category": "디지털/가전 > 주방가전 > 분쇄기", "group": "A", "match": "match", "note": "실검색 100% 분쇄기"},
+        {"keyword": "전동소금그라인더", "category": "디지털/가전 > 주방가전 > 분쇄기", "group": "A", "match": "match", "note": "사전 미등록·추정 (소금그라인더와 동일 패턴 예상)"},
+
+        {"keyword": "커피그라인더", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 원두분쇄기", "group": "B", "match": "partial", "note": "같은 주방가전이지만 다른 세분류 (원두분쇄기)"},
+        {"keyword": "홈카페그라인더", "category": "디지털/가전 > 주방가전 > 커피머신/메이커 > 원두분쇄기", "group": "B", "match": "partial", "note": "커피 머신 위주 노출 (실검색 100% 원두분쇄기)"},
+        {"keyword": "미니분쇄기", "category": "디지털/가전 > 주방가전 > 믹서기", "group": "B", "match": "partial", "note": "⚠️ 분쇄기 아닌 믹서기로 빠짐 (실검색 100% 믹서기)"},
+        {"keyword": "그라인더", "category": "생활/건강 > 공구 > 절삭공구 > 그라인더", "group": "B", "match": "partial", "note": "⚠️ 단독으로는 산업용 공구로 매칭 (정확 110점)"},
+
+        {"keyword": "페퍼밀", "category": "생활/건강 > 주방용품 > 보관/밀폐용기 > 양념통/설탕프림기", "group": "C", "match": "miss", "note": "⚠️ 영문 함정 - 양념통으로 빠짐 (실검색 100%)"},
+        {"keyword": "페퍼그라인더", "category": "생활/건강 > 주방용품 > 보관/밀폐용기 > 양념통/설탕프림기", "group": "C", "match": "miss", "note": "⚠️ 영문 함정 - 양념통으로 빠짐 (실검색 100%)"},
+        {"keyword": "솔트밀", "category": "생활/건강 > 주방용품 > 보관/밀폐용기 > 양념통/설탕프림기", "group": "C", "match": "miss", "note": "⚠️ 페퍼밀처럼 수동 양념통으로 빠짐 (실검색 100%)"},
+        {"keyword": "후추통", "category": "생활/건강 > 주방용품 > 보관/밀폐용기 > 양념통/설탕프림기", "group": "C", "match": "miss", "note": "⚠️ 조미료(식품)가 아닌 양념통 (실검색 100%)"},
+        {"keyword": "미니그라인더", "category": "생활/건강 > 공구 > 절삭공구 > 그라인더", "group": "C", "match": "miss", "note": "⚠️ 산업용 공구 함정 (실검색 100%)"},
+        {"keyword": "무선그라인더", "category": "생활/건강 > 공구 > 절삭공구 > 그라인더", "group": "C", "match": "miss", "note": "⚠️ 산업용 공구 함정"},
+        {"keyword": "충전식그라인더", "category": "생활/건강 > 공구 > 절삭공구 > 그라인더", "group": "C", "match": "miss", "note": "⚠️ 산업용 공구 함정 (실검색 100%)"},
+        {"keyword": "USB충전그라인더", "category": "생활/건강 > 공구 > 절삭공구 > 그라인더 (추정)", "group": "C", "match": "miss", "note": "산업용 공구로 매칭 가능성 높음"},
+        {"keyword": "휴대용그라인더", "category": "생활/건강 > 공구 > 절삭공구 > 그라인더 (추정)", "group": "C", "match": "miss", "note": "산업용 공구로 매칭 가능성 높음"},
+
+        {"keyword": "다이닝그라인더", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "제품 컨셉 키워드, 검색량 약함"},
+        {"keyword": "식탁용그라인더", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "다이닝 컨셉의 한국어 표현"},
+        {"keyword": "1인가구그라인더", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "시나리오 키워드"},
+        {"keyword": "자취생그라인더", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "시나리오 키워드"},
+        {"keyword": "캠핑그라인더", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "시나리오 키워드"},
+        {"keyword": "듀얼그라인더", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "2대 세트 강조"},
+        {"keyword": "2종세트그라인더", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "2대 세트 강조"},
+        {"keyword": "그라인더세트", "category": "사전 미등록 (분쇄기/공구 혼재 추정)", "group": "D", "match": "unknown", "note": "단어상 공구로 빠질 위험"},
+        {"keyword": "분쇄기세트", "category": "사전 미등록 (분쇄기 추정)", "group": "D", "match": "unknown", "note": "분쇄기 카테고리 매칭 가능성 높음"},
+        {"keyword": "양념다지기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "다른 제품 형태 (다지기 vs 그라인더)"},
+        {"keyword": "페퍼앤솔트밀", "category": "사전 미등록 (양념통 추정)", "group": "D", "match": "unknown", "note": "페퍼밀+솔트밀 함정 패턴, 양념통으로 빠질 위험"}
+      ]
+    },
+    {
+      "id": "wastebasket-vwtb007be",
+      "name": "보아르 컴플릿M20L 쓰레기통",
+      "model": "VWTB-007BE",
+      "product_category": "생활가전",
+      "category_target": "생활/건강 > 청소용품 > 휴지통 > 센서 휴지통",
+      "manual_path": "./manuals/260518_VWTB-007BE_컴플릿M20L쓰레기통_설명서_HM_V1_웹용.pdf",
+      "analysis_date": "2026-07-10",
+      "features": "20L 스테인리스 · 모션 감지 자동 개폐 (5초) · 터치 버튼 수동 · 충격 감지 · 모션 감지 무드등 (야간 자동) · 살균(오존) 12시간 주기 · AA 건전지 2개 (별도 구매) · 190×305×495mm · 1.9kg",
+      "keywords": [
+        {"keyword": "자동쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 센서 휴지통", "group": "A", "match": "match", "note": "⭐ 제품 정체성 직격 (실검색 10/10 센서 휴지통)"},
+        {"keyword": "센서쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 센서 휴지통", "group": "A", "match": "match", "note": "⭐ 제품 정체성 직격 (실검색 10/10 센서 휴지통)"},
+        {"keyword": "스마트쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 센서 휴지통", "group": "A", "match": "match", "note": "실검색 10/10 센서 휴지통"},
+        {"keyword": "자동개폐쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 센서 휴지통", "group": "A", "match": "match", "note": "실검색 10/10 센서 휴지통"},
+        {"keyword": "살균쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 센서 휴지통", "group": "A", "match": "match", "note": "⭐ 제품 차별점(오존 살균) 어필 (실검색 10/10)"},
+        {"keyword": "오존쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 센서 휴지통/다용도휴지통", "group": "A", "match": "match", "note": "센서 휴지통 5/10 + 다용도 5/10 (제품 차별점 부합)"},
+        {"keyword": "자동센서휴지통", "category": "생활/건강 > 청소용품 > 휴지통 > 센서 휴지통", "group": "A", "match": "match", "note": "휴지통 카테고리 정확 매칭"},
+        {"keyword": "20L쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 센서 휴지통", "group": "A", "match": "match", "note": "본 제품 용량, 센서 휴지통 상위 노출"},
+        {"keyword": "스마트휴지통", "category": "생활/건강 > 청소용품 > 휴지통 > 센서 휴지통", "group": "A", "match": "match", "note": "휴지통 명칭 사용, 센서 휴지통 매칭"},
+        {"keyword": "센서휴지통", "category": "생활/건강 > 청소용품 > 휴지통 > 센서 휴지통", "group": "A", "match": "match", "note": "정확 매칭"},
+
+        {"keyword": "모션감지쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 다용도휴지통", "group": "B", "match": "partial", "note": "⚠️ 함정 - 센서 휴지통 아닌 다용도휴지통 (실검색 10/10)"},
+        {"keyword": "전동쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 다용도휴지통", "group": "B", "match": "partial", "note": "실검색 10/10 다용도휴지통"},
+        {"keyword": "주방쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 다용도휴지통", "group": "B", "match": "partial", "note": "다용도휴지통 위주, 사용처 부합"},
+        {"keyword": "터치쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 다용도휴지통", "group": "B", "match": "partial", "note": "실검색 10/10 다용도휴지통"},
+        {"keyword": "페달쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 다용도휴지통", "group": "B", "match": "partial", "note": "경쟁 형태(매직캔 등) 위주 노출"},
+        {"keyword": "원룸쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 다용도휴지통", "group": "B", "match": "partial", "note": "시나리오 키워드, 다용도휴지통"},
+        {"keyword": "스테인리스쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 다용도휴지통", "group": "B", "match": "partial", "note": "재질 강조, 업소용 노출 많음"},
+        {"keyword": "뚜껑쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 다용도휴지통", "group": "B", "match": "partial", "note": "다용도휴지통 위주"},
+        {"keyword": "무드등쓰레기통", "category": "사전 미등록 (다용도휴지통 추정)", "group": "B", "match": "unknown", "note": "제품 차별점이나 검색량 매우 약함"},
+        {"keyword": "20리터쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 다용도휴지통", "group": "B", "match": "partial", "note": "다용도휴지통 위주"},
+        {"keyword": "슬림쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 다용도휴지통", "group": "B", "match": "partial", "note": "다용도휴지통"},
+        {"keyword": "쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 센서/다용도 혼재", "group": "B", "match": "partial", "note": "너무 광범위, 상위 노출은 센서 휴지통 위주지만 다양"},
+
+        {"keyword": "음식물쓰레기통", "category": "생활/건강 > 청소용품 > 휴지통 > 음식물쓰레기통", "group": "C", "match": "miss", "note": "⚠️ 같은 소분류 안 다른 세분류 (별도)"},
+        {"keyword": "분리수거함", "category": "생활/건강 > 청소용품 > 휴지통 > 분리수거함", "group": "C", "match": "miss", "note": "⚠️ 같은 소분류 안 다른 세분류 (정확 110점)"},
+
+        {"keyword": "자취생쓰레기통", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "시나리오 키워드, 검색량 약함"},
+        {"keyword": "1인가구쓰레기통", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "시나리오 키워드"},
+        {"keyword": "화장실쓰레기통", "category": "사전 미등록 (다용도휴지통 추정)", "group": "D", "match": "unknown", "note": "사용처, 검색량 있음"},
+        {"keyword": "사무실쓰레기통", "category": "사전 미등록 (다용도휴지통 추정)", "group": "D", "match": "unknown", "note": "업소용 노출 많음"},
+        {"keyword": "거실쓰레기통", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "사용처"},
+        {"keyword": "야간등쓰레기통", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "무드등 기능 강조, 검색량 매우 약함"},
+        {"keyword": "충격감지쓰레기통", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "제품 차별점이나 검색량 약함"},
+        {"keyword": "무선쓰레기통", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "AA 건전지 강조"},
+        {"keyword": "스틸쓰레기통", "category": "사전 미등록 (다용도휴지통 추정)", "group": "D", "match": "unknown", "note": "재질, 다용도휴지통 노출"},
+        {"keyword": "미니쓰레기통", "category": "사전 미등록 (다용도휴지통)", "group": "D", "match": "unknown", "note": "20L라 미니 아님, 부적합"},
+        {"keyword": "대용량쓰레기통", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "20L는 대용량 애매함"}
+      ]
+    },
+    {
+      "id": "sterilizer-vstz005wh",
+      "name": "보아르 아가 미니 휴대용 젖병소독기",
+      "model": "VSTZ-005WH",
+      "product_category": "육아",
+      "category_target": "출산/육아 > 소독/살균용품 > 젖병소독기",
+      "manual_path": "./manuals/260702_VSTZ-005WH_아가미니휴대용젖병소독기_설명서_HM_V1_웹용.pdf",
+      "analysis_date": "2026-08-05",
+      "features": "UV 자외선 살균 + 열풍 건조 겸용 · 20분/40분 모드 · 배터리 내장(2500mAh, 27.75Wh) · USB-C 충전(1시간30분) · 사용시간 20분×2회 또는 40분×1회 · 파우치 포함(외출용) · 상/하단 선반 (숟가락·젖꼭지·젖병) · 270×109×115mm · 768g · DC12V 3A 36W · ⚠️ 20개 이상 미검증 (네이버 shop API 심사 대기)",
+      "keywords": [
+        {"keyword": "젖병소독기", "category": "출산/육아 > 소독/살균용품 > 젖병소독기", "group": "A", "match": "match", "note": "타겟 메인 키워드 (정확일치 120점)"},
+        {"keyword": "휴대용젖병소독기", "category": "출산/육아 > 소독/살균용품 > 젖병소독기", "group": "A", "match": "match", "note": "⭐ 제품명 직결 (유사 45점)"},
+        {"keyword": "젖꼭지소독기", "category": "출산/육아 > 소독/살균용품 > 젖병소독기", "group": "A", "match": "match", "note": "젖병소독기 카테고리 매칭 (유사 46점)"},
+        {"keyword": "여행용젖병소독기", "category": "출산/육아 > 소독/살균용품 > 젖병소독기", "group": "A", "match": "match", "note": "휴대성 어필 (유사 45점)"},
+        {"keyword": "차량용젖병소독기", "category": "출산/육아 > 소독/살균용품 > 젖병소독기", "group": "A", "match": "match", "note": "일부 자동차용품 혼재 (유사 45점)"},
+        {"keyword": "스팀젖병소독기", "category": "출산/육아 > 소독/살균용품 > 젖병소독기", "group": "A", "match": "match", "note": "⚠️ 본 제품 UV 방식, 스팀 아님 - 상품명 사용 자제 권장 (유사 48점)"},
+
+        {"keyword": "젖병건조기", "category": "출산/육아 > 소독/살균용품 > 젖병건조대", "group": "B", "match": "partial", "note": "⚠️ 소독기 아닌 건조대 세분류로 빠짐 - '건조기' 표현 지양"},
+        {"keyword": "자외선살균기", "category": "디지털/가전 > 생활가전 > 자외선소독기", "group": "B", "match": "partial", "note": "⚠️ 육아 카테고리 아닌 가전 카테고리 - 'UV 살균' 강조 시 위험"},
+
+        {"keyword": "UV젖병소독기", "category": "사전 미등록 (젖병소독기 추정)", "group": "D", "match": "unknown", "note": "search_shop 미검증"},
+        {"keyword": "미니젖병소독기", "category": "사전 미등록 (젖병소독기 추정)", "group": "D", "match": "unknown", "note": "search_shop 미검증, 본 제품 미니 사이즈"},
+        {"keyword": "자외선젖병소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "search_shop 미검증"},
+        {"keyword": "젖병살균기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "search_shop 미검증, '살균기' 표현"},
+        {"keyword": "젖병살균건조기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "search_shop 미검증, 소독+건조 겸용 강조"},
+        {"keyword": "살균소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "search_shop 미검증"},
+        {"keyword": "UV살균기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "search_shop 미검증"},
+        {"keyword": "무선젖병소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "배터리 무선 강조"},
+        {"keyword": "충전식젖병소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "search_shop 미검증"},
+        {"keyword": "USB젖병소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "USB-C 충전"},
+        {"keyword": "배터리젖병소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "search_shop 미검증"},
+        {"keyword": "소형젖병소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "제품 크기"},
+        {"keyword": "열풍건조젖병소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "열풍 건조 기능 강조"},
+        {"keyword": "건조겸용젖병소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "소독+건조 겸용"},
+        {"keyword": "파우치젖병소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "파우치 포함, 외출용"},
+        {"keyword": "노리개젖꼭지소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "상단 선반 활용"},
+        {"keyword": "캠핑용젖병소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "휴대 시나리오"},
+        {"keyword": "외출용젖병소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "휴대 시나리오"},
+        {"keyword": "신생아젖병소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "타겟 대상"},
+        {"keyword": "이유식용품소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "숟가락·포크도 넣을 수 있음"},
+        {"keyword": "젖병전기소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "search_shop 미검증"},
+        {"keyword": "유아용품소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "search_shop 미검증"},
+        {"keyword": "아기용품소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "search_shop 미검증"},
+        {"keyword": "공갈젖꼭지소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "search_shop 미검증"},
+        {"keyword": "유아식기소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "숟가락·포크"},
+        {"keyword": "이유식스푼소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "search_shop 미검증"},
+        {"keyword": "아기소독기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "포괄 키워드"},
+        {"keyword": "미니살균기", "category": "사전 미등록", "group": "D", "match": "unknown", "note": "search_shop 미검증"}
+      ]
+    }
+  ]
+}
+</script>
+
+<script>
+const TRAP_PATTERNS = [
+  { product_id: "suitssok-vcdm002wh", pattern: "행거 + 건조기", expected: "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", actual: "생활/건강 > 세탁용품 > 빨래건조대", note: "단 '빨래건조기'는 의류건조기로 잘 매칭됨 — 분리 필요" },
+  { product_id: "suitssok-vcdm002wh", pattern: "옷 + 냄새제거기", expected: "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", actual: "생활/건강 > 생활용품 > 제습/방향/탈취 > 옷장탈취제" },
+  { product_id: "suitssok-vcdm002wh", pattern: "옷 + 주름제거기", expected: "디지털/가전 > 생활가전 > 세탁/건조기 > 의류관리기", actual: "디지털/가전 > 생활가전 > 보풀제거기" },
+  { product_id: "mono-vcmk003wh", pattern: "모카포트", expected: "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", actual: "생활/건강 > 주방용품 > 커피용품 > 드립포트", note: "전동 머신 아닌 수동 드립 도구로 빠짐 (실검색 100%)" },
+  { product_id: "mono-vcmk003wh", pattern: "밀크스티머", expected: "디지털/가전 > 주방가전 > 커피머신/메이커 > 에스프레소머신", actual: "생활/건강 > 주방용품 > 커피용품 > 우유거품기" },
+  { product_id: "watercling-vcvc022wh", pattern: "○○ + 클리너 (영문)", expected: "디지털/가전 > 청소기 > 침구청소기", actual: "생활/건강 > 생활용품 > 세제/세정제", note: "매트리스클리너·패브릭클리너·워터클리너 모두 세제로 빠짐" },
+  { product_id: "watercling-vcvc022wh", pattern: "휴대용 + 청소기", expected: "디지털/가전 > 청소기 > 침구청소기 / 무선청소기", actual: "생활/건강 > 자동차용품 > 편의용품 > 차량용청소기" },
+  { product_id: "watercling-vcvc022wh", pattern: "얼룩제거 + 청소기", expected: "디지털/가전 > 청소기 > 침구청소기", actual: "생활/건강 > 생활용품 > 세제/세정제" },
+  { product_id: "watercling-vcvc022wh", pattern: "캠핑 + 청소기", expected: "디지털/가전 > 청소기 > 침구청소기", actual: "스포츠/레저 > 캠핑 > 기타캠핑용품" },
+  { product_id: "watercling-vcvc022wh", pattern: "분무 + 청소기", expected: "디지털/가전 > 청소기 > 침구청소기", actual: "생활/건강 > 청소용품 > 밀대/패드" },
+  { product_id: "pepper-grinder-vbld011wh", pattern: "페퍼밀 · 페퍼그라인더 (영문)", expected: "디지털/가전 > 주방가전 > 분쇄기", actual: "생활/건강 > 주방용품 > 보관/밀폐용기 > 양념통/설탕프림기", note: "한국어 '후추그라인더'는 OK, 영문이 함정" },
+  { product_id: "pepper-grinder-vbld011wh", pattern: "솔트밀", expected: "디지털/가전 > 주방가전 > 분쇄기", actual: "생활/건강 > 주방용품 > 보관/밀폐용기 > 양념통/설탕프림기", note: "페퍼밀과 같이 수동 양념통으로 빠짐 (실검색 100%)" },
+  { product_id: "pepper-grinder-vbld011wh", pattern: "후추통", expected: "디지털/가전 > 주방가전 > 분쇄기", actual: "생활/건강 > 주방용품 > 보관/밀폐용기 > 양념통/설탕프림기", note: "조미료(식품)가 아닌 양념통 (실검색 100%)" },
+  { product_id: "pepper-grinder-vbld011wh", pattern: "미니 · 무선 · 충전식 · 휴대용 · USB + 그라인더", expected: "디지털/가전 > 주방가전 > 분쇄기", actual: "생활/건강 > 공구 > 절삭공구 > 그라인더", note: "산업용 공구 카테고리로 빠짐" },
+  { product_id: "pepper-grinder-vbld011wh", pattern: "그라인더 (단독)", expected: "디지털/가전 > 주방가전 > 분쇄기", actual: "생활/건강 > 공구 > 절삭공구 > 그라인더" },
+  { product_id: "pepper-grinder-vbld011wh", pattern: "미니분쇄기", expected: "디지털/가전 > 주방가전 > 분쇄기", actual: "디지털/가전 > 주방가전 > 믹서기" },
+  { product_id: "pepper-grinder-vbld011wh", pattern: "커피 · 홈카페 · 원두 + 그라인더", expected: "디지털/가전 > 주방가전 > 분쇄기", actual: "디지털/가전 > 주방가전 > 커피머신/메이커 > 원두분쇄기", note: "같은 주방가전이지만 다른 세분류" },
+
+  { product_id: "wastebasket-vwtb007be", pattern: "모션감지 · 전동 · 터치 + 쓰레기통", expected: "생활/건강 > 청소용품 > 휴지통 > 센서 휴지통", actual: "생활/건강 > 청소용품 > 휴지통 > 다용도휴지통", note: "센서 휴지통 아닌 다용도휴지통으로 빠짐 (실검색 100%) - '자동/센서/스마트'로 대체 필요" },
+  { product_id: "wastebasket-vwtb007be", pattern: "페달 · 스테인리스 · 원룸 + 쓰레기통", expected: "생활/건강 > 청소용품 > 휴지통 > 센서 휴지통", actual: "생활/건강 > 청소용품 > 휴지통 > 다용도휴지통", note: "경쟁 형태(페달)·재질·시나리오 키워드는 다용도휴지통으로 빠짐" },
+  { product_id: "wastebasket-vwtb007be", pattern: "음식물 + 쓰레기통", expected: "생활/건강 > 청소용품 > 휴지통 > 센서 휴지통", actual: "생활/건강 > 청소용품 > 휴지통 > 음식물쓰레기통", note: "같은 소분류 안 다른 세분류 (분리수거함도 동일 패턴)" }
+];
+
+const PRODUCT_CATEGORIES = ["전체", "생활가전", "육아", "계절가전", "주방가전"];
+const GROUP_LABELS = {
+  A: { title: "A그룹 · 타겟 카테고리 정확 노출 (메인 키워드)", desc: "상품명·태그에 적극 사용" },
+  B: { title: "B그룹 · 인접 카테고리 노출 (광고용)", desc: "타겟 카테고리와 다른 곳에 노출되지만 같은 영역" },
+  D: { title: "D그룹 · 혼재 / 약한 키워드", desc: "보조 사용 또는 상세페이지 컨셉용" },
+  C: { title: "C그룹 · 사용 금지 (다른 카테고리로 빠짐)", desc: "상품명·태그·광고에서 모두 제외" }
+};
+const GROUP_ORDER = ["A", "B", "D", "C"];
+
+let DATA = null;
+let activeCategory = "전체";
+let viewMode = "product";
+let VOLUMES_CACHE = {}; // {키워드: {pc, mo, comp, _ts}}
+
+async function init() {
+  DATA = JSON.parse(document.getElementById("productData").textContent);
+  renderCategoryTabs();
+  renderProductSelect();
+  if (DATA.products.length > 0) {
+    document.getElementById("lastUpdated").textContent = `마지막 업데이트: ${DATA.products[DATA.products.length-1].analysis_date}`;
+  }
+  await loadVolumesCache();
+  render();
+}
+
+async function loadVolumesCache() {
+  try {
+    const res = await fetch('/volumes-cache');
+    if (res.ok) {
+      VOLUMES_CACHE = await res.json();
+    }
+  } catch (e) {
+    console.warn('조회수 캐시 로드 실패', e);
+  }
+}
+
+async function refreshProductVolumes() {
+  const productId = document.getElementById("productSelect").value;
+  const product = DATA.products.find(p => p.id === productId);
+  if (!product) return;
+
+  const btn = document.getElementById('refreshVolumesBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '🔄 조회 중...'; }
+
+  try {
+    const keywords = product.keywords.map(k => k.keyword);
+    const res = await fetch('/keyword-volumes', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ keywords, force: false })
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`서버 ${res.status}: ${errText.substring(0,200)}`);
+    }
+    const data = await res.json();
+    Object.entries(data.results).forEach(([kw, v]) => { VOLUMES_CACHE[kw] = v; });
+    const msg = `조회수 업데이트 완료\n신규: ${data.fetched_count}개 / 캐시 재사용: ${data.cached_count}개${data.failed.length ? ` / 실패: ${data.failed.length}개` : ''}`;
+    render();
+    setTimeout(() => alert(msg), 100);
+  } catch (e) {
+    alert(`실패: ${e.message}\n\n• server.py 실행 중인지 확인\n• .env에 NAVER_AD_API_KEY / NAVER_AD_SECRET_KEY / NAVER_AD_CUSTOMER_ID 설정 확인`);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '🔄 조회수 가져오기'; }
+  }
+}
+
+function getMobileVolume(keyword) {
+  const v = VOLUMES_CACHE[keyword];
+  return v ? v.mo : undefined;
+}
+
+function getPcVolume(keyword) {
+  const v = VOLUMES_CACHE[keyword];
+  return v ? v.pc : undefined;
+}
+
+/* 제품 특징 텍스트 → 픽토그램 칩 자동 변환 */
+function getFeatureIcon(text) {
+  const t = text.toLowerCase();
+  if (/\d+\s*kg|\d+\s*g\b/i.test(text)) return "⚖️";
+  if (/\d+\.?\d*\s*l\b/i.test(text)) return "🪣";
+  if (/220v|110w|\d+\s*w\b|dc\s*\d+|ac\s*\d+|정격|배터리/i.test(t)) return "⚡";
+  if (/usb-c|usb/i.test(t)) return "🔌";
+  if (/충전식|충전\b/.test(t)) return "🔋";
+  if (/무선/.test(t)) return "📡";
+  if (/휴대용|포터블|핸디/.test(t)) return "🎒";
+  if (/행거|거치|걸이|벽걸이|받침/.test(t)) return "🪝";
+  if (/접이식|접었을|폈을|접는|폴딩/.test(t)) return "📐";
+  if (/열풍|열\s/.test(t)) return "🌬️";
+  if (/스팀|증기/.test(t)) return "💨";
+  if (/슈트|정장|양복/.test(t)) return "👔";
+  if (/커버|케이스|박스/.test(t)) return "🛡️";
+  if (/물탱크|정수통|오수통|물\s|물분사|물 분사|용기/.test(t)) return "💧";
+  if (/롤러|브러시|솔/.test(t)) return "🧹";
+  if (/필터|바스켓/.test(t)) return "🧊";
+  if (/패브릭|소파|매트리스|침구|카펫|카시트|이불|쇼파/.test(t)) return "🛋️";
+  if (/얼룩|제거|살균|클리닝/.test(t)) return "✨";
+  if (/싱글샷|더블샷|에스프레소|커피|크레마|추출/.test(t)) return "☕";
+  if (/우유|라떼|카푸치노|밀크|거품|스티밍/.test(t)) return "🥛";
+  if (/굵기|입자|분쇄|조절\s링|조절링/.test(t)) return "📏";
+  if (/후추|소금|향신료|페퍼|솔트|조미료/.test(t)) return "🧂";
+  if (/그라인더|믹서|블렌더/.test(t)) return "⚙️";
+  if (/다이닝|식탁|테이블/.test(t)) return "🍽️";
+  if (/2대|듀얼|세트|병용|겸용/.test(t)) return "👯";
+  if (/거치대/.test(t)) return "🏛️";
+  if (/시간|분\b|초\b/.test(t)) return "⏱️";
+  if (/가정용|홈|실내/.test(t)) return "🏠";
+  if (/진공\s|진공아닌|진공\s아닌/.test(t)) return "🌀";
+  if (/아님|불가|⚠/.test(text)) return "⚠️";
+  if (/크기|mm|cm|×|x\s*\d/i.test(t)) return "📦";
+  return "✓";
+}
+
+function renderFeatureChips(features) {
+  if (!features) return "";
+  const items = features.split(/\s*·\s*/).filter(s => s.trim());
+  return items.map(item => {
+    const icon = getFeatureIcon(item);
+    return `<span class="feature-chip"><span class="ic">${icon}</span>${escapeHTML(item.trim())}</span>`;
+  }).join("");
+}
+
+function renderProductTraps(productId) {
+  const traps = TRAP_PATTERNS.filter(t => t.product_id === productId);
+  const items = traps.length === 0
+    ? `<div class="empty-traps">이 제품에 등록된 함정 패턴이 없습니다</div>`
+    : `<div class="trap-list">` + traps.map(t => `
+        <div class="trap-item">
+          <span class="tp">⚠️ ${escapeHTML(t.pattern)}</span>
+          <div class="row good"><span class="label">의도</span><span class="val">${escapeHTML(t.expected || "-")}</span></div>
+          <div class="row bad"><span class="label">실제</span><span class="val">${escapeHTML(t.actual)}</span></div>
+          ${t.note ? `<span class="nt">💡 ${escapeHTML(t.note)}</span>` : ""}
+        </div>
+      `).join("") + `</div>`;
+  return `
+    <div class="product-traps">
+      <div class="traps-title">🚨 이 제품 함정 키워드 <span class="count">${traps.length}개</span></div>
+      ${items}
+    </div>
+  `;
+}
+
+function renderCategoryTabs() {
+  const tabs = document.getElementById("catTabs");
+  tabs.innerHTML = PRODUCT_CATEGORIES.map(c => {
+    const count = c === "전체"
+      ? DATA.products.length
+      : DATA.products.filter(p => p.product_category === c).length;
+    const active = c === activeCategory ? "active" : "";
+    return `<div class="cat-tab ${active}" onclick="selectCategory('${c}')">
+      ${c} <span class="badge-count">${count}</span>
+    </div>`;
+  }).join("");
+}
+
+function selectCategory(c) {
+  activeCategory = c;
+  renderCategoryTabs();
+  renderProductSelect();
+  render();
+}
+
+function setViewMode(mode) {
+  viewMode = mode;
+  document.getElementById("viewProduct").classList.toggle("active", mode === "product");
+  document.getElementById("viewCategory").classList.toggle("active", mode === "category");
+  document.getElementById("productSelect").style.display = mode === "product" ? "" : "none";
+  document.getElementById("productSelectLabel").style.display = mode === "product" ? "" : "none";
+  render();
+}
+
+function getFilteredProducts() {
+  return activeCategory === "전체"
+    ? DATA.products
+    : DATA.products.filter(p => p.product_category === activeCategory);
+}
+
+function renderProductSelect() {
+  const select = document.getElementById("productSelect");
+  const products = getFilteredProducts();
+  select.innerHTML = "";
+  products.forEach(p => {
+    const opt = document.createElement("option");
+    opt.value = p.id;
+    opt.textContent = `[${p.product_category}] ${p.name} (${p.model})`;
+    select.appendChild(opt);
+  });
+}
+
+function render() {
+  const products = getFilteredProducts();
+  if (products.length === 0) {
+    document.getElementById("productInfo").innerHTML = "";
+    document.getElementById("summary").innerHTML = "";
+    document.getElementById("groups").innerHTML = `<div class="empty"><h3>📭 ${activeCategory} 카테고리에 등록된 제품이 없습니다</h3><p>우측 상단 "🆕 신제품 분석 요청" 버튼으로 새 제품을 추가하세요</p></div>`;
+    return;
+  }
+
+  if (viewMode === "product") {
+    renderProductView();
+  } else {
+    renderCategoryView();
+  }
+}
+
+function renderProductView() {
+  const id = document.getElementById("productSelect").value;
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  const product = DATA.products.find(p => p.id === id);
+  if (!product) return;
+
+  const manualBtn = product.manual_path
+    ? `<a class="manual-btn" href="${product.manual_path.replace(/\\/g, '/')}" target="_blank">📄 설명서 보기</a>`
+    : `<span class="manual-btn disabled">📄 설명서 미등록</span>`;
+
+  document.getElementById("productInfo").innerHTML = `
+    <div class="product-info-grid">
+      <div class="product-info">
+        <h2>${escapeHTML(product.name)}</h2>
+        <span class="model">${escapeHTML(product.model)}</span>
+        <div class="badge-row">
+          <span class="cat-badge ${product.product_category}">${product.product_category}</span>
+          ${manualBtn}
+          <button id="refreshVolumesBtn" class="vol-btn" onclick="refreshProductVolumes()" title="네이버 검색광고 API로 PC/모바일 월간 조회수 가져오기">🔄 조회수 가져오기</button>
+        </div>
+        <div class="target">
+          <span class="ic">🎯</span>
+          <span><b>타겟 카테고리</b> · ${escapeHTML(product.category_target)}</span>
+        </div>
+        <div class="section-label">제품 특징</div>
+        <div class="features">${renderFeatureChips(product.features)}</div>
+        <div class="footer-meta">
+          <span><b>분석일</b>${escapeHTML(product.analysis_date)}</span>
+          <span><b>총 키워드</b>${product.keywords.length}개</span>
+        </div>
+      </div>
+      ${renderProductTraps(product.id)}
+    </div>
+  `;
+
+  const filtered = filterKeywords(product.keywords, q);
+  renderSummary(filtered);
+  renderGroups(filtered.map(k => ({ ...k, _product: product.name })), q, false);
+}
+
+function renderCategoryView() {
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  const products = getFilteredProducts();
+
+  document.getElementById("productInfo").innerHTML = `
+    <div class="product-info">
+      <h2>📚 ${activeCategory} 카테고리 통합 뷰
+        <span class="model">${products.length}개 제품 · 총 ${products.reduce((s, p) => s + p.keywords.length, 0)}개 키워드</span>
+      </h2>
+      <div class="meta">
+        <b>포함 제품:</b> ${products.map(p => p.name).join(" · ")}<br>
+        <b>분석 기간:</b> ${products.map(p => p.analysis_date).sort().join(" ~ ")}
+      </div>
+    </div>
+  `;
+
+  const allKeywords = [];
+  products.forEach(p => {
+    p.keywords.forEach(k => allKeywords.push({ ...k, _product: p.name }));
+  });
+
+  const filtered = filterKeywords(allKeywords, q);
+  renderSummary(filtered);
+  renderGroups(filtered, q, true);
+}
+
+function filterKeywords(keywords, q) {
+  if (!q) return keywords;
+  return keywords.filter(k =>
+    k.keyword.toLowerCase().includes(q) ||
+    k.category.toLowerCase().includes(q) ||
+    (k.note || "").toLowerCase().includes(q) ||
+    (k._product || "").toLowerCase().includes(q));
+}
+
+function renderSummary(filtered) {
+  const s = { A: 0, B: 0, D: 0, C: 0 };
+  filtered.forEach(k => s[k.group]++);
+  document.getElementById("summary").innerHTML = `
+    <div class="card total"><div class="label"><span class="dot"></span>표시 키워드</div><div class="value">${filtered.length}</div></div>
+    <div class="card p1"><div class="label"><span class="dot"></span>A그룹 · 메인</div><div class="value">${s.A}</div></div>
+    <div class="card p2"><div class="label"><span class="dot"></span>B그룹 · 인접</div><div class="value">${s.B}</div></div>
+    <div class="card p3"><div class="label"><span class="dot"></span>D그룹 · 혼재</div><div class="value">${s.D}</div></div>
+    <div class="card banned"><div class="label"><span class="dot"></span>C그룹 · 금지</div><div class="value">${s.C}</div></div>
+  `;
+}
+
+function renderGroups(keywords, q, showProduct) {
+  const groupsEl = document.getElementById("groups");
+  if (keywords.length === 0) {
+    groupsEl.innerHTML = `<div class="empty"><h3>🔍 검색 결과 없음</h3><p>다른 키워드로 검색해보세요</p></div>`;
+    return;
+  }
+
+  let html = "";
+  GROUP_ORDER.forEach(g => {
+    const items = keywords.filter(k => k.group === g);
+    if (items.length === 0) return;
+    const meta = GROUP_LABELS[g];
+    const prodColHead = showProduct ? `<th style="width:12%">제품</th>` : "";
+    html += `
+      <div class="group ${g}">
+        <div class="group-header">
+          <span class="dot"></span>
+          <span>${meta.title}</span>
+          <span class="count">${items.length}개</span>
+          <span style="font-weight:400;font-size:12px;color:var(--text-mute);margin-left:auto;">${meta.desc}</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              ${prodColHead}
+              <th style="width:18%">키워드</th>
+              <th style="width:11%; text-align:right;">📱 모바일 조회수</th>
+              <th style="width:28%">매칭 카테고리</th>
+              <th style="width:8%">상태</th>
+              <th>비고</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${items.map(k => `
+              <tr>
+                ${showProduct ? `<td><span class="prod-tag">${escapeHTML(k._product)}</span></td>` : ""}
+                <td class="keyword">${highlight(k.keyword, q)}</td>
+                <td class="volume">${formatVolume(getMobileVolume(k.keyword) ?? k.mobile_volume)}</td>
+                <td class="category">${highlight(k.category, q)}</td>
+                <td><span class="badge ${k.match}">${badgeLabel(k.match)}</span></td>
+                <td class="note">${highlight(k.note || "", q)}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  });
+  groupsEl.innerHTML = html;
+}
+
+function formatVolume(v) {
+  if (v === undefined || v === null || v === "") return `<span style="color:#cbd5e1;">—</span>`;
+  if (typeof v === "string" && v === "< 10") return `<span style="color:var(--text-mute);">&lt; 10</span>`;
+  const n = Number(v);
+  if (isNaN(n)) return `<span style="color:#cbd5e1;">—</span>`;
+  return `<span style="font-family:'Inter',sans-serif;font-weight:600;color:var(--text);">${n.toLocaleString()}</span>`;
+}
+
+function badgeLabel(m) {
+  return { match: "정확", partial: "인접", miss: "미스", unknown: "혼재" }[m] || m;
+}
+
+/* ===== CSV(엑셀) 내보내기 ===== */
+function exportToCSV() {
+  const productId = document.getElementById("productSelect").value;
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  const isCategoryView = viewMode === "category";
+
+  let rows = [];
+  let filename = "";
+
+  if (isCategoryView) {
+    const products = getFilteredProducts();
+    if (products.length === 0) { alert("내보낼 데이터가 없습니다."); return; }
+    products.forEach(p => {
+      p.keywords.forEach(k => rows.push({ ...k, _product: p.name, _model: p.model }));
+    });
+    filename = `${activeCategory}_카테고리_키워드_${formatDate(new Date())}.csv`;
+  } else {
+    const product = DATA.products.find(p => p.id === productId);
+    if (!product) { alert("제품을 선택해주세요."); return; }
+    rows = product.keywords.map(k => ({ ...k, _product: product.name, _model: product.model }));
+    filename = `${product.name}_키워드_${product.analysis_date}.csv`;
+  }
+
+  if (q) rows = filterKeywords(rows, q);
+  if (rows.length === 0) { alert("내보낼 키워드가 없습니다."); return; }
+
+  // 그룹 순서대로 정렬 (A → B → D → C)
+  const order = { A: 1, B: 2, D: 3, C: 4 };
+  rows.sort((a, b) => (order[a.group] || 99) - (order[b.group] || 99));
+
+  // CSV 생성
+  const headers = isCategoryView
+    ? ["제품명", "모델명", "키워드", "PC 월간 조회수", "모바일 월간 조회수", "그룹", "상태", "매칭 카테고리", "비고"]
+    : ["키워드", "PC 월간 조회수", "모바일 월간 조회수", "그룹", "상태", "매칭 카테고리", "비고"];
+
+  const data = rows.map(k => {
+    const pc = getPcVolume(k.keyword) ?? k.pc_volume ?? "";
+    const mo = getMobileVolume(k.keyword) ?? k.mobile_volume ?? "";
+    const base = [
+      k.keyword,
+      pc,
+      mo,
+      k.group,
+      badgeLabel(k.match),
+      k.category,
+      k.note || ""
+    ];
+    return isCategoryView ? [k._product, k._model, ...base] : base;
+  });
+
+  const csvLines = [headers, ...data].map(row =>
+    row.map(cell => {
+      const s = String(cell ?? "").replace(/"/g, '""');
+      return /[",\r\n]/.test(s) ? `"${s}"` : s;
+    }).join(",")
+  );
+  const csv = csvLines.join("\r\n");
+
+  // UTF-8 BOM 추가 (Excel 한글 깨짐 방지)
+  const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function formatDate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function escapeHTML(s) {
+  return (s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function highlight(text, q) {
+  if (!q || !text) return escapeHTML(text);
+  const escaped = escapeHTML(text);
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+  return escaped.replace(re, '<mark style="background:#fef08a;padding:0 2px;border-radius:2px;">$1</mark>');
+}
+
+/* ===== 신제품 등록 모달 ===== */
+function openNewProductModal() {
+  document.getElementById("newProductModal").classList.add("show");
+  document.getElementById("requestOutputArea").style.display = "none";
+  document.getElementById("copySuccess").classList.remove("show");
+}
+
+function closeNewProductModal() {
+  document.getElementById("newProductModal").classList.remove("show");
+}
+
+let pendingFile = null;  // 드래그앤드롭으로 들어온 파일 임시 저장
+
+function updateFilePath() {
+  const fileInput = document.getElementById("newManual");
+  const display = document.getElementById("filePathDisplay");
+  if (fileInput.files && fileInput.files[0]) {
+    pendingFile = fileInput.files[0];
+    display.innerHTML = `📎 선택된 파일: <b>${pendingFile.name}</b> (${(pendingFile.size/1024).toFixed(1)} KB)`;
+  } else if (pendingFile) {
+    display.innerHTML = `📎 선택된 파일: <b>${pendingFile.name}</b> (${(pendingFile.size/1024).toFixed(1)} KB)`;
+  } else {
+    display.innerHTML = `💡 또는 PDF 파일을 화면 어디든 <b>드래그앤드롭</b> 하세요`;
+  }
+}
+
+/* ===== PDF 업로드 + 자동 분석 트리거 ===== */
+async function uploadAndAnalyze() {
+  const fileInput = document.getElementById("newManual");
+  const file = (fileInput.files && fileInput.files[0]) || pendingFile;
+
+  if (!file) {
+    alert("PDF 파일을 첨부하거나 드래그앤드롭해주세요.");
+    return;
+  }
+  if (!file.name.toLowerCase().endsWith(".pdf")) {
+    alert("PDF 파일만 가능합니다.");
+    return;
+  }
+
+  const cat = document.querySelector('input[name="newCat"]:checked').value;
+  const name = document.getElementById("newName").value.trim();
+  const model = document.getElementById("newModel").value.trim();
+  const target = document.getElementById("newTarget").value.trim();
+
+  const btn = document.getElementById("uploadBtn");
+  btn.disabled = true;
+  btn.textContent = "📤 업로드 중...";
+
+  try {
+    // 1. PDF를 base64로 변환
+    const base64 = await fileToBase64(file);
+
+    // 2. 백엔드로 업로드
+    const res = await fetch("/upload", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        filename: file.name,
+        content_base64: base64,
+        product_category: cat,
+        product_name: name,
+        model: model,
+        target_category: target
+      })
+    });
+
+    if (!res.ok) {
+      throw new Error(`서버 오류: ${res.status} ${res.statusText}`);
+    }
+    const result = await res.json();
+
+    // 3. 상태 배너 표시 — v5: 트리거 문자열 불필요, 다음 채팅 메시지에 자동 분석
+    showStatus(
+      "✅",
+      `<b>PDF 저장 완료! Claude 채팅창에서 <span style="color:#03c75a;font-size:18px;">아무 메시지나</span> 한 번만 보내세요.</b><br>` +
+      `<span class="small">파일: ${result.filename} → manuals/ 폴더<br>` +
+      `분석 대기 플래그(<code>pending_analysis=true</code>)가 세팅되어, Claude가 다음 메시지에 이 PDF를 자동으로 찾아 4단계 분석 후 대시보드에 추가합니다. <b>"ㄱㄱ" 같은 특정 트리거 불필요.</b></span>`
+    );
+
+    closeNewProductModal();
+    pendingFile = null;
+  } catch (err) {
+    console.error(err);
+    alert(`업로드 실패: ${err.message}\n\n서버가 실행 중인지 확인하세요 (server.py).`);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "📤 PDF 저장 + 분석 시작";
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function buildTriggerMessage(r) {
+  const lines = [
+    `방금 ${r.relative_path} 신제품 PDF 추가했어. 키워드 카테고리 분석해줘.`,
+    ``,
+    `제품 카테고리(사내): ${r.product_category}`,
+  ];
+  if (r.product_name) lines.push(`제품명: ${r.product_name}`);
+  if (r.model) lines.push(`모델명: ${r.model}`);
+  if (r.target_category) lines.push(`타겟 네이버 카테고리: ${r.target_category}`);
+  else lines.push(`타겟 네이버 카테고리: (PDF 보고 추론해줘)`);
+  lines.push(``);
+  lines.push(`저장된 workflow-keyword-category-matching 4단계로 진행하고 대시보드 JSON에 추가해줘.`);
+  lines.push(`manual_path 필드는 "${r.relative_path}" 그대로, product_category는 "${r.product_category}" 입력.`);
+  return lines.join("\n");
+}
+
+function showStatus(icon, html) {
+  document.getElementById("statusIcon").textContent = icon;
+  document.getElementById("statusText").innerHTML = html;
+  const banner = document.getElementById("statusBanner");
+  banner.classList.add("show", "pulse");
+  setTimeout(() => banner.classList.remove("pulse"), 4000);
+}
+
+function hideStatus() {
+  document.getElementById("statusBanner").classList.remove("show");
+}
+
+/* ===== 드래그앤드롭 핸들러 ===== */
+let dragCounter = 0;
+
+window.addEventListener("dragenter", (e) => {
+  if (e.dataTransfer && e.dataTransfer.types.includes("Files")) {
+    e.preventDefault();
+    dragCounter++;
+    document.getElementById("dropzoneOverlay").classList.add("show");
+  }
+});
+
+window.addEventListener("dragover", (e) => {
+  if (e.dataTransfer && e.dataTransfer.types.includes("Files")) {
+    e.preventDefault();
+  }
+});
+
+window.addEventListener("dragleave", (e) => {
+  dragCounter--;
+  if (dragCounter <= 0) {
+    dragCounter = 0;
+    document.getElementById("dropzoneOverlay").classList.remove("show");
+  }
+});
+
+window.addEventListener("drop", (e) => {
+  e.preventDefault();
+  dragCounter = 0;
+  document.getElementById("dropzoneOverlay").classList.remove("show");
+
+  const files = e.dataTransfer && e.dataTransfer.files;
+  if (!files || files.length === 0) return;
+
+  const pdfFile = Array.from(files).find(f => f.name.toLowerCase().endsWith(".pdf"));
+  if (!pdfFile) {
+    alert("PDF 파일만 업로드 가능합니다.");
+    return;
+  }
+
+  pendingFile = pdfFile;
+  openNewProductModal();
+  updateFilePath();
+});
+
+document.getElementById("newProductModal").addEventListener("click", e => {
+  if (e.target.id === "newProductModal") closeNewProductModal();
+});
+
+init();
+</script>
+</body>
+</html>

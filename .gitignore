@@ -27,8 +27,11 @@ _*.txt
 todos_*.bak.json
 todos.broken_*.json
 todos.before_*.json
+todos.snap_*.json
+events.snap_*.json
 reviews_backup/
 *.xlsx
+*.pptx
 
 # 캐시·자동 생성
 __pycache__/
@@ -42,8 +45,14 @@ baby/supabase_setup.sql
 
 # 다른 프로젝트 산출물 (별도 호스팅)
 리뷰이벤트_CS.html
-키워드_카테고리_대시보드.html
+# 키워드_카테고리_대시보드.html  ← v6 (2026-08-06): GitHub Pages 배포로 공개
 keyword_volumes.json
+양성준_대시보드.html
+last_upload.json
+event_notes.json
+events.json
+mcp_mysql_client.py
+_supabase_*.sql
 
 # 사용자 안내·메모 (외부 공개 불필요)
 README_담당자용.txt
