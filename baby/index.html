@@ -359,7 +359,6 @@
       <button class="nav-item active" data-tab="dash"><span class="nav-emoji">📊</span>대시보드</button>
       <button class="nav-item" data-tab="cal"><span class="nav-emoji">📅</span>캘린더<span class="nav-badge soft" id="badge-cal">0</span></button>
       <button class="nav-item" data-tab="idea"><span class="nav-emoji">✨</span>소재<span class="nav-badge soft" id="badge-idea">0</span></button>
-      <button class="nav-item" data-tab="make"><span class="nav-emoji">✍️</span>제작</button>
       <button class="nav-item" data-tab="pub"><span class="nav-emoji">📤</span>발행</button>
       <button class="nav-item" data-tab="comp"><span class="nav-emoji">🔍</span>경쟁사</button>
       <button class="nav-item" data-tab="prod"><span class="nav-emoji">📦</span>제품<span class="nav-badge soft">17</span></button>
@@ -546,43 +545,11 @@
   </section>
 
   <!-- ───── 제작 ───── -->
-  <section id="tab-make" class="hidden">
-    <div class="page-head">
-      <h1>✍️ 제작</h1>
-      <p>카드뉴스 · 캡션 · 해시태그를 만듭니다.</p>
-    </div>
-    <div class="card">
-      <div class="empty-state">
-        <div class="es-emoji">✍️</div>
-        <div class="es-title">소재를 먼저 고르세요</div>
-        <div class="es-desc">
-          <b>소재</b> 탭에서 카드를 클릭하면 여기서 제작이 시작됩니다.<br><br>
-          제작 원칙: <b>한글 문구는 AI 이미지에 넣지 않습니다.</b> 배경만 생성하고 한글은 템플릿이 위에 얹습니다 —
-          AI가 만든 한글은 반드시 깨지기 때문입니다.
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ───── 발행 ───── -->
   <section id="tab-pub" class="hidden">
     <div class="page-head">
       <h1>📤 발행</h1>
       <p>인스타그램 자동 업로드. 연결되면 민채님 손이 완전히 빠집니다.</p>
-    </div>
-
-    <div class="card">
-      <h2>📱 계정 정보<span class="hint" id="acct-state">미등록</span></h2>
-      <div class="row mb8">
-        <span class="fs13 muted">@</span>
-        <input type="text" id="in-insta" placeholder="voar.aganote" style="flex:1;min-width:200px">
-        <input type="text" id="in-insta-name" placeholder="표시명 (예: 보아르 아가노트 | 신생아 수면·수유 정보)" style="flex:2;min-width:260px">
-        <button class="btn brand" id="btn-save-insta">저장</button>
-      </div>
-      <div class="row mt14" id="setup-checks"></div>
-      <div class="fs11 soft mt14">
-        아이디를 저장하면 발행 연동 준비가 시작됩니다. 아래 3단계까지 끝나야 자동 업로드가 붙습니다.
-      </div>
     </div>
 
     <div class="callout warn" id="pub-warn">
@@ -654,12 +621,12 @@
     </div>
 
     <div class="card">
-      <h2>📮 발행 큐<span class="hint" id="queue-count">0건</span></h2>
+      <h2>📮 발행 대기 소재<span class="hint" id="queue-count">0건</span></h2>
       <div id="queue-list"></div>
       <div id="queue-empty" class="empty-state">
         <div class="es-emoji">📮</div>
-        <div class="es-title">대기 중인 발행이 없습니다</div>
-        <div class="es-desc">제작이 끝난 게시물이 여기에 올라오면, 카드와 캡션을 확인하고 승인하실 수 있습니다.</div>
+        <div class="es-title">대기 중인 소재가 없습니다</div>
+        <div class="es-desc"><b>소재</b> 탭에서 「발행 대기로 보내기」를 누르면 여기에 올라옵니다.</div>
       </div>
     </div>
   </section>
@@ -1059,7 +1026,7 @@ function fmtWon(n) {
 function uid() { return 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 
 /* ───────── 탭 전환 ───────── */
-const TABS = ['dash','cal','idea','make','pub','comp','prod'];
+const TABS = ['dash','cal','idea','pub','comp','prod'];
 document.getElementById('menu').addEventListener('click', (e) => {
   const btn = e.target.closest('.nav-item');
   if (!btn) return;
@@ -1184,7 +1151,7 @@ function genSlots() {
     if (dows.includes(day.getDay())) {
       out.push({
         date: `${day.getFullYear()}-${String(day.getMonth()+1).padStart(2,'0')}-${String(day.getDate()).padStart(2,'0')}`,
-        time: S.cfg.time, ideaId: null,
+        time: S.cfg.time, postId: null,
       });
     }
   }
@@ -1197,16 +1164,40 @@ function renderCal() {
   if (!S.slots.length) S.slots = genSlots();
 
   document.getElementById('slot-list').innerHTML = S.slots.map(s => {
-    const idea = S.ideas.find(i => i.id === s.ideaId);
+    // 슬롯에는 승인된 '발행 대기 소재'가 들어간다 (승인 시 자동 배정).
+    const q = (S.queue || []).find(x => x.id === s.postId);
     const dow = DOW_KO[new Date(s.date).getDay()];
-    return `<div class="slot ${idea ? '' : 'empty'}">
+    const tag = q
+      ? (q.status === 'published'
+          ? '<span class="tag t-green">발행 완료</span>'
+          : '<span class="tag t-blue">발행 예정</span>')
+      : '<span class="tag t-gray">비어있음</span>';
+    return `<div class="slot ${q ? '' : 'empty'}">
       <div class="date">${s.date}<span class="dow"> ${dow}</span></div>
       <div class="mono soft fs12">${s.time}</div>
-      <div class="title ${idea ? '' : 'ph'}">${idea ? idea.topic : '미배정'}</div>
-      ${idea ? `<span class="tag t-blue">${idea.status}</span>` : '<span class="tag t-gray">비어있음</span>'}
+      <div class="title ${q ? '' : 'ph'}">${q ? escapeHtml(q.title) : '미배정'}</div>
+      ${tag}
     </div>`;
   }).join('');
-  document.getElementById('badge-cal').textContent = S.slots.filter(s => !s.ideaId).length;
+  document.getElementById('badge-cal').textContent = S.slots.filter(s => !s.postId).length;
+}
+
+/* ───────── 슬롯 배정 ─────────
+   승인하면 예정 슬롯 중 '가장 빠른 빈 날짜'에 자동으로 꽂힌다.
+   이미 8/6이 차 있으면 다음 승인 건은 그다음 빈 슬롯(8/8)으로 간다. */
+function assignSlot(postId) {
+  if (!S.slots || !S.slots.length) S.slots = genSlots();
+  if (S.slots.some(s => s.postId === postId)) return null;   // 이미 배정됨
+  const today = todayStr();
+  const free = S.slots
+    .filter(s => !s.postId && s.date >= today)
+    .sort((a, b) => a.date.localeCompare(b.date))[0];
+  if (!free) return null;
+  free.postId = postId;
+  return free;
+}
+function releaseSlot(postId) {
+  (S.slots || []).forEach(s => { if (s.postId === postId) delete s.postId; });
 }
 
 /* ───────── 소재 ───────── */
@@ -1228,6 +1219,7 @@ function renderIdeas() {
   const STATUS_TAG = { '아이디어':'t-gray', '초안':'t-yellow', '제작완료':'t-blue', '예약':'t-purple', '발행':'t-green' };
   document.getElementById('idea-grid').innerHTML = list.map(i => {
     const p = PILLARS.find(x => x.id === i.pillar);
+    const queued = (S.queue || []).some(q => q.ideaId === i.id);
     return `<div class="idea-card" data-id="${i.id}">
       <div class="ic-top">
         <span class="tag" style="background:${p ? p.color+'22' : '#f1f2f4'};color:${p ? p.color : 'var(--text-mute)'}">${p ? p.name : '미분류'}</span>
@@ -1235,6 +1227,13 @@ function renderIdeas() {
       </div>
       <div class="ic-title">${escapeHtml(i.topic)}</div>
       <div class="ic-meta"><span>👶 ${i.age}</span><span>📅 ${i.created}</span></div>
+      <div class="row mt8">
+        ${queued
+          ? '<span class="tag t-purple">발행 대기로 보냄</span>'
+          : `<button class="btn sm brand" data-send="${i.id}">발행 대기로 보내기</button>`}
+        <div class="spacer"></div>
+        <button class="btn sm" data-del-idea="${i.id}">삭제</button>
+      </div>
     </div>`;
   }).join('');
 }
@@ -1403,6 +1402,34 @@ document.getElementById('btn-add-idea').addEventListener('click', () => {
 document.getElementById('in-topic').addEventListener('keydown', e => {
   if (e.key === 'Enter') document.getElementById('btn-add-idea').click();
 });
+document.getElementById('idea-grid').addEventListener('click', e => {
+  const t = e.target;
+  if (t.dataset.delIdea) {
+    if (!confirm('이 소재를 삭제할까요?')) return;
+    S.ideas = S.ideas.filter(x => x.id !== t.dataset.delIdea);
+    save(); renderIdeas(); renderDash();
+    return;
+  }
+  if (t.dataset.send) {
+    const idea = S.ideas.find(x => x.id === t.dataset.send);
+    if (!idea) return;
+    S.queue = S.queue || [];
+    S.queue.unshift({
+      id: 'q_' + idea.id,
+      ideaId: idea.id,
+      title: idea.topic,
+      pillar: idea.pillar,
+      age: idea.age,
+      images: [],
+      caption: '',
+      status: 'requested',
+      createdAt: new Date().toISOString(),
+    });
+    idea.status = '제작요청';
+    save(); renderIdeas(); renderQueue(); renderDash();
+    alert('발행 대기 소재로 보냈습니다.\n카드와 캡션이 만들어지면 승인하실 수 있습니다.');
+  }
+});
 document.getElementById('flt-pillar').addEventListener('change', renderIdeas);
 document.getElementById('flt-status').addEventListener('change', renderIdeas);
 
@@ -1440,43 +1467,15 @@ const SETUP_STEPS = [
   { k: 'token', label: '액세스 토큰 발급' },
 ];
 function renderInsta() {
-  document.getElementById('in-insta').value = S.instaId || '';
-  document.getElementById('in-insta-name').value = S.instaName || '';
+  // 계정 정보 카드는 제거됨 (대시보드 탭 연결 배너와 중복).
+  // setup 상태는 데이터로만 유지하며, 안내 카드 노출 여부만 여기서 판단한다.
   S.setup = S.setup || {};
-
-  const done = SETUP_STEPS.filter(s => S.setup[s.k]).length;
-  const st = document.getElementById('acct-state');
-  if (!S.instaId)      { st.className = 'hint'; st.textContent = '미등록'; }
-  else if (done === 3) { st.className = 'hint'; st.textContent = `@${S.instaId} · 연결 준비 완료`; }
-  else                 { st.className = 'hint'; st.textContent = `@${S.instaId} · 세팅 ${done}/3`; }
-
-  document.getElementById('setup-checks').innerHTML = SETUP_STEPS.map(s => `
-    <label class="row fs12" style="gap:6px;margin-right:18px;cursor:pointer">
-      <input type="checkbox" data-setup="${s.k}" ${S.setup[s.k] ? 'checked' : ''}>
-      ${s.label}
-    </label>`).join('');
-
-  // 세팅이 끝나면 안내용 카드는 감춘다 (다시 필요해지면 자동으로 나타남)
-  const finished = done === SETUP_STEPS.length;
+  const finished = SETUP_STEPS.every(x => S.setup[x.k]);
   ['pub-warn', 'setup-guide', 'publish-compare'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.toggle('hidden', finished);
   });
 }
-document.getElementById('btn-save-insta').addEventListener('click', () => {
-  const id = document.getElementById('in-insta').value.trim().replace(/^@/, '');
-  if (!id) { alert('계정 아이디를 입력하세요'); return; }
-  S.instaId = id;
-  S.instaName = document.getElementById('in-insta-name').value.trim();
-  save(); renderInsta(); renderDash();
-});
-document.getElementById('setup-checks').addEventListener('change', e => {
-  const k = e.target.dataset?.setup;
-  if (!k) return;
-  S.setup = S.setup || {};
-  S.setup[k] = e.target.checked;
-  save(); renderInsta(); renderDash();
-});
 
 /* ───────── 이미지 확대 팝업 ───────── */
 let lbList = [], lbIdx = 0;
@@ -1517,6 +1516,7 @@ document.addEventListener('keydown', e => {
    autoPublish 가 false면 status='approved' 로 바뀐 것만 발행 스크립트가 가져감.
    기본값 false — 사용자가 명시적으로 켜기 전까지 자동 발행 없음. */
 const Q_TAG = {
+  requested: ['t-purple', '제작 대기'],
   pending:   ['t-yellow', '승인 대기'],
   approved:  ['t-blue',   '승인됨 · 발행 대기'],
   published: ['t-green',  '발행 완료'],
@@ -1567,7 +1567,9 @@ function renderQueue() {
       <div class="row mb8">
         <b class="fs13">${escapeHtml(q.title || '(제목 없음)')}</b>
         <span class="tag ${cls}">${label}</span>
-        <span class="soft fs11">${escapeHtml(q.scheduledAt || '')}</span>
+        <span class="soft fs11">${q.scheduledAt
+          ? `📅 ${escapeHtml(q.scheduledAt)} ${escapeHtml(q.scheduledTime || '')} 발행 예정`
+          : ''}</span>
         <div class="spacer"></div>
         ${q.attachment ? `<a class="btn sm" href="${escapeHtml(q.attachment)}" target="_blank" rel="noopener">📎 첨부파일</a>` : ''}
         ${q.permalink ? `<a class="btn sm" href="${escapeHtml(q.permalink)}" target="_blank" rel="noopener">게시물 보기</a>` : ''}
@@ -1576,6 +1578,7 @@ function renderQueue() {
           <button class="btn sm brand" data-q-ok="${q.id}">✅ 발행 승인</button>
           <button class="btn sm" data-q-no="${q.id}">반려</button>` : ''}
         ${q.status === 'approved' ? `<button class="btn sm" data-q-cancel="${q.id}">승인 취소</button>` : ''}
+        <button class="btn sm" data-q-del="${q.id}">🗑</button>
       </div>
       <div class="row mb8">${thumbs}</div>
       ${q.note ? `<div class="fs11 soft mb8">📌 ${escapeHtml(q.note)}</div>` : ''}
@@ -1625,12 +1628,39 @@ document.getElementById('queue-list').addEventListener('click', e => {
     const q = S.queue.find(x => x.id === id);
     if (!q) return;
     q.status = st;
-    if (st === 'approved') q.approvedAt = new Date().toISOString();
-    save(); renderQueue();
+    if (st === 'approved') {
+      q.approvedAt = new Date().toISOString();
+      const slot = assignSlot(id);
+      if (slot) {
+        q.scheduledAt = slot.date;
+        q.scheduledTime = slot.time;
+      } else {
+        alert('빈 예정 슬롯이 없습니다. 캘린더에서 「슬롯 다시 생성」을 눌러주세요.');
+      }
+    } else {
+      releaseSlot(id);
+      delete q.scheduledAt;
+      delete q.scheduledTime;
+    }
+    save(); renderQueue(); renderCal(); renderDash();
   };
   if (t.dataset.qOk)     set(t.dataset.qOk, 'approved');
   if (t.dataset.qNo)     set(t.dataset.qNo, 'rejected');
   if (t.dataset.qCancel) set(t.dataset.qCancel, 'pending');
+
+  if (t.dataset.qDel) {
+    const q = S.queue.find(x => x.id === t.dataset.qDel);
+    if (!q) return;
+    if (!confirm(`"${q.title}"을(를) 발행 대기 소재에서 삭제할까요?`)) return;
+    releaseSlot(q.id);
+    if (q.ideaId) {
+      const idea = S.ideas.find(x => x.id === q.ideaId);
+      if (idea && idea.status === '제작요청') idea.status = '아이디어';
+    }
+    S.queue = S.queue.filter(x => x.id !== q.id);
+    save(); renderQueue(); renderCal(); renderIdeas(); renderDash();
+    return;
+  }
 
   if (t.dataset.qEdit)  document.getElementById('edit-' + t.dataset.qEdit).classList.toggle('hidden');
   if (t.dataset.qClose) document.getElementById('edit-' + t.dataset.qClose).classList.add('hidden');
