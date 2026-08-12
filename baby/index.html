@@ -397,6 +397,10 @@
       <b>⚠️ 인스타그램 미연결</b> — 계정을 연결해야 팔로워·저장·도달 지표가 자동으로 채워집니다.
       <b>발행</b> 탭에서 연결 절차를 확인하세요.
     </div>
+    <div class="callout ok hidden" id="conn-ok">
+      <b>☁️ 인스타그램 연결됨</b> — <b id="conn-acct"></b>
+      <span class="soft fs12" id="conn-synced"></span>
+    </div>
 
     <div class="grid g4 mb14">
       <div class="kpi muted">
@@ -1048,13 +1052,39 @@ function renderDash() {
   }).join('');
   document.getElementById('goal-body').innerHTML = body;
 
-  // 팔로워 KPI
+  // ── 연결 상태 배너 ──
+  // 세팅 3단계가 끝나면 미연결 경고를 감춘다. (예전엔 계속 떠 있었음)
+  const setupDone = SETUP_STEPS.every(s => (S.setup || {})[s.k]);
+  document.getElementById('conn-warn').classList.toggle('hidden', setupDone);
+  const okBox = document.getElementById('conn-ok');
+  okBox.classList.toggle('hidden', !setupDone);
+  if (setupDone) {
+    document.getElementById('conn-acct').textContent = '@' + (S.instaId || '');
+    const m = S.metrics || {};
+    document.getElementById('conn-synced').textContent =
+      m.syncedAt ? ` · 마지막 동기화 ${m.syncedAt.slice(0, 16).replace('T', ' ')}` : ' · 지표 동기화 전';
+  }
+
+  // ── 팔로워 / 저장 / 도달 KPI ──
+  const m = S.metrics || {};
   const first = FOLLOWER_GOALS[1].target; // 3개월 1,000 기준
-  if (S.followers != null) {
-    document.getElementById('k-fol').textContent = fmt(S.followers);
+  const fol = m.followers != null ? m.followers : S.followers;
+  if (fol != null) {
+    document.getElementById('k-fol').textContent = fmt(fol);
     document.getElementById('k-fol').parentElement.classList.remove('muted');
     document.getElementById('k-fol-d').textContent = `3개월 목표 ${fmt(first)}명 대비`;
-    document.getElementById('k-fol-bar').style.width = Math.min(100, S.followers / first * 100) + '%';
+    document.getElementById('k-fol-bar').style.width = Math.min(100, fol / first * 100) + '%';
+  }
+  if (m.avgSaved != null) {
+    const el = document.getElementById('k-save');
+    el.textContent = fmt(m.avgSaved);
+    el.parentElement.classList.remove('muted');
+  }
+  if (m.reach30 != null) {
+    const el = document.getElementById('k-reach');
+    el.textContent = fmt(m.reach30);
+    el.parentElement.classList.remove('muted');
+    el.parentElement.querySelector('.delta').textContent = '최근 30일';
   }
 
   // 콘텐츠 축 비중
