@@ -712,6 +712,22 @@
         배수가 높을수록 그 계정에서 평소보다 훨씬 반응이 좋았던 글입니다. <b>주제 발굴에 이걸 보세요.</b>
       </div>
     </div>
+
+    <div class="card">
+      <h2>#️⃣ 해시태그 랭킹<span class="hint" id="tag-hint">경쟁 계정 수집 전</span></h2>
+      <table>
+        <thead><tr>
+          <th class="num">#</th><th>태그</th><th class="num">점수</th>
+          <th class="num">등장</th><th class="num">계정</th><th class="num">상대성과</th>
+        </tr></thead>
+        <tbody id="tag-body"></tbody>
+      </table>
+      <div class="fs11 soft mt14">
+        인스타는 태그별 검색량을 공개하지 않습니다. 대신 경쟁 계정이 <b>실제로 써서 성과가 난 태그</b>를 역산했습니다.<br>
+        점수 = 등장빈도(log) × 평균 상대성과 × 계정 다양성 &nbsp;·&nbsp;
+        <b>상대성과</b>는 그 태그를 단 글이 해당 계정 평균보다 몇 배 반응이 좋았는지입니다.
+      </div>
+    </div>
   </section>
 
   <!-- ───── 제품 ───── -->
@@ -1222,16 +1238,60 @@ function escapeHtml(s) {
 
 /* ───────── 경쟁사 ───────── */
 function renderComp() {
+  const list = [...S.comps].sort((a, b) => (b.followers || 0) - (a.followers || 0));
   document.getElementById('comp-count').textContent = `${S.comps.length}개`;
   document.getElementById('comp-empty').classList.toggle('hidden', S.comps.length > 0);
-  document.getElementById('comp-body').innerHTML = S.comps.map(c => `
-    <tr>
-      <td><b>@${escapeHtml(c.handle)}</b></td>
+
+  document.getElementById('comp-body').innerHTML = list.map(c => {
+    const synced = c.followers != null;
+    // 참여율은 절대값보다 구간이 중요하다 — 1% 넘으면 좋은 계정으로 본다
+    const eg = c.engagement;
+    const egTag = eg == null ? '' :
+      eg >= 1 ? 't-green' : eg >= 0.4 ? 't-yellow' : 't-gray';
+    return `<tr>
+      <td><a href="https://instagram.com/${escapeHtml(c.handle)}" target="_blank" rel="noopener"><b>@${escapeHtml(c.handle)}</b></a></td>
+      <td class="num">${synced ? fmt(c.followers) : '—'}</td>
+      <td class="num">${synced ? fmt(c.avgLikes) : '—'}</td>
+      <td class="num">${eg == null ? '—' : `<span class="tag ${egTag}">${eg}%</span>`}</td>
+      <td class="num fs12 muted">${c.postEveryDays == null ? '—' : c.postEveryDays + '일'}</td>
       <td class="fs12 muted">${escapeHtml(c.memo || '')}</td>
-      <td class="num">${c.followers == null ? '—' : fmt(c.followers)}</td>
-      <td><span class="tag t-gray">수집 전</span></td>
       <td><button class="btn sm" data-del-comp="${c.id}">삭제</button></td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
+
+  // 잘 터진 게시물 — 계정을 가로질러 배수순으로
+  const tops = [];
+  S.comps.forEach(c => (c.top || []).forEach(t => tops.push({ ...t, handle: c.handle })));
+  tops.sort((a, b) => (b.ratio || 0) - (a.ratio || 0));
+  document.getElementById('comp-top').innerHTML = tops.slice(0, 12).map(t => `
+    <tr>
+      <td class="fs12 muted">@${escapeHtml(t.handle)}</td>
+      <td class="fs12">${escapeHtml(t.caption || '(캡션 없음)')}</td>
+      <td class="num">${fmt(t.likes)}</td>
+      <td class="num"><b>${t.ratio == null ? '—' : t.ratio + '×'}</b></td>
+      <td>${t.permalink ? `<a class="btn sm" href="${escapeHtml(t.permalink)}" target="_blank" rel="noopener">보기</a>` : ''}</td>
+    </tr>`).join('') || '<tr><td colspan="5" class="soft fs12">아직 수집된 게시물이 없습니다.</td></tr>';
+
+  renderTags();
+}
+
+/* ───────── 해시태그 랭킹 (경쟁 계정에서 역산) ───────── */
+function renderTags() {
+  const rows = S.tagRanking || [];
+  const body = document.getElementById('tag-body');
+  if (!body) return;
+  document.getElementById('tag-hint').textContent =
+    rows.length ? `${rows.length}개` : '경쟁 계정 수집 전';
+  body.innerHTML = rows.length ? rows.map((r, i) => `
+    <tr>
+      <td class="num soft">${i + 1}</td>
+      <td><b>#${escapeHtml(r.tag)}</b></td>
+      <td class="num">${r.score}</td>
+      <td class="num fs12 muted">${r.count}회</td>
+      <td class="num fs12 muted">${r.accounts}개</td>
+      <td class="num fs12">${r.relPerf}×</td>
+    </tr>`).join('')
+    : '<tr><td colspan="6" class="soft fs12">경쟁 계정을 등록하고 수집하면 여기가 채워집니다.</td></tr>';
 }
 
 /* ───────── 제품 ───────── */
