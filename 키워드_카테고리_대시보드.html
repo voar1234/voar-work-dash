@@ -575,9 +575,137 @@
     .controls { flex-direction: column; align-items: stretch; }
     .radio-group { grid-template-columns: repeat(2, 1fr); }
   }
+
+  /* ═══════ 외부 모드: 비번 잠금 · 배너 ═══════ */
+  #remoteLockBg { position: fixed; inset: 0; background: rgba(15,23,42,0.96); z-index: 99999; display: none; align-items: center; justify-content: center; font-family: 'Noto Sans KR', 'Segoe UI', sans-serif; }
+  #remoteLockBg.show { display: flex; }
+  #remoteLockBg .lock-card { background: #fff; border-radius: 14px; padding: 36px 32px; max-width: 380px; width: 92vw; text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+  #remoteLockBg .lock-emoji { font-size: 44px; line-height: 1; margin-bottom: 8px; }
+  #remoteLockBg .lock-title { font-size: 18px; font-weight: 700; color: #111; margin-bottom: 6px; }
+  #remoteLockBg .lock-sub { font-size: 12px; color: #6b7280; margin-bottom: 18px; }
+  #remoteLockBg input { width: 100%; padding: 12px 14px; border: 1.5px solid #e5e7eb; border-radius: 8px; font-size: 15px; font-family: inherit; box-sizing: border-box; }
+  #remoteLockBg input:focus { outline: 2px solid #03c75a; border-color: #03c75a; }
+  #remoteLockBg button { margin-top: 12px; width: 100%; padding: 11px; background: #03c75a; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
+  #remoteLockBg button:hover { background: #029947; }
+  #remoteLockBg .lock-err { color: #dc2626; font-size: 12px; margin-top: 8px; min-height: 16px; }
+  #remoteLockBg .lock-note { font-size: 11px; color: #9ca3af; margin-top: 14px; }
+  #remoteBanner { position: fixed; top: 0; left: 0; right: 0; background: linear-gradient(90deg, #03c75a, #027a37); color: #fff; text-align: center; padding: 5px 10px; font-size: 11px; font-weight: 600; z-index: 9998; letter-spacing: 0.3px; display: none; }
+  #remoteBanner.show { display: block; }
+  body.remote-mode { padding-top: 26px; }
+  body.remote-mode .remote-hide-local { display: none !important; }
 </style>
 </head>
 <body>
+
+<!-- ═══════ 외부 모드 비번 게이트 (양성준 대시보드 방식 이식) ═══════ -->
+<div id="remoteLockBg" role="dialog" aria-modal="true">
+  <div class="lock-card">
+    <div class="lock-emoji">🔐</div>
+    <div class="lock-title">신제품 키워드 카테고리 대시보드</div>
+    <div class="lock-sub">접속 비밀번호 입력</div>
+    <input type="password" id="remoteLockPw" autocomplete="current-password" placeholder="비밀번호" autofocus>
+    <button id="remoteLockBtn">잠금 해제</button>
+    <div class="lock-err" id="remoteLockErr"></div>
+    <div class="lock-note">📡 외부 보기 전용 · 데이터 수정은 사내 PC에서</div>
+  </div>
+</div>
+<div id="remoteBanner">📡 외부 보기 모드 · 데이터는 Supabase 클라우드 기준 · 조회수 갱신/PDF 업로드는 사내 PC에서</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   외부 호스팅(GitHub Pages) 자동 감지 + 비번 잠금 + Supabase fetch
+   - localhost / 127.0.0.1 / 빈 호스트 → 사내 PC. 잠금 X, server.py 그대로.
+   - 그 외 → 외부 모드. 잠금 화면 + Supabase에서 데이터 fetch + 쓰기 차단.
+═══════════════════════════════════════════════════════════ */
+(function() {
+  const PW_HASH = 'b45a86de8fdcbf924f15507c8794d80b7a761f4dc9b372d29c3c26dcbe76b747';  // voar1234
+  const TOKEN_KEY = 'voar_keyword_dash_remote_token_v1';
+  const TOKEN_TTL_DAYS = 30;
+  const host = location.hostname;
+  const IS_REMOTE = host !== 'localhost' && host !== '127.0.0.1' && host !== '';
+  window.IS_REMOTE_MODE = IS_REMOTE;
+  window.SUPABASE_URL = 'https://vgzodlljefanuipohevy.supabase.co';
+  window.SUPABASE_KEY = 'sb_publishable_Xj1aWpDLyfaAPxkn1q-ErA_94MEBT9V';
+  if (!IS_REMOTE) return;
+
+  document.body.classList.add('remote-mode');
+
+  // ── fetch monkey-patch: 로컬 server.py 엔드포인트 → Supabase 로 리다이렉트 or 차단
+  const origFetch = window.fetch.bind(window);
+  window.fetch = function(url, opts) {
+    const method = ((opts || {}).method || 'GET').toUpperCase();
+    const supaHdr = { apikey: window.SUPABASE_KEY, Authorization: 'Bearer ' + window.SUPABASE_KEY };
+
+    if (typeof url === 'string') {
+      // /volumes-cache → Supabase keyword_volumes 전체 → {keyword: {pc, mo, comp}} 로 변환
+      if (url === '/volumes-cache' || url.startsWith('/volumes-cache?')) {
+        return origFetch(window.SUPABASE_URL + '/rest/v1/keyword_volumes?select=keyword,pc,mo,comp', { headers: supaHdr })
+          .then(r => r.json())
+          .then(rows => {
+            const map = {};
+            (rows || []).forEach(r => { map[r.keyword] = { pc: r.pc, mo: r.mo, comp: r.comp }; });
+            return new Response(JSON.stringify(map), { status: 200, headers: { 'Content-Type': 'application/json' } });
+          })
+          .catch(() => new Response('{}', { status: 200, headers: { 'Content-Type': 'application/json' } }));
+      }
+      // /keyword-volumes (POST) → 외부에서 조회수 새로 가져오기는 차단 (Edge Function 나오면 그때 연결)
+      if (url === '/keyword-volumes') {
+        return Promise.resolve(new Response(JSON.stringify({ error: '외부 모드에서는 조회수 갱신 불가 (사내 PC 또는 Edge Function 필요)' }),
+          { status: 403, headers: { 'Content-Type': 'application/json' } }));
+      }
+      // /upload (POST) → PDF 업로드는 아직 차단 (Storage 연동 다음 스텝)
+      if (url === '/upload') {
+        return Promise.resolve(new Response(JSON.stringify({ error: '외부 모드 PDF 업로드는 준비 중 (Supabase Storage 연동 예정)' }),
+          { status: 403, headers: { 'Content-Type': 'application/json' } }));
+      }
+    }
+    return origFetch(url, opts);
+  };
+
+  // ── Supabase에서 제품 목록 로드 (init에서 호출 대체용)
+  window.loadProductsFromSupabase = async function() {
+    const r = await origFetch(window.SUPABASE_URL + '/rest/v1/keyword_products?select=*&order=analysis_date.asc', { headers: supaHdr });
+    if (!r.ok) throw new Error('Supabase fetch 실패 status=' + r.status);
+    const rows = await r.json();
+    return { products: rows };
+  };
+
+  // ── SHA-256
+  async function sha256(text) {
+    const buf = new TextEncoder().encode(text);
+    const hash = await crypto.subtle.digest('SHA-256', buf);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  function tokenValid() {
+    try {
+      const t = JSON.parse(localStorage.getItem(TOKEN_KEY) || 'null');
+      if (!t || t.h !== PW_HASH) return false;
+      return (Date.now() - (t.ts || 0)) < TOKEN_TTL_DAYS * 86400000;
+    } catch { return false; }
+  }
+  function saveToken() { localStorage.setItem(TOKEN_KEY, JSON.stringify({ h: PW_HASH, ts: Date.now() })); }
+  function showBanner() { document.getElementById('remoteBanner').classList.add('show'); }
+  function hideLock() { document.getElementById('remoteLockBg').classList.remove('show'); showBanner(); }
+  function showLock() { document.getElementById('remoteLockBg').classList.add('show'); setTimeout(() => document.getElementById('remoteLockPw')?.focus(), 50); }
+  async function tryUnlock() {
+    const inp = document.getElementById('remoteLockPw');
+    const err = document.getElementById('remoteLockErr');
+    const v = inp.value.trim();
+    if (!v) return;
+    if (await sha256(v) === PW_HASH) { saveToken(); err.textContent = ''; hideLock(); }
+    else { err.textContent = '비밀번호가 일치하지 않습니다.'; inp.select(); }
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    if (tokenValid()) hideLock();
+    else {
+      showLock();
+      document.getElementById('remoteLockBtn').addEventListener('click', tryUnlock);
+      document.getElementById('remoteLockPw').addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+    }
+  });
+})();
+</script>
+
 <!-- Drag & drop overlay (전체 화면에 PDF 드래그하면 표시) -->
 <div class="dropzone-overlay" id="dropzoneOverlay">
   <div class="inner">
