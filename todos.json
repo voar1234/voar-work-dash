@@ -276,7 +276,19 @@
       "done": true
     }
   ],
-  "2026-07-31": [],
+  "2026-07-31": [
+    {
+      "id": "t_x8s9nx26j39",
+      "text": "[자동] 보아르아가미니휴대용젖병소독기 카테고리·키워드 조사·공정위 제작",
+      "done": false,
+      "autoKey": "auto:prod:1010:260414003",
+      "autoSource": {
+        "품목ID": 1010,
+        "type": "생산완료일",
+        "발주번호": 260414003
+      }
+    }
+  ],
   "2026-08-07": [
     {
       "id": "t_y2cry7txjhi",
@@ -1034,20 +1046,7 @@
       "done": true
     }
   ],
-  "2026-07-30": [
-    {
-      "id": "t_gr9q7sgfu15",
-      "text": "[자동] 보아르아가미니휴대용젖병소독기 카테고리·키워드 조사·공정위 제작",
-      "done": false,
-      "autoKey": "auto:prod:1010:260414003",
-      "autoSource": {
-        "품목ID": 1010,
-        "type": "생산완료일",
-        "발주번호": 260414003
-      },
-      "leaveRerouted": "2026-07-31"
-    }
-  ],
+  "2026-07-30": [],
   "2026-07-29": [
     {
       "id": "t_1fgeonen0y7",
@@ -1754,6 +1753,24 @@
       "id": "t_zzakvg9ji4",
       "text": "리뷰이벤트 상품권 발송",
       "done": false
+    },
+    {
+      "id": "t_5ip2vzl9uhs",
+      "text": "스위프클링 못나간건 발송처리",
+      "done": false,
+      "rolledFrom": "2026-08-11"
+    },
+    {
+      "id": "t_rvkcnpcvp2i",
+      "text": "네이버 디/가 페스타 행사가 예약+배너 준비",
+      "done": false,
+      "rolledFrom": "2026-08-11"
+    },
+    {
+      "id": "t_kehlla1gv4",
+      "text": "스위프클링 입고체크/당일배송설정",
+      "done": false,
+      "rolledFrom": "2026-08-10"
     }
   ],
   "2026-08-11": [
@@ -1761,16 +1778,6 @@
       "id": "t_csjyi1od8n7",
       "text": "이베이 판매예치금,11번가 셀러캐쉬 체크",
       "done": true
-    },
-    {
-      "id": "t_5ip2vzl9uhs",
-      "text": "스위프클링 못나간건 발송처리",
-      "done": false
-    },
-    {
-      "id": "t_rvkcnpcvp2i",
-      "text": "네이버 디/가 페스타 행사가 예약+배너 준비",
-      "done": false
     },
     {
       "id": "t_1nyifkoupb7",
@@ -1782,12 +1789,6 @@
       "text": "아가담 상세페이지 수정사항 전달 (10일까지)",
       "done": true,
       "rolledFrom": "2026-08-07"
-    },
-    {
-      "id": "t_kehlla1gv4",
-      "text": "스위프클링 입고체크/당일배송설정",
-      "done": false,
-      "rolledFrom": "2026-08-10"
     },
     {
       "id": "t_i1s8iou8z5f",
@@ -1819,6 +1820,9 @@
       "text": "컴플릿M 행사가 셋팅 649 / 셋팅 후 화연님 전달",
       "done": false,
       "leaveRerouted": "2026-08-18"
+    }
+  ]
+}Rerouted": "2026-08-18"
     }
   ]
 }
