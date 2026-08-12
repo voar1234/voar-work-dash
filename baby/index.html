@@ -686,13 +686,30 @@
     <div class="card">
       <h2>📋 등록 계정<span class="hint" id="comp-count">0개</span></h2>
       <table>
-        <thead><tr><th>계정</th><th>메모</th><th class="num">팔로워</th><th>상태</th><th></th></tr></thead>
+        <thead><tr>
+          <th>계정</th><th class="num">팔로워</th><th class="num">평균 ♥</th>
+          <th class="num">참여율</th><th class="num">게시 주기</th><th>메모</th><th></th>
+        </tr></thead>
         <tbody id="comp-body"></tbody>
       </table>
       <div id="comp-empty" class="empty-state">
         <div class="es-emoji">🔍</div>
         <div class="es-title">등록된 계정이 없습니다</div>
         <div class="es-desc">0~36개월 육아 정보 계정 위주로 5~10개 등록하면 분석 정확도가 올라갑니다.</div>
+      </div>
+      <div class="fs11 soft mt14">
+        <b>참여율</b> = (평균 좋아요 + 댓글) ÷ 팔로워. 팔로워가 많아도 참여율이 낮으면 실제 영향력은 작습니다.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🔥 잘 터진 게시물<span class="hint">계정 평균 대비 배수</span></h2>
+      <table>
+        <thead><tr><th>계정</th><th>내용</th><th class="num">♥</th><th class="num">배수</th><th></th></tr></thead>
+        <tbody id="comp-top"></tbody>
+      </table>
+      <div class="fs11 soft mt14">
+        배수가 높을수록 그 계정에서 평소보다 훨씬 반응이 좋았던 글입니다. <b>주제 발굴에 이걸 보세요.</b>
       </div>
     </div>
   </section>
