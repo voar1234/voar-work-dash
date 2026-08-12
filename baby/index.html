@@ -714,18 +714,24 @@
     </div>
 
     <div class="card">
-      <h2>#️⃣ 해시태그 랭킹<span class="hint" id="tag-hint">경쟁 계정 수집 전</span></h2>
+      <h2>#️⃣ 해시태그<span class="hint" id="tag-hint">0개</span></h2>
+      <div class="row mb14">
+        <span class="fs13 muted">#</span>
+        <input type="text" id="in-tag" placeholder="육아정보" style="width:200px">
+        <input type="text" id="in-tag-cnt" placeholder="게시물 수 (예: 137만)" style="width:180px">
+        <button class="btn brand sm" id="btn-add-tag">추가</button>
+        <div class="spacer"></div>
+        <span class="fs11 soft">인스타 검색창에 태그를 치면 게시물 수가 나옵니다</span>
+      </div>
       <table>
         <thead><tr>
-          <th class="num">#</th><th>태그</th><th class="num">점수</th>
-          <th class="num">등장</th><th class="num">계정</th><th class="num">상대성과</th>
+          <th>태그</th><th class="num">게시물 수</th><th>규모</th><th>메모</th><th></th>
         </tr></thead>
         <tbody id="tag-body"></tbody>
       </table>
       <div class="fs11 soft mt14">
-        인스타는 태그별 검색량을 공개하지 않습니다. 대신 경쟁 계정이 <b>실제로 써서 성과가 난 태그</b>를 역산했습니다.<br>
-        점수 = 등장빈도(log) × 평균 상대성과 × 계정 다양성 &nbsp;·&nbsp;
-        <b>상대성과</b>는 그 태그를 단 글이 해당 계정 평균보다 몇 배 반응이 좋았는지입니다.
+        <b>규모별 전략</b> — 대형(100만+)은 경쟁이 심해 몇 분 만에 밀립니다. 소형(10만 미만)은 상위 노출이 오래 갑니다.<br>
+        <b>대형 2~3개 + 중형 5~10개 + 소형 5~10개</b>를 섞는 게 정석입니다.
       </div>
     </div>
   </section>
@@ -1275,24 +1281,66 @@ function renderComp() {
   renderTags();
 }
 
-/* ───────── 해시태그 랭킹 (경쟁 계정에서 역산) ───────── */
+/* ───────── 해시태그 ─────────
+   인스타 Graph API는 태그별 게시물 수를 주지 않는다(media_count 필드 없음).
+   앱 검색창에만 나오는 값이라 직접 입력받는다. */
+function parseCount(s) {
+  const t = String(s).replace(/[,\s]/g, '');
+  const m = t.match(/^([\d.]+)(만|천|억)?/);
+  if (!m) return null;
+  const n = parseFloat(m[1]);
+  return Math.round(n * ({ '천': 1e3, '만': 1e4, '억': 1e8 }[m[2]] || 1));
+}
+function countLabel(n) {
+  if (n == null) return '—';
+  if (n >= 1e8) return (n / 1e8).toFixed(1).replace(/\.0$/, '') + '억';
+  if (n >= 1e4) return Math.round(n / 1e4).toLocaleString('ko-KR') + '만';
+  return fmt(n);
+}
+function tagScale(n) {
+  if (n == null) return ['t-gray', '미입력'];
+  if (n >= 1e6) return ['t-red', '대형'];
+  if (n >= 1e5) return ['t-yellow', '중형'];
+  return ['t-green', '소형'];
+}
 function renderTags() {
-  const rows = S.tagRanking || [];
   const body = document.getElementById('tag-body');
   if (!body) return;
-  document.getElementById('tag-hint').textContent =
-    rows.length ? `${rows.length}개` : '경쟁 계정 수집 전';
-  body.innerHTML = rows.length ? rows.map((r, i) => `
-    <tr>
-      <td class="num soft">${i + 1}</td>
-      <td><b>#${escapeHtml(r.tag)}</b></td>
-      <td class="num">${r.score}</td>
-      <td class="num fs12 muted">${r.count}회</td>
-      <td class="num fs12 muted">${r.accounts}개</td>
-      <td class="num fs12">${r.relPerf}×</td>
-    </tr>`).join('')
-    : '<tr><td colspan="6" class="soft fs12">경쟁 계정을 등록하고 수집하면 여기가 채워집니다.</td></tr>';
+  S.tags = S.tags || [];
+  const list = [...S.tags].sort((a, b) => (b.count || 0) - (a.count || 0));
+  document.getElementById('tag-hint').textContent = `${S.tags.length}개`;
+  body.innerHTML = list.length ? list.map(t => {
+    const [cls, label] = tagScale(t.count);
+    return `<tr>
+      <td><b>#${escapeHtml(t.tag)}</b></td>
+      <td class="num">${countLabel(t.count)}</td>
+      <td><span class="tag ${cls}">${label}</span></td>
+      <td class="fs12 muted">${escapeHtml(t.memo || '')}</td>
+      <td><button class="btn sm" data-del-tag="${escapeHtml(t.tag)}">삭제</button></td>
+    </tr>`;
+  }).join('')
+    : '<tr><td colspan="5" class="soft fs12">태그를 추가해주세요. 게시물 수는 인스타 검색창에서 확인할 수 있습니다.</td></tr>';
 }
+document.getElementById('btn-add-tag').addEventListener('click', () => {
+  const tag = document.getElementById('in-tag').value.trim().replace(/^#/, '');
+  if (!tag) { alert('태그를 입력하세요'); return; }
+  S.tags = S.tags || [];
+  const cnt = parseCount(document.getElementById('in-tag-cnt').value.trim());
+  const found = S.tags.find(x => x.tag === tag);
+  if (found) found.count = cnt; else S.tags.push({ tag, count: cnt, memo: '' });
+  document.getElementById('in-tag').value = '';
+  document.getElementById('in-tag-cnt').value = '';
+  save(); renderTags();
+});
+document.getElementById('in-tag-cnt').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('btn-add-tag').click();
+});
+document.getElementById('tag-body').addEventListener('click', e => {
+  const t = e.target.dataset?.delTag;
+  if (!t) return;
+  S.tags = (S.tags || []).filter(x => x.tag !== t);
+  save(); renderTags();
+});
 
 /* ───────── 제품 ───────── */
 function renderProd() {
