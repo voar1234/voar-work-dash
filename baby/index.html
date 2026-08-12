@@ -360,6 +360,7 @@
       <button class="nav-item" data-tab="cal"><span class="nav-emoji">📅</span>발행 캘린더<span class="nav-badge soft" id="badge-cal">0</span></button>
       <button class="nav-item" data-tab="idea"><span class="nav-emoji">✨</span>소재<span class="nav-badge soft" id="badge-idea">0</span></button>
       <button class="nav-item" data-tab="pub"><span class="nav-emoji">📤</span>게시물</button>
+      <button class="nav-item" data-tab="reels"><span class="nav-emoji">🎬</span>릴스<span class="nav-badge soft" id="badge-reels">0</span></button>
       <button class="nav-item" data-tab="comp"><span class="nav-emoji">🔍</span>경쟁사</button>
       <button class="nav-item" data-tab="prod"><span class="nav-emoji">📦</span>제품<span class="nav-badge soft">17</span></button>
     </nav>
@@ -627,6 +628,66 @@
         <div class="es-emoji">📮</div>
         <div class="es-title">대기 중인 소재가 없습니다</div>
         <div class="es-desc"><b>소재</b> 탭에서 「발행 대기로 보내기」를 누르면 여기에 올라옵니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── 릴스 ───── -->
+  <section id="tab-reels" class="hidden">
+    <div class="page-head">
+      <h1>🎬 릴스</h1>
+      <p>카드뉴스를 세로 영상으로 바꿔 올립니다. 릴스는 팔로워가 아닌 사람에게 도달하는 유일한 통로입니다.</p>
+    </div>
+
+    <div class="grid g4 mb14">
+      <div class="kpi"><div class="label">발행한 릴스</div><div class="value mono" id="r-count">0</div><div class="delta">누적</div></div>
+      <div class="kpi muted"><div class="label">평균 조회수</div><div class="value" id="r-plays">—</div><div class="delta">릴스 발행 후 집계</div></div>
+      <div class="kpi muted"><div class="label">평균 저장수</div><div class="value" id="r-saved">—</div><div class="delta">릴스 발행 후 집계</div></div>
+      <div class="kpi"><div class="label">대기 중</div><div class="value mono" id="r-wait">0</div><div class="delta">승인 대기 포함</div></div>
+    </div>
+
+    <div class="callout info">
+      <b>왜 릴스인가</b> — 일반 게시물은 주로 <b>팔로워에게</b> 갑니다. 릴스는 <b>팔로워가 아닌 사람</b>에게 뿌려집니다.
+      팔로워 0에서 시작하는 계정이 성장하는 사실상 유일한 경로입니다.
+    </div>
+
+    <div class="card">
+      <h2>⚙️ 릴스 기본 설정</h2>
+      <div class="row mb14">
+        <label class="fs13">장당 노출</label>
+        <select id="r-cfg-sec">
+          <option value="2.5">2.5초</option>
+          <option value="3" selected>3초 (권장)</option>
+          <option value="4">4초</option>
+        </select>
+        <label class="fs13" style="margin-left:14px">화면비</label>
+        <select id="r-cfg-ratio">
+          <option value="9:16" selected>9:16 세로 (1080×1920)</option>
+        </select>
+        <label class="fs13" style="margin-left:14px">배경음</label>
+        <select id="r-cfg-bgm">
+          <option value="none" selected>무음 (앱에서 직접 삽입)</option>
+          <option value="free">저작권 프리 음원</option>
+        </select>
+      </div>
+      <div class="fs11 soft">
+        ⚠️ <b>배경음은 무음으로 뽑는 걸 권합니다.</b> 인스타 인기 음원은 앱 안에서 붙여야 저작권 문제가 없고,
+        릴스 알고리즘도 인스타 내장 음원을 쓴 영상을 더 밀어줍니다. API로 올린 영상에는 내장 음원을 붙일 수 없습니다.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🧩 제작 파이프라인<span class="hint" id="r-pipe-hint"></span></h2>
+      <div id="r-pipeline"></div>
+    </div>
+
+    <div class="card">
+      <h2>🎬 릴스 대기 소재<span class="hint" id="r-queue-count">0건</span></h2>
+      <div id="r-queue-list"></div>
+      <div id="r-queue-empty" class="empty-state">
+        <div class="es-emoji">🎬</div>
+        <div class="es-title">대기 중인 릴스가 없습니다</div>
+        <div class="es-desc"><b>게시물</b> 탭의 발행 대기 소재에서 「릴스로 만들기」를 누르면 여기에 올라옵니다.</div>
       </div>
     </div>
   </section>
@@ -1026,7 +1087,7 @@ function fmtWon(n) {
 function uid() { return 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 
 /* ───────── 탭 전환 ───────── */
-const TABS = ['dash','cal','idea','pub','comp','prod'];
+const TABS = ['dash','cal','idea','pub','reels','comp','prod'];
 document.getElementById('menu').addEventListener('click', (e) => {
   const btn = e.target.closest('.nav-item');
   if (!btn) return;
@@ -1578,6 +1639,7 @@ function renderQueue() {
           <button class="btn sm brand" data-q-ok="${q.id}">✅ 발행 승인</button>
           <button class="btn sm" data-q-no="${q.id}">반려</button>` : ''}
         ${q.status === 'approved' ? `<button class="btn sm" data-q-cancel="${q.id}">승인 취소</button>` : ''}
+        ${(q.images || []).length && !q.reelOf ? `<button class="btn sm" data-q-reel="${q.id}">🎬 릴스로</button>` : ''}
         <button class="btn sm" data-q-del="${q.id}">🗑</button>
       </div>
       <div class="row mb8">${thumbs}</div>
@@ -1648,6 +1710,25 @@ document.getElementById('queue-list').addEventListener('click', e => {
   if (t.dataset.qNo)     set(t.dataset.qNo, 'rejected');
   if (t.dataset.qCancel) set(t.dataset.qCancel, 'pending');
 
+  if (t.dataset.qReel) {
+    const q = S.queue.find(x => x.id === t.dataset.qReel);
+    if (!q) return;
+    S.reels = S.reels || [];
+    if (S.reels.some(r => r.fromQueue === q.id)) { alert('이미 릴스로 만들어져 있습니다.'); return; }
+    S.reels.unshift({
+      id: 'r_' + q.id,
+      fromQueue: q.id,
+      title: q.title,
+      images: q.images || [],
+      caption: q.caption || '',
+      status: 'requested',
+      createdAt: new Date().toISOString(),
+    });
+    save(); renderReels();
+    alert('릴스 대기 소재로 보냈습니다.');
+    return;
+  }
+
   if (t.dataset.qDel) {
     const q = S.queue.find(x => x.id === t.dataset.qDel);
     if (!q) return;
@@ -1687,6 +1768,74 @@ document.getElementById('queue-list').addEventListener('click', e => {
   }
 });
 
+
+/* ───────── 릴스 ─────────
+   카드뉴스 이미지를 세로 영상으로 이어붙이는 방식.
+   인코딩에 ffmpeg가 필요해서, 설치 전까지는 '제작 대기'에서 멈춘다. */
+const REEL_PIPE = [
+  { k: 'cards',  label: '카드 이미지 확보',   done: true,  note: '게시물 카드를 9:16으로 재배치해 사용' },
+  { k: 'encode', label: '영상 인코딩 (ffmpeg)', done: false, note: '아직 설치 안 됨 — 설치하면 자동 제작이 열립니다' },
+  { k: 'host',   label: '공개 URL 업로드',     done: true,  note: 'GitHub Pages (인스타가 공개 URL만 받음)' },
+  { k: 'api',    label: '릴스 발행 API',       done: true,  note: 'media_type=REELS · 토큰 권한 확인됨' },
+];
+function renderReels() {
+  S.reels = S.reels || [];
+  const wait = S.reels.filter(r => r.status !== 'published').length;
+  document.getElementById('r-count').textContent = S.reels.filter(r => r.status === 'published').length;
+  document.getElementById('r-wait').textContent = wait;
+  document.getElementById('badge-reels').textContent = wait;
+  document.getElementById('r-queue-count').textContent = `${S.reels.length}건`;
+  document.getElementById('r-queue-empty').classList.toggle('hidden', S.reels.length > 0);
+
+  const c = S.reelCfg || {};
+  if (c.sec)   document.getElementById('r-cfg-sec').value = c.sec;
+  if (c.bgm)   document.getElementById('r-cfg-bgm').value = c.bgm;
+
+  const blocked = REEL_PIPE.filter(p => !p.done).length;
+  document.getElementById('r-pipe-hint').textContent =
+    blocked ? `${blocked}단계 막힘` : '전 단계 준비됨';
+  document.getElementById('r-pipeline').innerHTML = REEL_PIPE.map((p, i) => `
+    <div class="step ${p.done ? 'done' : ''}">
+      <div class="n" style="${p.done ? '' : 'background:var(--orange)'}">${p.done ? '✓' : i + 1}</div>
+      <div class="st-body">
+        <div class="st-title">${p.label}</div>
+        <div class="st-desc">${p.note}</div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('r-queue-list').innerHTML = S.reels.map(r => {
+    const [cls, label] = Q_TAG[r.status] || Q_TAG.requested;
+    const thumbs = (r.images || []).slice(0, 8).map(u =>
+      `<img class="q-thumb" src="${escapeHtml(u)}" data-lb="${r.id}" data-lb-i="0" style="width:44px;height:78px">`).join('');
+    return `<div class="card" style="box-shadow:none;margin-bottom:12px">
+      <div class="row mb8">
+        <b class="fs13">${escapeHtml(r.title || '')}</b>
+        <span class="tag ${cls}">${label}</span>
+        <span class="soft fs11">${(r.images || []).length}장 · 약 ${Math.round((r.images || []).length * (c.sec || 3))}초</span>
+        <div class="spacer"></div>
+        ${r.permalink ? `<a class="btn sm" href="${escapeHtml(r.permalink)}" target="_blank" rel="noopener">릴스 보기</a>` : ''}
+        <button class="btn sm" data-r-del="${r.id}">🗑</button>
+      </div>
+      <div class="row">${thumbs}</div>
+    </div>`;
+  }).join('');
+}
+['r-cfg-sec', 'r-cfg-bgm'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('change', () => {
+    S.reelCfg = S.reelCfg || {};
+    S.reelCfg[id === 'r-cfg-sec' ? 'sec' : 'bgm'] = el.value;
+    save(); renderReels();
+  });
+});
+document.getElementById('r-queue-list').addEventListener('click', e => {
+  const id = e.target.dataset?.rDel;
+  if (!id) return;
+  if (!confirm('이 릴스를 삭제할까요?')) return;
+  S.reels = S.reels.filter(x => x.id !== id);
+  save(); renderReels();
+});
+
 /* ───────── 백업 UI ───────── */
 document.getElementById('btn-export').addEventListener('click', exportJson);
 document.getElementById('btn-import').addEventListener('click', () => document.getElementById('file-import').click());
@@ -1697,7 +1846,7 @@ document.getElementById('file-import').addEventListener('change', e => {
 
 /* ───────── 초기 렌더 ───────── */
 function renderAll() {
-  renderDash(); renderCal(); renderIdeas(); renderComp(); renderProd(); renderInsta(); renderQueue();
+  renderDash(); renderCal(); renderIdeas(); renderComp(); renderProd(); renderInsta(); renderQueue(); renderReels();
 }
 fillPillarSelects();
 renderAll();
