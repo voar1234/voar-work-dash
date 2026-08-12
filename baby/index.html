@@ -589,7 +589,7 @@
       <b>⚠️ 아직 계정이 연결되지 않았습니다.</b> 아래 3단계는 계정 소유자 인증이 필요해서 민채님이 한 번만 해주셔야 합니다. 5분이면 끝납니다.
     </div>
 
-    <div class="card">
+    <div class="card" id="setup-guide">
       <h2>🔌 연결 절차</h2>
       <div class="step">
         <div class="n">1</div>
@@ -614,7 +614,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="publish-compare">
       <h2>⚖️ 발행 방식 비교</h2>
       <table>
         <thead><tr><th>방식</th><th>예약발행</th><th>PC 꺼져도</th><th>세팅</th><th>권장</th></tr></thead>
@@ -1331,8 +1331,12 @@ function renderInsta() {
       ${s.label}
     </label>`).join('');
 
-  const warn = document.getElementById('pub-warn');
-  if (warn) warn.classList.toggle('hidden', done === 3);
+  // 세팅이 끝나면 안내용 카드는 감춘다 (다시 필요해지면 자동으로 나타남)
+  const finished = done === SETUP_STEPS.length;
+  ['pub-warn', 'setup-guide', 'publish-compare'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('hidden', finished);
+  });
 }
 document.getElementById('btn-save-insta').addEventListener('click', () => {
   const id = document.getElementById('in-insta').value.trim().replace(/^@/, '');
