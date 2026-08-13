@@ -1851,8 +1851,7 @@ document.getElementById('queue-list').addEventListener('click', e => {
   if (t.dataset.chipQ) {
     const ta = document.querySelector(`[data-all-q="${t.dataset.chipQ}"]`);
     if (ta) {
-      ta.value = (ta.value.trim() ? ta.value.replace(/\s*$/, '') + '
-' : '') + t.dataset.chip;
+      ta.value = (ta.value.trim() ? ta.value.replace(/\s*$/, '') + '\n' : '') + t.dataset.chip;
       ta.focus();
     }
     return;
