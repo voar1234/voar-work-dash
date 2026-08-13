@@ -724,6 +724,21 @@
     </div>
 
     <div class="card">
+      <h2>🆕 새로 올라온 글<span class="hint" id="cnew-hint">수집 전</span></h2>
+      <div class="fs11 soft mb14">
+        마지막 확인 이후 경쟁 계정에 올라온 글입니다. <b>반응이 좋은 순</b>으로 정렬됩니다.
+        쓸 만한 주제는 <b>「소재로」</b>를 눌러 소재 탭으로 가져오세요.
+      </div>
+      <table>
+        <thead><tr>
+          <th class="num">배수</th><th>주제</th><th>계정</th>
+          <th class="num">♥</th><th>형식</th><th>날짜</th><th></th>
+        </tr></thead>
+        <tbody id="cnew-body"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
       <h2>📋 등록 계정<span class="hint" id="comp-count">0개</span></h2>
       <table>
         <thead><tr>
@@ -1302,7 +1317,8 @@ function renderIdeas() {
         <span class="tag ${STATUS_TAG[i.status] || 't-gray'}">${i.status}</span>
       </div>
       <div class="ic-title">${escapeHtml(i.topic)}</div>
-      <div class="ic-meta"><span>👶 ${i.age}</span><span>📅 ${i.created}</span></div>
+      <div class="ic-meta"><span>👶 ${i.age}</span><span>📅 ${i.created}</span>${
+        i.from ? `<span>📎 ${escapeHtml(i.from)}</span>` : ''}</div>
       <div class="row mt8">
         ${queued
           ? '<span class="tag t-purple">게시물 제작 중</span>'
@@ -1357,7 +1373,61 @@ function renderComp() {
     </tr>`).join('') || '<tr><td colspan="5" class="soft fs12">아직 수집된 게시물이 없습니다.</td></tr>';
 
   renderTags();
+  renderCompNew();
 }
+
+
+/* ───────── 경쟁사 새 글 ─────────
+   _sync_competitors.py 가 마지막 확인 시점 이후의 글만 골라 compNew 에 넣는다.
+   ratio = 그 계정 평균 좋아요 대비 몇 배 터졌는지. */
+function renderCompNew() {
+  const body = document.getElementById('cnew-body');
+  if (!body) return;
+  const rows = (S.compNew || []).filter(x => !x.taken);
+  const hint = document.getElementById('cnew-hint');
+  hint.textContent = S.compSyncedAt
+    ? `${rows.length}건 · ${S.compSyncedAt.slice(5, 16).replace('T', ' ')} 확인`
+    : '수집 전';
+
+  body.innerHTML = rows.length ? rows.map(x => {
+    const r = x.ratio || 0;
+    const cls = r >= 2 ? 't-red' : r >= 1.3 ? 't-yellow' : 't-gray';
+    const kind = x.type === 'VIDEO' ? '릴스' : x.type === 'CAROUSEL_ALBUM' ? '캐러셀' : '이미지';
+    return `<tr>
+      <td class="num"><span class="tag ${cls}">${x.ratio ? x.ratio + '×' : '—'}</span></td>
+      <td class="fs12">${escapeHtml(x.topic || '(제목 없음)')}</td>
+      <td class="fs12 muted">@${escapeHtml(x.handle)}</td>
+      <td class="num fs12">${fmt(x.likes)}</td>
+      <td class="fs12 muted">${kind}</td>
+      <td class="fs11 soft">${escapeHtml(x.date || '')}</td>
+      <td class="row" style="gap:4px">
+        ${x.permalink ? `<a class="btn sm" href="${escapeHtml(x.permalink)}" target="_blank" rel="noopener">보기</a>` : ''}
+        <button class="btn sm brand" data-take="${escapeHtml(x.id)}">소재로</button>
+        <button class="btn sm" data-skip="${escapeHtml(x.id)}">숨김</button>
+      </td>
+    </tr>`;
+  }).join('')
+    : `<tr><td colspan="7" class="soft fs12">새로 올라온 글이 없습니다.
+       ${S.compSyncedAt ? '' : '아직 한 번도 수집하지 않았습니다.'}</td></tr>`;
+}
+document.getElementById('cnew-body').addEventListener('click', e => {
+  const t = e.target;
+  const id = t.dataset?.take || t.dataset?.skip;
+  if (!id) return;
+  const x = (S.compNew || []).find(v => v.id === id);
+  if (!x) return;
+  if (t.dataset.take) {
+    S.ideas = S.ideas || [];
+    S.ideas.unshift({
+      id: uid(), topic: x.topic, pillar: 'sleep', age: '전체 공통',
+      status: '아이디어', created: todayStr(),
+      from: '@' + x.handle,
+    });
+    alert('소재 탭에 담았습니다.\n축과 시기는 소재 탭에서 조정하세요.');
+  }
+  x.taken = true;
+  save(); renderCompNew(); renderIdeas(); renderDash();
+});
 
 /* ───────── 해시태그 ─────────
    인스타 Graph API는 태그별 게시물 수를 주지 않는다(media_count 필드 없음).
