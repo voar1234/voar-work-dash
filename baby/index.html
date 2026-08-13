@@ -666,13 +666,13 @@
         </select>
         <label class="fs13" style="margin-left:14px">배경음</label>
         <select id="r-cfg-bgm">
-          <option value="none" selected>무음 (앱에서 직접 삽입)</option>
-          <option value="free">저작권 프리 음원</option>
+          <option value="none" selected>무음 (확정)</option>
         </select>
       </div>
       <div class="fs11 soft">
-        ⚠️ <b>배경음은 무음으로 뽑는 걸 권합니다.</b> 인스타 인기 음원은 앱 안에서 붙여야 저작권 문제가 없고,
-        릴스 알고리즘도 인스타 내장 음원을 쓴 영상을 더 밀어줍니다. API로 올린 영상에는 내장 음원을 붙일 수 없습니다.
+        <b>무음으로 확정했습니다.</b> 완전 자동 발행을 위한 선택입니다.
+        인스타 내장 음원은 앱에서만 붙일 수 있어(API 불가) 손이 가고, 외부 음원은 저작권 위험이 있습니다.
+        대신 <b>자막과 화면 전환으로 시선을 잡는 구성</b>이 중요해집니다.
       </div>
     </div>
 
@@ -1773,10 +1773,10 @@ document.getElementById('queue-list').addEventListener('click', e => {
    카드뉴스 이미지를 세로 영상으로 이어붙이는 방식.
    인코딩에 ffmpeg가 필요해서, 설치 전까지는 '제작 대기'에서 멈춘다. */
 const REEL_PIPE = [
-  { k: 'cards',  label: '카드 이미지 확보',   done: true,  note: '게시물 카드를 9:16으로 재배치해 사용' },
-  { k: 'encode', label: '영상 인코딩 (ffmpeg)', done: false, note: '아직 설치 안 됨 — 설치하면 자동 제작이 열립니다' },
-  { k: 'host',   label: '공개 URL 업로드',     done: true,  note: 'GitHub Pages (인스타가 공개 URL만 받음)' },
-  { k: 'api',    label: '릴스 발행 API',       done: true,  note: 'media_type=REELS · 토큰 권한 확인됨' },
+  { k: 'cards',  label: '카드 이미지 확보',     done: true, note: '카드 위·아래 색을 확장해 9:16으로 재배치 (레터박스 안 보이게)' },
+  { k: 'encode', label: '영상 인코딩 (ffmpeg)', done: true, note: 'ffmpeg 9.0 · H.264 1080x1920 30fps + 무음 AAC 트랙' },
+  { k: 'host',   label: '공개 URL 업로드',      done: true, note: 'GitHub Pages (인스타가 공개 URL만 받음)' },
+  { k: 'api',    label: '릴스 발행 API',        done: true, note: 'media_type=REELS · 토큰 권한 확인됨' },
 ];
 function renderReels() {
   S.reels = S.reels || [];
