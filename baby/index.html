@@ -1074,6 +1074,7 @@ async function syncRework() {
         if (rq.caption) q.caption = rq.caption;
         q.needsRework = false;
         q.cardNotes = [];
+        q.reworkAll = '';
       }
       changed = true;
     }
@@ -1814,9 +1815,18 @@ function renderQueue() {
         <div class="fs12 mb8"><b>캡션</b> <span class="soft">— 직접 고치면 그대로 발행됩니다</span></div>
         <textarea id="ec-${q.id}" style="min-height:220px" class="mb14">${escapeHtml(q.caption || '')}</textarea>
 
-        <div class="fs12 mb8"><b>카드 수정 요청</b>
-          <span class="soft">— 뭐가 틀렸는지 적고 「수정 요청 보내기」를 누르세요.
-          제가 켜져 있으면 바로 감지해서 다시 만들고, 진행 상태가 위에 표시됩니다.</span></div>
+        <div class="fs12 mb8"><b>전체 수정 요청</b>
+          <span class="soft">— 디자인이나 내용을 통째로 다시 만들어야 할 때 적으세요.
+          한 장씩 고칠 게 아니라면 여기에 적는 편이 빠릅니다.</span></div>
+        <textarea data-all-q="${q.id}" class="mb8" style="min-height:88px"
+          placeholder="예) 디자인 전체가 너무 밋밋해요. 색을 더 쓰고 그림도 넣어주세요&#10;예) 내용이 어려워요. 처음 임신한 사람 기준으로 다시 써주세요">${escapeHtml(q.reworkAll || '')}</textarea>
+        <div class="row mb14">
+          ${['디자인 전체 다시', '내용 전체 다시', '너무 밋밋함', '글이 너무 많음', '톤이 안 맞음']
+            .map(t => `<button class="btn sm" data-chip-q="${q.id}" data-chip="${t}">${t}</button>`).join('')}
+        </div>
+
+        <div class="fs12 mb8"><b>카드별 수정 요청</b>
+          <span class="soft">— 특정 장만 고칠 때 씁니다. 비워두면 그 장은 그대로 둡니다.</span></div>
         ${noteRows}
 
         <div class="row mt14">
@@ -1838,9 +1848,19 @@ document.getElementById('chk-auto').addEventListener('change', e => {
 document.getElementById('queue-list').addEventListener('click', e => {
   const t = e.target;
 
+  if (t.dataset.chipQ) {
+    const ta = document.querySelector(`[data-all-q="${t.dataset.chipQ}"]`);
+    if (ta) {
+      ta.value = (ta.value.trim() ? ta.value.replace(/\s*$/, '') + '
+' : '') + t.dataset.chip;
+      ta.focus();
+    }
+    return;
+  }
+
   if (t.dataset.rwClear) {
     const q = S.queue.find(x => x.id === t.dataset.rwClear);
-    if (q) { delete q.rework; delete q.needsRework; q.cardNotes = []; save(); renderQueue(); }
+    if (q) { delete q.rework; delete q.needsRework; q.cardNotes = []; q.reworkAll = ''; save(); renderQueue(); }
     return;
   }
 
@@ -1923,7 +1943,9 @@ document.getElementById('queue-list').addEventListener('click', e => {
       .map(el => el.value.trim());
     q.editedAt = new Date().toISOString();
     // 수정 요청이 하나라도 있으면 "재작업 필요" 표시
-    q.needsRework = q.cardNotes.some(n => n);
+    const allEl = document.querySelector(`[data-all-q="${id}"]`);
+    q.reworkAll = allEl ? allEl.value.trim() : '';
+    q.needsRework = q.cardNotes.some(n => n) || !!q.reworkAll;
     if (q.needsRework) {
       q.rework = { state: 'requested', at: new Date().toISOString(), msg: '' };
     } else {
