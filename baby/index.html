@@ -1717,6 +1717,12 @@ const Q_TAG = {
    그래서 "요청을 남겨두면" _watch_rework.py 가 감지하고,
    내가 실제로 다시 그린 뒤 상태를 done 으로 바꾼다.
    진행 상태는 12초마다 원격에서 받아와 갱신한다. */
+const BUILD = {
+  requested: ['t-gray',   '📨 제작 요청',  '감지되기를 기다리는 중입니다'],
+  seen:      ['t-yellow', '👀 확인함',     '요청을 확인했습니다. 곧 시작합니다'],
+  working:   ['t-blue',   '🏗 제작 중',    '카드를 만들고 있습니다'],
+  done:      ['t-green',  '✅ 제작 완료',  '승인 대기로 넘어갔습니다'],
+};
 const RW = {
   requested: ['t-gray',   '📨 요청 보냄',  '감지되기를 기다리는 중입니다'],
   seen:      ['t-yellow', '👀 확인함',     '요청을 확인했습니다. 곧 시작합니다'],
@@ -1724,21 +1730,28 @@ const RW = {
   done:      ['t-green',  '✅ 수정 완료',  '새 카드로 교체했습니다'],
 };
 function rwBadge(q) {
+  const out = [];
+  const b = q.build && q.build.state;
+  if (b && BUILD[b]) out.push(`<span class="tag ${BUILD[b][0]}">${BUILD[b][1]}</span>`);
   const st = q.rework && q.rework.state;
-  if (!st || !RW[st]) return '';
-  return `<span class="tag ${RW[st][0]}">${RW[st][1]}</span>`;
+  if (st && RW[st]) out.push(`<span class="tag ${RW[st][0]}">${RW[st][1]}</span>`);
+  return out.join(' ');
 }
 function rwPanel(q) {
-  const r = q.rework, st = r && r.state;
-  if (!st || !RW[st]) return '';
-  const [cls, label, base] = RW[st];
+  return bar(q, q.build, BUILD, 'build') + bar(q, q.rework, RW, 'rework');
+}
+function bar(q, r, TBL, kind) {
+  const st = r && r.state;
+  if (!st || !TBL[st]) return '';
+  const [cls, label, base] = TBL[st];
   const el = r.at ? Math.round((Date.now() - new Date(r.at)) / 60000) : null;
   return `<div class="rw-bar ${st === 'done' ? 'rw-done' : ''}">
     <span class="tag ${cls}">${label}</span>
     <span class="fs12">${escapeHtml(r.msg || base)}</span>
     <div class="spacer"></div>
     ${st !== 'done' && el !== null ? `<span class="fs11 soft">${el}분 경과</span>` : ''}
-    ${st === 'done' ? `<button class="btn sm" data-rw-clear="${q.id}">확인</button>` : ''}
+    ${st === 'done' && kind === 'rework'
+      ? `<button class="btn sm" data-rw-clear="${q.id}">확인</button>` : ''}
   </div>`;
 }
 
@@ -1771,6 +1784,7 @@ function renderQueue() {
             title="클릭하면 크게 보기">`).join('');
     const cap = escapeHtml(q.caption || '').replace(/\n/g, '<br>');
     const editable = q.status === 'pending' || q.status === 'rejected';
+    const waitingBuild = q.status === 'requested';
     // 카드별 수정 메모 입력칸 — 이미지는 브라우저에서 다시 그릴 수 없어서,
     // "뭐가 틀렸는지"를 받아두고 내가 그걸 보고 다시 만든다.
     const noteRows = (q.images || []).map((u, i) => `
@@ -1804,6 +1818,9 @@ function renderQueue() {
       </div>
       <div class="row mb8">${thumbs}</div>
       ${rwPanel(q)}
+      ${waitingBuild && !(q.build || {}).state
+        ? `<div class="rw-bar"><span class="tag t-gray">📨 제작 요청</span>
+           <span class="fs12">제작 순서를 기다리는 중입니다</span></div>` : ''}
       ${q.note ? `<div class="fs11 soft mb8">📌 ${escapeHtml(q.note)}</div>` : ''}
       <details><summary class="fs12 muted" style="cursor:pointer">캡션 전문 보기</summary>
         <div class="fs12 muted mt8" style="line-height:1.8">${cap}</div></details>
