@@ -627,7 +627,7 @@
       <div id="queue-empty" class="empty-state">
         <div class="es-emoji">📮</div>
         <div class="es-title">대기 중인 소재가 없습니다</div>
-        <div class="es-desc"><b>소재</b> 탭에서 「발행 대기로 보내기」를 누르면 여기에 올라옵니다.</div>
+        <div class="es-desc"><b>소재</b> 탭에서 「게시물 제작」을 누르면 여기에 올라옵니다.</div>
       </div>
     </div>
   </section>
@@ -673,6 +673,18 @@
         <b>무음으로 확정했습니다.</b> 완전 자동 발행을 위한 선택입니다.
         인스타 내장 음원은 앱에서만 붙일 수 있어(API 불가) 손이 가고, 외부 음원은 저작권 위험이 있습니다.
         대신 <b>자막과 화면 전환으로 시선을 잡는 구성</b>이 중요해집니다.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>➕ 릴스 주제 던지기</h2>
+      <div class="row mb8">
+        <input type="text" id="in-reel" placeholder="예: 신생아 밤중수유 끊는 법" style="flex:1;min-width:280px">
+        <select id="in-reel-pillar"></select>
+        <button class="btn brand" id="btn-add-reel">추가</button>
+      </div>
+      <div class="fs11 soft">
+        릴스 전용 주제입니다. 게시물과 같은 주제를 릴스로도 만들려면 <b>소재</b> 탭에서 「🎬 릴스 제작」을 누르세요.
       </div>
     </div>
 
@@ -1267,6 +1279,8 @@ function fillPillarSelects() {
   document.getElementById('in-pillar').innerHTML = opts;
   document.getElementById('flt-pillar').innerHTML =
     '<option value="">전체 축</option>' + opts;
+  const rp = document.getElementById('in-reel-pillar');
+  if (rp) rp.innerHTML = opts;
 }
 function renderIdeas() {
   const fp = document.getElementById('flt-pillar').value;
@@ -1281,6 +1295,7 @@ function renderIdeas() {
   document.getElementById('idea-grid').innerHTML = list.map(i => {
     const p = PILLARS.find(x => x.id === i.pillar);
     const queued = (S.queue || []).some(q => q.ideaId === i.id);
+    const reeled = (S.reels || []).some(r => r.ideaId === i.id);
     return `<div class="idea-card" data-id="${i.id}">
       <div class="ic-top">
         <span class="tag" style="background:${p ? p.color+'22' : '#f1f2f4'};color:${p ? p.color : 'var(--text-mute)'}">${p ? p.name : '미분류'}</span>
@@ -1290,8 +1305,11 @@ function renderIdeas() {
       <div class="ic-meta"><span>👶 ${i.age}</span><span>📅 ${i.created}</span></div>
       <div class="row mt8">
         ${queued
-          ? '<span class="tag t-purple">발행 대기로 보냄</span>'
-          : `<button class="btn sm brand" data-send="${i.id}">발행 대기로 보내기</button>`}
+          ? '<span class="tag t-purple">게시물 제작 중</span>'
+          : `<button class="btn sm brand" data-send="${i.id}">📤 게시물 제작</button>`}
+        ${reeled
+          ? '<span class="tag t-blue">릴스 제작 중</span>'
+          : `<button class="btn sm" data-reel-make="${i.id}">🎬 릴스 제작</button>`}
         <div class="spacer"></div>
         <button class="btn sm" data-del-idea="${i.id}">삭제</button>
       </div>
@@ -1471,6 +1489,14 @@ document.getElementById('idea-grid').addEventListener('click', e => {
     save(); renderIdeas(); renderDash();
     return;
   }
+  if (t.dataset.reelMake) {
+    const idea = S.ideas.find(x => x.id === t.dataset.reelMake);
+    if (!idea) return;
+    addReel({ ideaId: idea.id, title: idea.topic, pillar: idea.pillar });
+    save(); renderIdeas(); renderReels();
+    alert('릴스 제작을 요청했습니다.\n「릴스」 탭에서 진행 상황을 확인하실 수 있습니다.');
+    return;
+  }
   if (t.dataset.send) {
     const idea = S.ideas.find(x => x.id === t.dataset.send);
     if (!idea) return;
@@ -1488,7 +1514,7 @@ document.getElementById('idea-grid').addEventListener('click', e => {
     });
     idea.status = '제작요청';
     save(); renderIdeas(); renderQueue(); renderDash();
-    alert('발행 대기 소재로 보냈습니다.\n카드와 캡션이 만들어지면 승인하실 수 있습니다.');
+    alert('게시물 제작을 요청했습니다.\n카드와 캡션이 만들어지면 「게시물」 탭에서 승인하실 수 있습니다.');
   }
 });
 document.getElementById('flt-pillar').addEventListener('change', renderIdeas);
@@ -1820,6 +1846,31 @@ function renderReels() {
     </div>`;
   }).join('');
 }
+function addReel(o) {
+  S.reels = S.reels || [];
+  S.reels.unshift({
+    id: 'r_' + (o.ideaId || uid()),
+    ideaId: o.ideaId || null,
+    title: o.title,
+    pillar: o.pillar || null,
+    images: o.images || [],
+    caption: o.caption || '',
+    videoUrl: null,
+    status: 'requested',
+    createdAt: new Date().toISOString(),
+  });
+}
+document.getElementById('btn-add-reel').addEventListener('click', () => {
+  const t = document.getElementById('in-reel').value.trim();
+  if (!t) { alert('주제를 입력하세요'); return; }
+  addReel({ title: t, pillar: document.getElementById('in-reel-pillar').value });
+  document.getElementById('in-reel').value = '';
+  save(); renderReels();
+});
+document.getElementById('in-reel').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('btn-add-reel').click();
+});
+
 ['r-cfg-sec', 'r-cfg-bgm'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener('change', () => {
