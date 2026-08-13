@@ -8,6 +8,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* 카드 수정 요청 진행 상태 */
+.rw-bar{display:flex;align-items:center;gap:10px;margin:10px 0;padding:11px 14px;
+  border-radius:12px;background:#f6f4ef;border:1px solid var(--line)}
+.rw-done{background:#eefaf1;border-color:#c6e8d1}
+.rw-bar .tag{flex:none}
+
   :root {
     --bg: #f7f8fa;
     --panel: #ffffff;
@@ -1051,6 +1057,31 @@ function adoptRemote(row, msg) {
 }
 /* 부팅: 원격이 더 최신이면 원격 채택, 아니면 로컬을 올림.
    원격 상태를 못 읽었으면(ok=false) 아무것도 하지 않음 — 잘못 덮어쓰는 게 최악. */
+/* 수정이 진행 중일 때만 원격을 들여다본다.
+   전체를 갈아끼우면 편집 중이던 내용이 날아가므로 rework/images 만 옮긴다. */
+async function syncRework() {
+  if (!(S.queue || []).some(q => q.rework && q.rework.state !== 'done')) return;
+  const { ok, row } = await pullRemote();
+  if (!ok || !row || !row.data || !Array.isArray(row.data.queue)) return;
+  let changed = false;
+  for (const rq of row.data.queue) {
+    const q = (S.queue || []).find(x => x.id === rq.id);
+    if (!q || !rq.rework) continue;
+    if (JSON.stringify(q.rework || null) !== JSON.stringify(rq.rework)) {
+      q.rework = rq.rework;
+      if (rq.rework.state === 'done') {
+        if (rq.images) q.images = rq.images;
+        if (rq.caption) q.caption = rq.caption;
+        q.needsRework = false;
+        q.cardNotes = [];
+      }
+      changed = true;
+    }
+  }
+  if (changed) { save({ localOnly: true }); renderQueue(); }
+}
+setInterval(syncRework, 12000);
+
 async function boot() {
   const { ok, row } = await pullRemote();
   if (!ok) return;                       // 원격 상태 불명 → 아무것도 안 함
@@ -1679,6 +1710,37 @@ const Q_TAG = {
   published: ['t-green',  '발행 완료'],
   rejected:  ['t-red',    '반려'],
 };
+
+/* ───────── 카드 수정 요청 ─────────
+   대시보드는 정적 페이지라 이미지를 스스로 못 만든다.
+   그래서 "요청을 남겨두면" _watch_rework.py 가 감지하고,
+   내가 실제로 다시 그린 뒤 상태를 done 으로 바꾼다.
+   진행 상태는 12초마다 원격에서 받아와 갱신한다. */
+const RW = {
+  requested: ['t-gray',   '📨 요청 보냄',  '감지되기를 기다리는 중입니다'],
+  seen:      ['t-yellow', '👀 확인함',     '요청을 확인했습니다. 곧 시작합니다'],
+  working:   ['t-blue',   '🔧 수정 중',    '카드를 다시 만들고 있습니다'],
+  done:      ['t-green',  '✅ 수정 완료',  '새 카드로 교체했습니다'],
+};
+function rwBadge(q) {
+  const st = q.rework && q.rework.state;
+  if (!st || !RW[st]) return '';
+  return `<span class="tag ${RW[st][0]}">${RW[st][1]}</span>`;
+}
+function rwPanel(q) {
+  const r = q.rework, st = r && r.state;
+  if (!st || !RW[st]) return '';
+  const [cls, label, base] = RW[st];
+  const el = r.at ? Math.round((Date.now() - new Date(r.at)) / 60000) : null;
+  return `<div class="rw-bar ${st === 'done' ? 'rw-done' : ''}">
+    <span class="tag ${cls}">${label}</span>
+    <span class="fs12">${escapeHtml(r.msg || base)}</span>
+    <div class="spacer"></div>
+    ${st !== 'done' && el !== null ? `<span class="fs11 soft">${el}분 경과</span>` : ''}
+    ${st === 'done' ? `<button class="btn sm" data-rw-clear="${q.id}">확인</button>` : ''}
+  </div>`;
+}
+
 function renderQueue() {
   S.queue = S.queue || [];
   S.autoPublish = S.autoPublish === true;
@@ -1724,6 +1786,7 @@ function renderQueue() {
       <div class="row mb8">
         <b class="fs13">${escapeHtml(q.title || '(제목 없음)')}</b>
         <span class="tag ${cls}">${label}</span>
+        ${rwBadge(q)}
         <span class="soft fs11">${q.scheduledAt
           ? `📅 ${escapeHtml(q.scheduledAt)} ${escapeHtml(q.scheduledTime || '')} 발행 예정`
           : ''}</span>
@@ -1739,6 +1802,7 @@ function renderQueue() {
         <button class="btn sm" data-q-del="${q.id}">🗑</button>
       </div>
       <div class="row mb8">${thumbs}</div>
+      ${rwPanel(q)}
       ${q.note ? `<div class="fs11 soft mb8">📌 ${escapeHtml(q.note)}</div>` : ''}
       <details><summary class="fs12 muted" style="cursor:pointer">캡션 전문 보기</summary>
         <div class="fs12 muted mt8" style="line-height:1.8">${cap}</div></details>
@@ -1751,11 +1815,12 @@ function renderQueue() {
         <textarea id="ec-${q.id}" style="min-height:220px" class="mb14">${escapeHtml(q.caption || '')}</textarea>
 
         <div class="fs12 mb8"><b>카드 수정 요청</b>
-          <span class="soft">— 이미지는 여기서 다시 못 그립니다. 뭐가 틀렸는지 적어주시면 제가 고쳐서 다시 올립니다.</span></div>
+          <span class="soft">— 뭐가 틀렸는지 적고 「수정 요청 보내기」를 누르세요.
+          제가 켜져 있으면 바로 감지해서 다시 만들고, 진행 상태가 위에 표시됩니다.</span></div>
         ${noteRows}
 
         <div class="row mt14">
-          <button class="btn brand sm" data-q-save="${q.id}">저장</button>
+          <button class="btn brand sm" data-q-save="${q.id}">수정 요청 보내기</button>
           <button class="btn sm" data-q-close="${q.id}">닫기</button>
           <span class="fs11 soft" id="es-${q.id}"></span>
         </div>
@@ -1772,6 +1837,12 @@ document.getElementById('chk-auto').addEventListener('change', e => {
 });
 document.getElementById('queue-list').addEventListener('click', e => {
   const t = e.target;
+
+  if (t.dataset.rwClear) {
+    const q = S.queue.find(x => x.id === t.dataset.rwClear);
+    if (q) { delete q.rework; delete q.needsRework; q.cardNotes = []; save(); renderQueue(); }
+    return;
+  }
 
   // 썸네일 클릭 → 확대 팝업
   if (t.dataset.lb) {
@@ -1853,6 +1924,11 @@ document.getElementById('queue-list').addEventListener('click', e => {
     q.editedAt = new Date().toISOString();
     // 수정 요청이 하나라도 있으면 "재작업 필요" 표시
     q.needsRework = q.cardNotes.some(n => n);
+    if (q.needsRework) {
+      q.rework = { state: 'requested', at: new Date().toISOString(), msg: '' };
+    } else {
+      delete q.rework;
+    }
     save();
     const st = document.getElementById('es-' + id);
     if (st) {
