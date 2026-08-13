@@ -66,3 +66,6 @@ README_담당자용.txt
 # 인스타 배포용 첨부파일은 예외로 공개
 !baby/posts/**/files/
 !baby/posts/**/files/*.xlsx
+
+# git 동시 실행 방지 잠금 (로컬 전용)
+.gitlock/
