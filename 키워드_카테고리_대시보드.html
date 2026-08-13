@@ -1178,7 +1178,17 @@ let viewMode = "product";
 let VOLUMES_CACHE = {}; // {키워드: {pc, mo, comp, _ts}}
 
 async function init() {
-  DATA = JSON.parse(document.getElementById("productData").textContent);
+  // v6 (2026-08-13): 외부 모드일 때 Supabase에서 fetch, 로컬은 내장 JSON
+  if (window.IS_REMOTE_MODE && typeof window.loadProductsFromSupabase === 'function') {
+    try {
+      DATA = await window.loadProductsFromSupabase();
+    } catch (e) {
+      console.error('[remote] Supabase 제품 로드 실패, 내장 JSON fallback:', e);
+      DATA = JSON.parse(document.getElementById("productData").textContent);
+    }
+  } else {
+    DATA = JSON.parse(document.getElementById("productData").textContent);
+  }
   renderCategoryTabs();
   renderProductSelect();
   if (DATA.products.length > 0) {
@@ -1200,6 +1210,11 @@ async function loadVolumesCache() {
 }
 
 async function refreshProductVolumes() {
+  // v6: 외부 모드 안내
+  if (window.IS_REMOTE_MODE) {
+    alert('외부 보기 모드에서는 조회수 갱신이 불가합니다.\n\n사내 PC(민채 자리)에서 갱신하면 Supabase로 동기화된 후 여기서도 최신 값이 보입니다.');
+    return;
+  }
   const productId = document.getElementById("productSelect").value;
   const product = DATA.products.find(p => p.id === productId);
   if (!product) return;
