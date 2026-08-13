@@ -1650,6 +1650,11 @@ function updateFilePath() {
 
 /* ===== PDF 업로드 + 자동 분석 트리거 ===== */
 async function uploadAndAnalyze() {
+  // v6: 외부 모드에서는 사내 PC 안내
+  if (window.IS_REMOTE_MODE) {
+    alert('외부 보기 모드에서는 PDF 업로드가 불가합니다.\n\n사내 PC(민채 자리)에서 대시보드에 PDF를 드래그앤드롭하면 자동 분석 후 Supabase로 동기화되어 여기서도 자동으로 새 제품이 보입니다.\n\n(Supabase Storage + Edge Function 자동 분석기는 다음 업데이트에서 지원 예정)');
+    return;
+  }
   const fileInput = document.getElementById("newManual");
   const file = (fileInput.files && fileInput.files[0]) || pendingFile;
 
