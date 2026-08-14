@@ -6071,6 +6071,7 @@ function renderTodos() {
     );
     // 태그 영역 (자동/수동/넘어옴 등)
     const tags = el('div', {class:'todo-tags'});
+    if (isUrgent) tags.append(el('span', {class:'todo-tag urgent'}, '🚨 긴급'));
     if (isAuto) tags.append(el('span', {class:'todo-tag auto'}, '🤖 자동'));
     if (!isAuto && !t.done) tags.append(el('span', {class:'todo-tag manual'}, '👤 수동'));
     if (isRolled) tags.append(el('span', {class:'todo-tag rolled'}, `↻ ${t.rolledFrom}에서 넘어옴`));
@@ -6251,6 +6252,25 @@ async function boot() {
       }
     }
     if (_changed) saveTodos(_t);
+  } catch (_) {}
+
+  // v2 마이그레이션 (2026-08-13): 기존 금요일 오늘끝딜 자동항목 정리
+  //  · 미완료 & 미래 항목은 삭제 (곧 목요일로 재생성됨). 완료된 과거 기록은 보존.
+  try {
+    const _t2 = loadTodos();
+    const _today2 = todayIso();
+    let _rm = 0;
+    for (const d of Object.keys(_t2)) {
+      const before = _t2[d].length;
+      _t2[d] = _t2[d].filter(it => {
+        if (!it.autoKey?.startsWith('auto:friday-ondeal:')) return true;
+        if (it.done) return true;             // 완료된 기록은 남김
+        if (d < _today2) return true;         // 과거 미완료도 남김 (rollover 이력)
+        return false;                         // 오늘·미래 미완료 금요일 항목 → 삭제
+      });
+      _rm += (before - _t2[d].length);
+    }
+    if (_rm > 0) { saveTodos(_t2); console.log(`[migrate] 레거시 금요일 오늘끝딜 ${_rm}건 정리`); }
   } catch (_) {}
 
   cleanupStaleAutoTodos();
