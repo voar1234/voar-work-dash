@@ -660,6 +660,19 @@
   .todo-item.manual  { border-left-color: var(--green); }
   .todo-item.rolled  { border-left-color: var(--orange); background: #fffbeb; }
   .todo-item.done    { background: #f9fafb; opacity: .55; border-left-color: var(--text-soft); }
+  /* 긴급(빨간) — 오늘끝딜 접수마감 등 */
+  .todo-item.urgent {
+    border-left-color: #dc2626 !important; border-left-width: 6px;
+    background: linear-gradient(90deg, #fef2f2 0%, #fff 60%) !important;
+    box-shadow: 0 0 0 1px #fecaca, 0 2px 8px rgba(220,38,38,0.15);
+    animation: urgent-pulse 2.2s ease-in-out infinite;
+  }
+  .todo-item.urgent .todo-text { color: #991b1b; font-weight: 700; }
+  .todo-item.urgent.done { animation: none; opacity: .5; }
+  @keyframes urgent-pulse {
+    0%,100% { box-shadow: 0 0 0 1px #fecaca, 0 2px 8px rgba(220,38,38,0.15); }
+    50%     { box-shadow: 0 0 0 2px #fca5a5, 0 4px 16px rgba(220,38,38,0.35); }
+  }
   .todo-item.done .todo-text { text-decoration: line-through; color: var(--text-soft); }
   .todo-item input[type="checkbox"] {
     margin-top: 4px; width: 22px; height: 22px; cursor: pointer;
@@ -679,6 +692,7 @@
   .todo-tag.manual  { background: var(--green-bg); color: #065f46; }
   .todo-tag.rolled  { background: #fed7aa; color: #9a3412; }
   .todo-tag.dday    { background: #fee2e2; color: #991b1b; }
+  .todo-tag.urgent  { background: #dc2626; color: #fff; letter-spacing: 0.5px; }
   .todo-source-info { font-size: 11px; color: var(--text-soft); }
   .todo-item .icon-btn {
     background: transparent; border: 0; cursor: pointer; color: var(--text-soft);
@@ -4675,7 +4689,9 @@ function cleanupStaleAutoTodos() {
       if (!t.autoKey) { cleaned.push(t); continue; }
       if (t.done) { cleaned.push(t); continue; }  // 완료된 건 보존
       // 정기 주간 업무 (제품 무관) — cleanup 적용 안 함
-      if (t.autoKey.startsWith('auto:friday-')) { cleaned.push(t); continue; }
+      if (t.autoKey.startsWith('auto:friday-')) { cleaned.push(t); continue; }        // 레거시
+      if (t.autoKey.startsWith('auto:thursday-')) { cleaned.push(t); continue; }      // 오늘끝딜 제안
+      if (t.autoKey.startsWith('auto:monday-'))  { cleaned.push(t); continue; }       // 오늘끝딜 접수마감
 
       const parts = t.autoKey.split(':');
       const aid = parseInt(parts[2], 10);
@@ -4844,22 +4860,36 @@ function generateAutoTodos() {
     }
   }
 
-  // 6. 매주 금요일 — 오늘의집 끝딜 제안 (제품과 무관한 정기 업무)
-  // 과거 8주 ~ 미래 8주의 금요일
+  // 6. 매주 정기 업무 — 네이버 오늘끝딜 사이클 (제품과 무관)
+  //    · 매주 목요일: 오늘끝딜 제안 (파란 자동)
+  //    · 매주 월요일: 오늘끝딜 접수마감! (빨간 urgent — 눈에 띄게)
+  //    과거 8주 ~ 미래 8주
   const now = new Date(today);
   for (let i = -8; i <= 8; i++) {
     const ref = new Date(now); ref.setDate(ref.getDate() + i * 7);
-    // 그 주의 금요일 찾기 (월요일=1, 금요일=5)
-    const dow = ref.getDay();  // 0=일, 5=금
-    const diff = 5 - dow;
-    const friday = new Date(ref); friday.setDate(ref.getDate() + diff);
-    const iso = todayIso(friday);
-    addAuto(iso, {
+    const dow = ref.getDay();  // 0=일, 1=월, 4=목
+
+    // (a) 목요일 — 오늘끝딜 제안 준비
+    const thu = new Date(ref); thu.setDate(ref.getDate() + (4 - dow));
+    const thuIso = todayIso(thu);
+    addAuto(thuIso, {
       id: 't_'+Math.random().toString(36).slice(2),
       text: '[자동·주간] 네이버 오늘끝딜 제안',
       done: false,
-      autoKey: `auto:friday-ondeal:${iso}`,
-      autoSource: { type: '매주 금요일 정기' },
+      autoKey: `auto:thursday-ondeal:${thuIso}`,
+      autoSource: { type: '매주 목요일 정기' },
+    });
+
+    // (b) 월요일 — 오늘끝딜 접수마감 (urgent 빨간색)
+    const mon = new Date(ref); mon.setDate(ref.getDate() + (1 - dow));
+    const monIso = todayIso(mon);
+    addAuto(monIso, {
+      id: 't_'+Math.random().toString(36).slice(2),
+      text: '🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)',
+      done: false,
+      urgent: true,
+      autoKey: `auto:monday-ondeal-deadline:${monIso}`,
+      autoSource: { type: '매주 월요일 12시 접수마감' },
     });
   }
 
@@ -6002,11 +6032,13 @@ function renderTodos() {
   for (const t of sorted) {
     const isAuto = !!t.autoKey || !!t.autoSource;
     const isRolled = !!t.rolledFrom;
+    const isUrgent = !!t.urgent;
     let cls = 'todo-item';
     if (t.done) cls += ' done';
     else if (isRolled) cls += ' rolled';
     else if (isAuto) cls += ' auto';
     else cls += ' manual';
+    if (isUrgent) cls += ' urgent';
 
     const item = el('li', {class: cls});
     item.append(el('input', {
