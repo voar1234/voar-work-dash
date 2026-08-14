@@ -1398,6 +1398,20 @@ function renderCal() {
    합치기·자리바꾸기를 거치면서 같은 날짜가 두 개 생기거나
    한 게시물이 두 자리를 차지하는 일이 생길 수 있다.
    화면을 그리기 전에 매번 한 번씩 훑어 정리한다. */
+/* 지정한 날짜의 자리를 이 글 것으로 만든다. 그 날짜가 없으면 새로 끼운다. */
+function claimSlot(postId, date, time) {
+  if (!Array.isArray(S.slots)) S.slots = genSlots();
+  let slot = S.slots.find(sl => sl.date === date && (!sl.postId || sl.postId === postId));
+  if (!slot) {
+    slot = { date, time: time || S.cfg.time, postId: null };
+    S.slots.push(slot);
+    S.slots.sort((a, b) => a.date.localeCompare(b.date));
+  }
+  slot.postId = postId;
+  if (time) slot.time = time;
+  return slot;
+}
+
 function repairSlots() {
   if (!Array.isArray(S.slots)) return 0;
   const alive = new Set((S.queue || [])
@@ -1424,11 +1438,12 @@ function repairSlots() {
   const out = [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date));
   if (fixed) S.slots = out;
 
-  // 승인됐는데 자리가 없는 글은 다시 배정
+  // 승인됐는데 슬롯 배정이 없는 글 — 화면엔 날짜가 떠 있는데 실제로는 자리가 빈 상태
   for (const q of (S.queue || [])) {
     if (q.status !== 'approved') continue;
     if (S.slots.some(sl => sl.postId === q.id)) continue;
-    const slot = assignSlot(q.id);
+    const slot = q.scheduledAt ? claimSlot(q.id, q.scheduledAt, q.scheduledTime)
+                               : assignSlot(q.id);
     if (slot) { q.scheduledAt = slot.date; q.scheduledTime = slot.time; fixed++; }
   }
   return fixed;
@@ -1450,7 +1465,13 @@ function assignSlot(postId) {
    (주 N회 규칙 밖의 날짜로도 보낼 수 있어야 하므로) */
 function moveSlot(postId, date, time) {
   if (!S.slots) S.slots = genSlots();
-  const mine = S.slots.find(s => s.postId === postId);          // 지금 내 자리
+  let mine = S.slots.find(s => s.postId === postId);            // 지금 내 자리
+  if (!mine) {
+    // 화면엔 발행 예정일이 떠 있는데 슬롯엔 배정이 없는 경우가 있다.
+    // 그대로 두면 바꿀 상대를 못 찾아 "둘 다 발행할까요?" 로 새버린다.
+    const q = (S.queue || []).find(x => x.id === postId);
+    if (q && q.scheduledAt) mine = claimSlot(postId, q.scheduledAt, q.scheduledTime);
+  }
   const taken = S.slots.find(s => s.date === date && s.postId && s.postId !== postId);
 
   if (taken) {
@@ -1941,6 +1962,7 @@ function bar(q, r, TBL, kind) {
 }
 
 function renderQueue() {
+  repairSlots();
   S.queue = S.queue || [];
   S.autoPublish = S.autoPublish === true;
 
