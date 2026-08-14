@@ -1105,6 +1105,13 @@ setInterval(syncRework, 12000);
    그래서 어느 쪽 작업도 지워지지 않는다. */
 const LISTS = ['queue', 'ideas', 'reels', 'reelIdeas', 'comps', 'tags', 'slots', 'compNew'];
 
+/* 항목을 건드릴 때마다 시각을 찍는다.
+   이게 없으면 합칠 때 내 변경이 '더 오래된 것'으로 취급돼 되돌아간다. */
+function touch(o) {
+  if (o && typeof o === 'object') o.updated = new Date().toISOString();
+  return o;
+}
+
 function itemStamp(o) {
   if (!o || typeof o !== 'object') return '';
   return [o.updated, o.editedAt, o.approvedAt,
@@ -1125,7 +1132,7 @@ function mergeList(mine, theirs) {
     // 이미지가 붙은 쪽이 이긴다 — 카드를 잃는 게 가장 치명적이다
     const tImg = (t.images || []).length, mImg = (m.images || []).length;
     if (tImg !== mImg) { out.push(tImg > mImg ? t : m); continue; }
-    out.push(itemStamp(t) >= itemStamp(m) ? t : m);
+    out.push(itemStamp(t) > itemStamp(m) ? t : m);   // 동점이면 내 조작 우선
   }
   for (const m of mine) if (m && m.id && !seen.has(m.id)) out.push(m);
   return out;
@@ -1397,6 +1404,30 @@ function assignSlot(postId) {
   free.postId = postId;
   return free;
 }
+/* 승인된 게시물의 발행일을 원하는 날짜로 옮긴다.
+   슬롯 목록에 그 날짜가 없으면 새로 만들어 끼워넣는다.
+   (주 N회 규칙 밖의 날짜로도 보낼 수 있어야 하므로) */
+function moveSlot(postId, date, time) {
+  if (!S.slots) S.slots = genSlots();
+  const taken = S.slots.find(s => s.date === date && s.postId && s.postId !== postId);
+  if (taken) {
+    const other = (S.queue || []).find(q => q.id === taken.postId);
+    if (!confirm(`${date} 에는 이미 「${other ? other.title : '다른 글'}」이 예정돼 있습니다.
+그래도 같은 날로 옮길까요?`))
+      return false;
+  }
+  releaseSlot(postId);
+  let slot = S.slots.find(s => s.date === date && !s.postId);
+  if (!slot) {
+    slot = { date, time: time || S.cfg.time, postId: null };
+    S.slots.push(slot);
+  }
+  slot.postId = postId;
+  if (time) slot.time = time;
+  S.slots.sort((a, b) => a.date.localeCompare(b.date));
+  return slot;
+}
+
 function releaseSlot(postId) {
   (S.slots || []).forEach(s => { if (s.postId === postId) delete s.postId; });
 }
@@ -1893,11 +1924,24 @@ function renderQueue() {
         ${q.status === 'pending' ? `
           <button class="btn sm brand" data-q-ok="${q.id}">✅ 발행 승인</button>
           <button class="btn sm" data-q-no="${q.id}">반려</button>` : ''}
-        ${q.status === 'approved' ? `<button class="btn sm" data-q-cancel="${q.id}">승인 취소</button>` : ''}
+        ${q.status === 'approved' ? `
+          <button class="btn sm" data-q-when="${q.id}">📅 발행일 변경</button>
+          <button class="btn sm" data-q-cancel="${q.id}">승인 취소</button>` : ''}
         ${(q.images || []).length && !q.reelOf ? `<button class="btn sm" data-q-reel="${q.id}">🎬 릴스로</button>` : ''}
         <button class="btn sm" data-q-del="${q.id}">🗑</button>
       </div>
       <div class="row mb8">${thumbs}</div>
+      ${q.status === 'approved' ? `
+        <div id="when-${q.id}" class="rw-bar hidden">
+          <span class="fs12"><b>발행일</b></span>
+          <input type="date" id="wd-${q.id}" value="${escapeHtml(q.scheduledAt || '')}"
+                 min="${todayStr()}" style="width:150px">
+          <input type="time" id="wt-${q.id}" value="${escapeHtml(q.scheduledTime || S.cfg.time)}"
+                 style="width:110px">
+          <button class="btn sm brand" data-q-when-ok="${q.id}">옮기기</button>
+          <button class="btn sm" data-q-when-no="${q.id}">닫기</button>
+          <span class="fs11 soft">비어 있는 가장 빠른 날로 자동 배정된 상태입니다</span>
+        </div>` : ''}
       ${rwPanel(q)}
       ${waitingBuild && !(q.build || {}).state
         ? `<div class="rw-bar"><span class="tag t-gray">📨 제작 요청</span>
@@ -1957,7 +2001,7 @@ document.getElementById('queue-list').addEventListener('click', e => {
 
   if (t.dataset.rwClear) {
     const q = S.queue.find(x => x.id === t.dataset.rwClear);
-    if (q) { delete q.rework; delete q.needsRework; q.cardNotes = []; q.reworkAll = ''; save(); renderQueue(); }
+    if (q) { delete q.rework; delete q.needsRework; q.cardNotes = []; q.reworkAll = ''; touch(q); save(); renderQueue(); }
     return;
   }
 
@@ -1974,6 +2018,7 @@ document.getElementById('queue-list').addEventListener('click', e => {
     const q = S.queue.find(x => x.id === id);
     if (!q) return;
     q.status = st;
+    touch(q);
     if (st === 'approved') {
       q.approvedAt = new Date().toISOString();
       const slot = assignSlot(id);
@@ -1987,9 +2032,34 @@ document.getElementById('queue-list').addEventListener('click', e => {
       releaseSlot(id);
       delete q.scheduledAt;
       delete q.scheduledTime;
+      delete q.approvedAt;          // 남겨두면 취소한 게 다시 승인으로 읽힌다
     }
     save(); renderQueue(); renderCal(); renderDash();
   };
+  if (t.dataset.qWhen) {
+    document.getElementById('when-' + t.dataset.qWhen).classList.toggle('hidden');
+    return;
+  }
+  if (t.dataset.qWhenNo) {
+    document.getElementById('when-' + t.dataset.qWhenNo).classList.add('hidden');
+    return;
+  }
+  if (t.dataset.qWhenOk) {
+    const id = t.dataset.qWhenOk;
+    const q = S.queue.find(x => x.id === id);
+    const date = document.getElementById('wd-' + id).value;
+    const time = document.getElementById('wt-' + id).value;
+    if (!q || !date) { alert('날짜를 골라주세요.'); return; }
+    if (date < todayStr() && !confirm('지난 날짜입니다. 그래도 옮길까요?')) return;
+    const slot = moveSlot(id, date, time);
+    if (!slot) return;
+    q.scheduledAt = slot.date;
+    q.scheduledTime = slot.time;
+    touch(q);
+    save(); renderQueue(); renderCal(); renderDash();
+    return;
+  }
+
   if (t.dataset.qOk)     set(t.dataset.qOk, 'approved');
   if (t.dataset.qNo)     set(t.dataset.qNo, 'rejected');
   if (t.dataset.qCancel) set(t.dataset.qCancel, 'pending');
@@ -2039,6 +2109,7 @@ document.getElementById('queue-list').addEventListener('click', e => {
     q.cardNotes = [...document.querySelectorAll(`[data-note-q="${id}"]`)]
       .map(el => el.value.trim());
     q.editedAt = new Date().toISOString();
+    touch(q);
     // 수정 요청이 하나라도 있으면 "재작업 필요" 표시
     const allEl = document.querySelector(`[data-all-q="${id}"]`);
     q.reworkAll = allEl ? allEl.value.trim() : '';
