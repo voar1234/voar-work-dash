@@ -344,7 +344,7 @@
     {
       "id": "t_gikn3419lvp",
       "text": "스위프클링 N배송 설정",
-      "done": false
+      "done": true
     },
     {
       "id": "t_rxzytx8mbu",
@@ -360,6 +360,18 @@
       "id": "t_8ohd818u29m",
       "text": "미스팀클링 디가페스타 가격설정",
       "done": false
+    },
+    {
+      "id": "t_y2tqswbdmr",
+      "text": "오늘끝딜 프로모션 준비 / 행사가 예약셋팅 필요",
+      "done": false,
+      "rolledFrom": "2026-08-13"
+    },
+    {
+      "id": "t_nq19dzmvoi",
+      "text": "신제품 브커 등록",
+      "done": false,
+      "rolledFrom": "2026-08-13"
     }
   ],
   "2026-06-04": [
@@ -1061,7 +1073,7 @@
   ],
   "2026-07-30": [
     {
-      "id": "t_udbzlx4khli",
+      "id": "t_phq0okqfpra",
       "text": "[자동] 보아르아가미니휴대용젖병소독기 카테고리·키워드 조사·공정위 제작",
       "done": false,
       "autoKey": "auto:prod:1010:260414003",
@@ -1706,19 +1718,9 @@
       "done": true
     },
     {
-      "id": "t_y2tqswbdmr",
-      "text": "오늘끝딜 프로모션 준비 / 행사가 예약셋팅 필요",
-      "done": false
-    },
-    {
       "id": "t_jw2skhbm8mo",
       "text": "병은님 휴가(크루방 운영)",
       "done": true
-    },
-    {
-      "id": "t_nq19dzmvoi",
-      "text": "신제품 브커 등록",
-      "done": false
     },
     {
       "id": "t_9zi9hxinu5",
@@ -1769,6 +1771,11 @@
     {
       "id": "t_a6i1ectfwyn",
       "text": "브랜드데이/신상위크 공지 체크",
+      "done": false
+    },
+    {
+      "id": "t_0l6g5kv1ct2j",
+      "text": "네이버 배송비 어뷰징 메일 확인",
       "done": false
     }
   ],
@@ -1866,22 +1873,25 @@
       }
     }
   ],
-  "2026-08-18": [
+  "2026-08-18": [],
+  "2026-08-17": [
     {
       "id": "t_gwstehe804i",
       "text": "컴포트클링 109로 가격 원복/공구진행 전 가격 상향",
-      "done": false
+      "done": false,
+      "leaveRerouted": "2026-08-18"
     },
     {
       "id": "t_7078atpbsey",
       "text": "플릿M 행사가 셋팅 649 / 셋팅 후 화연님 전달",
-      "done": false
+      "done": false,
+      "leaveRerouted": "2026-08-18"
     },
     {
       "id": "t_5l5osxizf5q",
       "text": "디가 이벤트배너 삽입",
-      "done": false
+      "done": false,
+      "leaveRerouted": "2026-08-18"
     }
-  ],
-  "2026-08-17": []
+  ]
 }
