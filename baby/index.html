@@ -381,6 +381,10 @@
         <span class="fs11 soft">저장 상태</span>
         <span class="tag t-gray" id="sync-badge">💾 로컬만</span>
       </div>
+      <div class="row mt8" style="justify-content:space-between">
+        <span class="fs11 soft">수정 감지</span>
+        <span class="tag t-gray" id="watch-badge" title="수정 요청을 자동으로 잡아주는 감지기 상태">확인 중</span>
+      </div>
       <div class="row mt8">
         <button class="btn sm" id="btn-export" style="flex:1">⬇ 백업</button>
         <button class="btn sm" id="btn-import" style="flex:1">⬆ 복원</button>
@@ -1173,6 +1177,34 @@ async function forcePull(silent) {
   if (!silent) alert(n ? '원격에 있던 내용을 불러왔습니다.' : '이미 최신 상태입니다.');
   return true;
 }
+
+/* 감지기 생존 표시.
+   감지기는 요청을 잡으면 종료되는 구조라 조용히 멈춰 있을 수 있다.
+   멈춰 있으면 요청이 사라지진 않지만 반영이 늦어지므로 눈에 보이게 둔다. */
+function renderWatch() {
+  const el = document.getElementById('watch-badge');
+  if (!el) return;
+  const t = S.watchBeat ? new Date(S.watchBeat) : null;
+  const min = t ? (Date.now() - t) / 60000 : null;
+  if (min !== null && min < 2) {
+    el.className = 'tag t-green';
+    el.textContent = '🟢 감지 중';
+    el.title = '수정 요청을 12초마다 확인하고 있습니다';
+  } else {
+    el.className = 'tag t-gray';
+    el.textContent = '⚪ 멈춤';
+    el.title = t ? `마지막 확인: ${t.toLocaleString('ko-KR')}
+요청은 사라지지 않고 대기합니다`
+                 : '아직 한 번도 동작하지 않았습니다';
+  }
+}
+setInterval(async () => {
+  const { ok, row } = await pullRemote();
+  if (ok && row && row.data && row.data.watchBeat) {
+    S.watchBeat = row.data.watchBeat;
+    renderWatch();
+  }
+}, 30000);
 
 async function boot() {
   const { ok, row } = await pullRemote();
@@ -2472,6 +2504,7 @@ document.getElementById('file-import').addEventListener('change', e => {
 
 /* ───────── 초기 렌더 ───────── */
 function renderAll() {
+  renderWatch();
   renderDash(); renderCal(); renderIdeas(); renderComp(); renderProd(); renderInsta(); renderQueue(); renderReels();
 }
 fillPillarSelects();
