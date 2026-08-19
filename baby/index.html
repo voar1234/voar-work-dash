@@ -1414,7 +1414,20 @@ function daysSincePublish(q) {
   if (isNaN(t)) return null;
   return (Date.now() - t) / 86400000;
 }
-const KEEP_DAYS = 1;          // 발행 후 이만큼 지나면 목록에서 치운다
+const KEEP_DAYS = 0;          // 0 = 발행 완료 즉시 목록·슬롯에서 치운다
+
+/* 목록에서 치워도 되는가.
+   daysSincePublish 가 null 이면 '발행된 적 없음' 이다.
+   이걸 0 으로 뭉개면 KEEP_DAYS=0 일 때 미발행 항목까지 전부 지워진다. */
+function isCleared(q) {
+  const d = daysSincePublish(q);
+  return d !== null && d >= KEEP_DAYS;
+}
+/* 아직 화면에 남겨둬야 하는 발행 완료 항목 (KEEP_DAYS 가 0 이면 없음) */
+function isFresh(q) {
+  const d = daysSincePublish(q);
+  return d !== null && d < KEEP_DAYS;
+}
 
 function slotKey(s) {
   return (s && s.date ? s.date : '9999-99-99') + ' ' + ((s && s.time) || '99:99');
@@ -1442,7 +1455,7 @@ function repairSlots() {
   // 발행 완료된 것도 잠시 자리를 지킨다 — 캘린더에 '발행 완료'로 보여주기 위해
   const alive = new Set(all
     .filter(q => q.status === 'approved' ||
-                 (q.status === 'published' && (daysSincePublish(q) ?? 99) < KEEP_DAYS))
+                 isFresh(q))
     .map(q => q.id));
 
   // ── 지난 날짜 슬롯 정리 ──
@@ -1451,7 +1464,7 @@ function repairSlots() {
   const today = todayStr();
   let fixedOld = 0;
   const keepIds = new Set(all
-    .filter(q => q.status === 'published' && (daysSincePublish(q) ?? 99) < KEEP_DAYS)
+    .filter(isFresh)
     .map(q => q.id));
   const past = S.slots.filter(sl => sl && sl.date && sl.date < today && !keepIds.has(sl.postId));
   let moved = 0;
@@ -1477,7 +1490,7 @@ function repairSlots() {
   }
   // 발행하고 하루 지난 자리는 치운다
   const doneOld = new Set(all
-    .filter(q => q.status === 'published' && (daysSincePublish(q) ?? 0) >= KEEP_DAYS)
+    .filter(isCleared)
     .map(q => q.id));
   if (doneOld.size) {
     const before = S.slots.length;
@@ -2037,10 +2050,10 @@ function bar(q, r, TBL, kind) {
 
 function renderQueue() {
   // 발행하고 하루 지난 글은 목록에서 치운다 (인스타에 이미 올라가 있다)
-  const gone = (S.queue || []).filter(q => (daysSincePublish(q) ?? 0) >= KEEP_DAYS);
+  const gone = (S.queue || []).filter(isCleared);
   if (gone.length) {
     S.queue = S.queue.filter(q => !gone.includes(q));
-    S.reels = (S.reels || []).filter(r => (daysSincePublish(r) ?? 0) < KEEP_DAYS);
+    S.reels = (S.reels || []).filter(r => !isCleared(r));
     save({ localOnly: true });
   }
   repairSlots();
