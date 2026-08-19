@@ -1129,6 +1129,12 @@ function mergeList(mine, theirs) {
     seen.add(t.id);
     const m = byId.get(t.id);
     if (!m) { out.push(t); continue; }
+    // 발행은 되돌릴 수 없는 사실이다. published 사본이 무조건 이긴다.
+    // (이게 없으면 예전 사본이 approved 로 되돌려 같은 글을 또 올리게 된다)
+    const tOut = !!(t.publishedAt || t.permalink || t.mediaId);
+    const mOut = !!(m.publishedAt || m.permalink || m.mediaId);
+    if (tOut !== mOut) { out.push(tOut ? t : m); continue; }
+
     // 이미지가 붙은 쪽이 이긴다 — 카드를 잃는 게 가장 치명적이다
     const tImg = (t.images || []).length, mImg = (m.images || []).length;
     if (tImg !== mImg) { out.push(tImg > mImg ? t : m); continue; }
