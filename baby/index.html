@@ -1414,7 +1414,7 @@ function claimSlot(postId, date, time) {
 
 function repairSlots() {
   if (!Array.isArray(S.slots)) return 0;
-  const alive = new Set((S.queue || [])
+  const alive = new Set([...(S.queue || []), ...(S.reels || [])]
     .filter(q => q.status === 'approved').map(q => q.id));
   const byDate = new Map();
   const usedPost = new Set();
@@ -1439,7 +1439,7 @@ function repairSlots() {
   if (fixed) S.slots = out;
 
   // 승인됐는데 슬롯 배정이 없는 글 — 화면엔 날짜가 떠 있는데 실제로는 자리가 빈 상태
-  for (const q of (S.queue || [])) {
+  for (const q of [...(S.queue || []), ...(S.reels || [])]) {
     if (q.status !== 'approved') continue;
     if (S.slots.some(sl => sl.postId === q.id)) continue;
     const slot = q.scheduledAt ? claimSlot(q.id, q.scheduledAt, q.scheduledTime)
@@ -1475,7 +1475,7 @@ function moveSlot(postId, date, time) {
   const taken = S.slots.find(s => s.date === date && s.postId && s.postId !== postId);
 
   if (taken) {
-    const other = (S.queue || []).find(q => q.id === taken.postId);
+    const other = [...(S.queue || []), ...(S.reels || [])].find(q => q.id === taken.postId);
     const name = other ? other.title : '다른 글';
     if (mine) {
       // 자리 교환이 가장 자연스럽다 — 상대는 내가 비우는 날로 간다
@@ -2262,18 +2262,34 @@ function renderReels() {
 
   document.getElementById('r-queue-list').innerHTML = S.reels.map(r => {
     const [cls, label] = Q_TAG[r.status] || Q_TAG.requested;
-    const thumbs = (r.images || []).slice(0, 8).map(u =>
-      `<img class="q-thumb" src="${escapeHtml(u)}" data-lb="${r.id}" data-lb-i="0" style="width:44px;height:78px">`).join('');
+    const video = r.video || r.videoUrl;
+    const thumbs = (r.images || []).slice(0, 8).map((u, i) =>
+      `<img class="q-thumb" src="${escapeHtml(u)}" data-lb="${r.id}" data-lb-i="${i}"
+            style="width:44px;height:78px" title="클릭하면 크게 보기">`).join('');
+    const cap = escapeHtml(r.caption || '').split(String.fromCharCode(10)).join('<br>');
     return `<div class="card" style="box-shadow:none;margin-bottom:12px">
       <div class="row mb8">
         <b class="fs13">${escapeHtml(r.title || '')}</b>
         <span class="tag ${cls}">${label}</span>
-        <span class="soft fs11">${(r.images || []).length}장 · 약 ${Math.round((r.images || []).length * (c.sec || 3))}초</span>
+        ${r.duration ? `<span class="soft fs11">${r.duration}초</span>` : ''}
+        ${(r.images || []).length ? `<span class="soft fs11">${r.images.length}컷</span>` : ''}
+        <span class="soft fs11">${r.scheduledAt
+          ? `📅 ${escapeHtml(r.scheduledAt)} ${escapeHtml(r.scheduledTime || '')} 발행 예정` : ''}</span>
         <div class="spacer"></div>
-        ${r.permalink ? `<a class="btn sm" href="${escapeHtml(r.permalink)}" target="_blank" rel="noopener">릴스 보기</a>` : ''}
+        ${r.status === 'pending' ? `
+          <button class="btn sm brand" data-r-ok="${r.id}">✅ 발행 승인</button>
+          <button class="btn sm" data-r-no="${r.id}">반려</button>` : ''}
+        ${r.status === 'approved' ? `<button class="btn sm" data-r-cancel="${r.id}">승인 취소</button>` : ''}
         <button class="btn sm" data-r-del="${r.id}">🗑</button>
       </div>
-      <div class="row">${thumbs}</div>
+      ${video ? `<video src="${escapeHtml(video)}" controls playsinline preload="metadata"
+          ${r.cover ? `poster="${escapeHtml(r.cover)}"` : ''}
+          style="width:216px;border-radius:14px;background:#000;display:block;margin:6px 0 10px"></video>`
+        : `<div class="fs12 soft mb8">아직 영상이 없습니다 — 소재만 등록된 상태입니다</div>`}
+      <div class="row mb8">${thumbs}</div>
+      ${r.note ? `<div class="fs11 soft mb8">📌 ${escapeHtml(r.note)}</div>` : ''}
+      ${r.caption ? `<details><summary class="fs12 muted" style="cursor:pointer">캡션 전문 보기</summary>
+        <div class="fs12 muted mt8" style="line-height:1.8">${cap}</div></details>` : ''}
     </div>`;
   }).join('');
 }
@@ -2311,7 +2327,34 @@ document.getElementById('in-reel').addEventListener('keydown', e => {
   });
 });
 document.getElementById('r-queue-list').addEventListener('click', e => {
-  const id = e.target.dataset?.rDel;
+  const t = e.target;
+
+  if (t.dataset?.lb) {                       // 컷 크게 보기
+    const r = S.reels.find(x => x.id === t.dataset.lb);
+    if (r && (r.images || []).length) { lbOpen(r.images, Number(t.dataset.lbI) || 0); return; }
+  }
+
+  const setR = (id, st) => {
+    const r = S.reels.find(x => x.id === id);
+    if (!r) return;
+    r.status = st;
+    touch(r);
+    if (st === 'approved') {
+      r.approvedAt = new Date().toISOString();
+      const slot = assignSlot(id);           // 게시물과 같은 캘린더를 쓴다
+      if (slot) { r.scheduledAt = slot.date; r.scheduledTime = slot.time; }
+      else alert('빈 예정 슬롯이 없습니다. 캘린더에서 「슬롯 다시 생성」을 눌러주세요.');
+    } else {
+      releaseSlot(id);
+      delete r.scheduledAt; delete r.scheduledTime; delete r.approvedAt;
+    }
+    save(); renderReels(); renderCal(); renderDash();
+  };
+  if (t.dataset?.rOk)     { setR(t.dataset.rOk, 'approved'); return; }
+  if (t.dataset?.rNo)     { setR(t.dataset.rNo, 'rejected'); return; }
+  if (t.dataset?.rCancel) { setR(t.dataset.rCancel, 'pending'); return; }
+
+  const id = t.dataset?.rDel;
   if (!id) return;
   if (!confirm('이 릴스를 삭제할까요?')) return;
   S.reels = S.reels.filter(x => x.id !== id);
