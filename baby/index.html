@@ -1414,8 +1414,36 @@ function claimSlot(postId, date, time) {
 
 function repairSlots() {
   if (!Array.isArray(S.slots)) return 0;
-  const alive = new Set([...(S.queue || []), ...(S.reels || [])]
-    .filter(q => q.status === 'approved').map(q => q.id));
+  const all = [...(S.queue || []), ...(S.reels || [])];
+  const alive = new Set(all.filter(q => q.status === 'approved').map(q => q.id));
+
+  // ── 지난 날짜 슬롯 정리 ──
+  // 그냥 지우면 아직 안 올라간 글의 예정이 사라지므로,
+  // 발행 안 된 글이 붙어 있으면 먼저 앞으로 옮기고 나서 지운다.
+  const today = todayStr();
+  const past = S.slots.filter(sl => sl && sl.date && sl.date < today);
+  let moved = 0;
+  for (const sl of past) {
+    const q = sl.postId ? all.find(x => x.id === sl.postId) : null;
+    if (q && q.status === 'approved') {
+      delete sl.postId;                 // 자리를 비워야 다시 배정된다
+      const slot = assignSlot(q.id);
+      if (slot) {
+        q.scheduledAt = slot.date;
+        q.scheduledTime = slot.time;
+        touch(q);
+        moved++;
+      } else {
+        delete q.scheduledAt;
+        delete q.scheduledTime;
+      }
+    }
+  }
+  if (past.length) {
+    S.slots = S.slots.filter(sl => sl && sl.date && sl.date >= today);
+    if (moved) setSync('ok', `지난 예정 ${past.length}칸 정리 · ${moved}건을 앞으로 옮겼습니다`);
+  }
+  if (!S.slots.length) S.slots = genSlots();
   const byDate = new Map();
   const usedPost = new Set();
   let fixed = 0;
@@ -1439,7 +1467,7 @@ function repairSlots() {
   if (fixed) S.slots = out;
 
   // 승인됐는데 슬롯 배정이 없는 글 — 화면엔 날짜가 떠 있는데 실제로는 자리가 빈 상태
-  for (const q of [...(S.queue || []), ...(S.reels || [])]) {
+  for (const q of all) {
     if (q.status !== 'approved') continue;
     if (S.slots.some(sl => sl.postId === q.id)) continue;
     const slot = q.scheduledAt ? claimSlot(q.id, q.scheduledAt, q.scheduledTime)
