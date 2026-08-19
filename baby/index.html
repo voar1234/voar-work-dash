@@ -1374,12 +1374,15 @@ function renderCal() {
 
   document.getElementById('slot-list').innerHTML = S.slots.map(s => {
     // 슬롯에는 승인된 '발행 대기 소재'가 들어간다 (승인 시 자동 배정).
-    const q = (S.queue || []).find(x => x.id === s.postId);
+    const q = [...(S.queue || []), ...(S.reels || [])].find(x => x.id === s.postId);
     const dow = DOW_KO[new Date(s.date).getDay()];
     const tag = q
       ? (q.status === 'published'
-          ? '<span class="tag t-green">발행 완료</span>'
-          : '<span class="tag t-blue">발행 예정</span>')
+          ? `<span class="tag t-green">✅ 발행 완료</span>${q.permalink
+              ? ` <a class="fs11" href="${escapeHtml(q.permalink)}" target="_blank" rel="noopener">보기</a>` : ''}`
+          : q.status === 'error'
+            ? '<span class="tag t-red">발행 실패</span>'
+            : '<span class="tag t-blue">발행 예정</span>')
       : '<span class="tag t-gray">비어있음</span>';
     return `<div class="slot ${q ? '' : 'empty'}">
       <div class="date">${s.date}<span class="dow"> ${dow}</span></div>
@@ -1400,6 +1403,19 @@ function renderCal() {
    화면을 그리기 전에 매번 한 번씩 훑어 정리한다. */
 /* 지정한 날짜의 자리를 이 글 것으로 만든다. 그 날짜가 없으면 새로 끼운다. */
 /* 슬롯 정렬 기준 — 날짜만 보면 같은 날 이른 시각이 뒤로 밀린다 */
+/* 발행하고 며칠 지났나. 발행 기록이 없으면 null. */
+function daysSincePublish(q) {
+  // 삭제는 되돌릴 수 없으므로 조건을 좁게 잡는다.
+  //   · status 가 published 여야 하고
+  //   · 실제 발행 시각(publishedAt)이 찍혀 있어야 한다
+  // 둘 중 하나라도 없으면 null → 어떤 자동 삭제에도 걸리지 않는다.
+  if (!q || q.status !== 'published' || !q.publishedAt) return null;
+  const t = new Date(q.publishedAt);
+  if (isNaN(t)) return null;
+  return (Date.now() - t) / 86400000;
+}
+const KEEP_DAYS = 1;          // 발행 후 이만큼 지나면 목록에서 치운다
+
 function slotKey(s) {
   return (s && s.date ? s.date : '9999-99-99') + ' ' + ((s && s.time) || '99:99');
 }
@@ -1423,13 +1439,21 @@ function claimSlot(postId, date, time) {
 function repairSlots() {
   if (!Array.isArray(S.slots)) return 0;
   const all = [...(S.queue || []), ...(S.reels || [])];
-  const alive = new Set(all.filter(q => q.status === 'approved').map(q => q.id));
+  // 발행 완료된 것도 잠시 자리를 지킨다 — 캘린더에 '발행 완료'로 보여주기 위해
+  const alive = new Set(all
+    .filter(q => q.status === 'approved' ||
+                 (q.status === 'published' && (daysSincePublish(q) ?? 99) < KEEP_DAYS))
+    .map(q => q.id));
 
   // ── 지난 날짜 슬롯 정리 ──
   // 그냥 지우면 아직 안 올라간 글의 예정이 사라지므로,
   // 발행 안 된 글이 붙어 있으면 먼저 앞으로 옮기고 나서 지운다.
   const today = todayStr();
-  const past = S.slots.filter(sl => sl && sl.date && sl.date < today);
+  let fixedOld = 0;
+  const keepIds = new Set(all
+    .filter(q => q.status === 'published' && (daysSincePublish(q) ?? 99) < KEEP_DAYS)
+    .map(q => q.id));
+  const past = S.slots.filter(sl => sl && sl.date && sl.date < today && !keepIds.has(sl.postId));
   let moved = 0;
   for (const sl of past) {
     const q = sl.postId ? all.find(x => x.id === sl.postId) : null;
@@ -1448,15 +1472,24 @@ function repairSlots() {
     }
   }
   if (past.length) {
-    S.slots = S.slots.filter(sl => sl && sl.date && sl.date >= today);
+    S.slots = S.slots.filter(sl => sl && sl.date && (sl.date >= today || keepIds.has(sl.postId)));
     if (moved) setSync('ok', `지난 예정 ${past.length}칸 정리 · ${moved}건을 앞으로 옮겼습니다`);
+  }
+  // 발행하고 하루 지난 자리는 치운다
+  const doneOld = new Set(all
+    .filter(q => q.status === 'published' && (daysSincePublish(q) ?? 0) >= KEEP_DAYS)
+    .map(q => q.id));
+  if (doneOld.size) {
+    const before = S.slots.length;
+    S.slots = S.slots.filter(sl => !doneOld.has(sl.postId));
+    if (S.slots.length !== before) fixedOld = before - S.slots.length;
   }
   if (!S.slots.length) S.slots = genSlots();
   // 하루에 두 편 이상 낼 수 있으므로 날짜가 아니라 '날짜+시각' 으로 중복을 본다.
   // 날짜로만 묶으면 같은 날 14:10 / 20:30 두 칸이 하나로 합쳐져 한 편이 사라진다.
   const byDate = new Map();
   const usedPost = new Set();
-  let fixed = 0;
+  let fixed = fixedOld;
 
   for (const sl of S.slots) {
     if (!sl || !sl.date) { fixed++; continue; }
@@ -2000,6 +2033,13 @@ function bar(q, r, TBL, kind) {
 }
 
 function renderQueue() {
+  // 발행하고 하루 지난 글은 목록에서 치운다 (인스타에 이미 올라가 있다)
+  const gone = (S.queue || []).filter(q => (daysSincePublish(q) ?? 0) >= KEEP_DAYS);
+  if (gone.length) {
+    S.queue = S.queue.filter(q => !gone.includes(q));
+    S.reels = (S.reels || []).filter(r => (daysSincePublish(r) ?? 0) < KEEP_DAYS);
+    save({ localOnly: true });
+  }
   repairSlots();
   S.queue = S.queue || [];
   S.autoPublish = S.autoPublish === true;
