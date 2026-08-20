@@ -1117,20 +1117,7 @@
       "done": true
     }
   ],
-  "2026-07-30": [
-    {
-      "id": "t_r2brwf76k8",
-      "text": "[자동] 보아르아가미니휴대용젖병소독기 카테고리·키워드 조사·공정위 제작",
-      "done": false,
-      "autoKey": "auto:prod:1010:260414003",
-      "autoSource": {
-        "품목ID": 1010,
-        "type": "생산완료일",
-        "발주번호": 260414003
-      },
-      "leaveRerouted": "2026-07-31"
-    }
-  ],
+  "2026-07-30": [],
   "2026-07-29": [
     {
       "id": "t_1fgeonen0y7",
@@ -1204,6 +1191,18 @@
       "autoKey": "auto:thursday-ondeal:2026-07-30",
       "autoSource": {
         "type": "매주 목요일 정기"
+      },
+      "leaveRerouted": "2026-07-30"
+    },
+    {
+      "id": "t_r2brwf76k8",
+      "text": "[자동] 보아르아가미니휴대용젖병소독기 카테고리·키워드 조사·공정위 제작",
+      "done": false,
+      "autoKey": "auto:prod:1010:260414003",
+      "autoSource": {
+        "품목ID": 1010,
+        "type": "생산완료일",
+        "발주번호": 260414003
       },
       "leaveRerouted": "2026-07-30"
     }
@@ -1869,30 +1868,15 @@
   ],
   "2026-08-19": [
     {
-      "id": "t_pgzzc0fqjec",
-      "text": "보아르아가미니휴대용젖병소독기 상품등록 준비",
-      "done": false
-    },
-    {
       "id": "t_nqfrf05s9b9",
       "text": "[D-2] 보아르아가미니휴대용젖병소독기 전채널 상품등록·광고등록",
-      "done": false,
+      "done": true,
       "autoKey": "auto:in:1010:2026-08-21:D-2",
       "autoSource": {
         "품목ID": 1010,
         "type": "입고 D-2",
         "입고예정일": "2026-08-21"
       }
-    },
-    {
-      "id": "t_acdduqo5m3e",
-      "text": "컴플릿m 브커 마지막 1명 정산확정하긔",
-      "done": false
-    },
-    {
-      "id": "t_a6i1ectfwyn",
-      "text": "브랜드데이/신상위크 공지 체크",
-      "done": false
     },
     {
       "id": "t_0l6g5kv1ct2j",
@@ -1930,7 +1914,7 @@
     {
       "id": "t_gdmg5v4c25o",
       "text": "에어로센 오늘끝딜 오픈! 노출확인/배너삽입",
-      "done": false
+      "done": true
     },
     {
       "id": "t_hm2ie6t7koe",
@@ -1950,6 +1934,18 @@
       "id": "t_2fu63lofy6u",
       "text": "아가미니 상품등록, 광고등록 마물;ㅣ",
       "done": false
+    },
+    {
+      "id": "t_acdduqo5m3e",
+      "text": "컴플릿m 브커 마지막 1명 정산확정하긔",
+      "done": false,
+      "rolledFrom": "2026-08-19"
+    },
+    {
+      "id": "t_a6i1ectfwyn",
+      "text": "브랜드데이/신상위크 공지 체크",
+      "done": false,
+      "rolledFrom": "2026-08-19"
     }
   ],
   "2026-08-25": [
