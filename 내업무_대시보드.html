@@ -4699,15 +4699,14 @@ function cleanupStaleAutoTodos() {
       if (Number.isFinite(aid) && !unreleasedAids.has(aid)) {
         removed++; continue;
       }
-      // (b) 트리거 위치 검증 — 올바른 위치가 계산되었고 현재 위치와 다르면 제거
+      // (b) 트리거 위치 검증 — 올바른 위치가 계산되었고 현재 위치와 다르면 제거.
+      //     단, 이월된 항목(rolledFrom)은 일부러 옮긴 것이므로 건드리지 않는다.
       const correct = correctDate[t.autoKey];
-      if (correct && correct !== d) {
+      if (!t.rolledFrom && correct && correct !== d) {
         removed++; continue;
       }
-      // (c) 롤오버로 옮겨졌던 자동 항목 → 제거 (원래 위치에 다시 생성)
-      if (t.rolledFrom) {
-        removed++; continue;
-      }
+      // (c) 예전에는 이월된 자동 항목을 지워 원래 날짜로 되돌렸다.
+      //     그 탓에 어제 못 끝낸 일이 오늘 목록에 안 떴다. 이제 그대로 둔다.
       cleaned.push(t);
     }
     todos[d] = cleaned;
@@ -4736,11 +4735,12 @@ function rolloverIncompleteTodos() {
     const stay = [];
     for (const t of todos[d]) {
       if (t.done) { stay.push(t); continue; }
-      // 자동 TODO는 트리거 날짜에 고정 (옮기지 않음) — 미니 캘린더로 그 날짜 클릭하면 보임
-      if (t.autoKey || t.autoSource) { stay.push(t); continue; }
-      // 수동 TODO 미완료만 오늘로 이동
-      if (t.id && todayIds.has(t.id)) continue;  // 중복
+      // 자동·수동 가릴 것 없이 못 끝낸 일은 오늘로 넘긴다.
+      // (예전엔 자동 항목을 트리거 날짜에 고정해서, 어제 못 한 일이 그냥 묻혔다)
+      if (t.autoKey && todayAutoKeys.has(t.autoKey)) continue;   // 중복
+      if (t.id && todayIds.has(t.id)) continue;                  // 중복
       const moved_item = {...t, rolledFrom: t.rolledFrom || d};
+      if (moved_item.autoKey) todayAutoKeys.add(moved_item.autoKey);
       todos[today].push(moved_item);
       if (moved_item.id) todayIds.add(moved_item.id);
       moved++;
