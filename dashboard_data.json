@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-08-21T15:28:26",
+    "extracted_at": "2026-08-21T15:35:30",
     "product_count": 48,
     "data_unit": "상품(SKU) 단위"
   },
@@ -3115,13 +3115,13 @@
         "발주중수량": 0
       },
       "매출_통계": {
-        "매출_7일합": 32,
-        "매출_28일합": 299,
+        "매출_7일합": 35,
+        "매출_28일합": 302,
         "일평균_7일": 5,
         "일평균_28일": 11,
-        "소진_잔여일수": 162,
-        "소진_예상일": "2027-01-30",
-        "재고발주_권장일": "2026-11-16"
+        "소진_잔여일수": 160,
+        "소진_예상일": "2027-01-28",
+        "재고발주_권장일": "2026-11-14"
       },
       "구성제품": [
         {
@@ -3652,8 +3652,8 @@
         "발주중수량": 3010
       },
       "매출_통계": {
-        "매출_7일합": 524,
-        "매출_28일합": 1791,
+        "매출_7일합": 526,
+        "매출_28일합": 1793,
         "일평균_7일": 75,
         "일평균_28일": 64,
         "소진_잔여일수": 36,
@@ -4151,13 +4151,13 @@
         "발주중수량": 3000
       },
       "매출_통계": {
-        "매출_7일합": 368,
-        "매출_28일합": 1202,
+        "매출_7일합": 374,
+        "매출_28일합": 1208,
         "일평균_7일": 53,
         "일평균_28일": 43,
         "소진_잔여일수": 55,
         "소진_예상일": "2026-10-15",
-        "재고발주_권장일": "2026-10-10"
+        "재고발주_권장일": "2026-10-09"
       },
       "구성제품": [
         {
@@ -6183,9 +6183,9 @@
         "발주중수량": 4032
       },
       "매출_통계": {
-        "매출_7일합": 535,
-        "매출_28일합": 2522,
-        "일평균_7일": 76,
+        "매출_7일합": 536,
+        "매출_28일합": 2523,
+        "일평균_7일": 77,
         "일평균_28일": 90,
         "소진_잔여일수": 59,
         "소진_예상일": "2026-10-19",
@@ -9399,13 +9399,13 @@
         "발주중수량": 2000
       },
       "매출_통계": {
-        "매출_7일합": 76,
-        "매출_28일합": 306,
+        "매출_7일합": 77,
+        "매출_28일합": 307,
         "일평균_7일": 11,
         "일평균_28일": 11,
         "소진_잔여일수": 23,
         "소진_예상일": "2026-09-13",
-        "재고발주_권장일": "2026-12-30"
+        "재고발주_권장일": "2026-12-29"
       },
       "구성제품": [
         {
@@ -14601,14 +14601,14 @@
   "sales": {
     "today_date": "2026-08-21",
     "kpi": {
-      "today_revenue": 9470950,
-      "today_profit": 3455075,
-      "today_qty": 270,
-      "today_orders": 20,
-      "yesterday_revenue": 18629439,
-      "week_revenue": 156047522,
+      "today_revenue": 9586641,
+      "today_profit": 3499958,
+      "today_qty": 274,
+      "today_orders": 21,
+      "yesterday_revenue": 18953122,
+      "week_revenue": 156486896,
       "last_week_revenue": 212955560,
-      "month_revenue": 503845398,
+      "month_revenue": 504284772,
       "last_month_revenue": 496336378
     },
     "channels_today": [
@@ -14618,7 +14618,7 @@
         "수량": 200,
         "매출": 6044150,
         "이익": 1967609,
-        "비중": 63.82
+        "비중": 63.05
       },
       {
         "매출처명": "스마트스토어",
@@ -14626,7 +14626,7 @@
         "수량": 29,
         "매출": 1428028,
         "이익": 684814,
-        "비중": 15.08
+        "비중": 14.9
       },
       {
         "매출처명": "원브릿지",
@@ -14634,7 +14634,7 @@
         "수량": 9,
         "매출": 543757,
         "이익": 238802,
-        "비중": 5.74
+        "비중": 5.67
       },
       {
         "매출처명": "오늘의집",
@@ -14642,7 +14642,7 @@
         "수량": 6,
         "매출": 329037,
         "이익": 143533,
-        "비중": 3.47
+        "비중": 3.43
       },
       {
         "매출처명": "(주)지에스리테일",
@@ -14650,7 +14650,7 @@
         "수량": 4,
         "매출": 298761,
         "이익": 89339,
-        "비중": 3.15
+        "비중": 3.12
       },
       {
         "매출처명": "삼성물산(주)안양컨트리클럽",
@@ -14658,7 +14658,7 @@
         "수량": 2,
         "매출": 229092,
         "이익": 66054,
-        "비중": 2.42
+        "비중": 2.39
       },
       {
         "매출처명": "카카오(선물하기)",
@@ -14666,7 +14666,15 @@
         "수량": 4,
         "매출": 144964,
         "이익": 71380,
-        "비중": 1.53
+        "비중": 1.51
+      },
+      {
+        "매출처명": "롯데쇼핑(주)e커머스사업본부(m포인트몰) 신전산",
+        "매출처ID": 806,
+        "수량": 4,
+        "매출": 115691,
+        "이익": 44883,
+        "비중": 1.21
       },
       {
         "매출처명": "오렌지스펙트럼 주식회사",
@@ -14674,7 +14682,7 @@
         "수량": 2,
         "매출": 66819,
         "이익": 27048,
-        "비중": 0.71
+        "비중": 0.7
       },
       {
         "매출처명": "(주)베이비하우스",
@@ -14682,7 +14690,7 @@
         "수량": 1,
         "매출": 55546,
         "이익": 19069,
-        "비중": 0.59
+        "비중": 0.58
       },
       {
         "매출처명": "주식회사 인정인터내셔널 (서울지점)",
@@ -14706,7 +14714,7 @@
         "수량": 1,
         "매출": 34802,
         "이익": 19182,
-        "비중": 0.37
+        "비중": 0.36
       },
       {
         "매출처명": "다날",
@@ -14714,7 +14722,7 @@
         "수량": 1,
         "매출": 31728,
         "이익": 19005,
-        "비중": 0.34
+        "비중": 0.33
       },
       {
         "매출처명": "네이버페이",
@@ -14722,7 +14730,7 @@
         "수량": 1,
         "매출": 31728,
         "이익": 19005,
-        "비중": 0.34
+        "비중": 0.33
       },
       {
         "매출처명": "(주)오피스넥스",
@@ -14730,7 +14738,7 @@
         "수량": 2,
         "매출": 30786,
         "이익": 12034,
-        "비중": 0.33
+        "비중": 0.32
       },
       {
         "매출처명": "원룸만들기",
@@ -14746,7 +14754,7 @@
         "수량": 2,
         "매출": 29091,
         "이익": 10339,
-        "비중": 0.31
+        "비중": 0.3
       },
       {
         "매출처명": "유한킴벌리(주) - 맘큐",
@@ -14754,7 +14762,7 @@
         "수량": 1,
         "매출": 28091,
         "이익": 13674,
-        "비중": 0.3
+        "비중": 0.29
       },
       {
         "매출처명": "(주)휴먼스케이프-마미톡",
@@ -14762,7 +14770,7 @@
         "수량": 1,
         "매출": 21560,
         "이익": 8837,
-        "비중": 0.23
+        "비중": 0.22
       },
       {
         "매출처명": "주식회사 위펀",
@@ -14778,9 +14786,9 @@
         "제품ID": 1700,
         "제품명": "보아르슈즈쏙-화이트",
         "카테고리명": "건조기",
-        "수량": 119,
-        "매출": 2937553,
-        "이익": 1078773,
+        "수량": 120,
+        "매출": 2962153,
+        "이익": 1087753,
         "판매처내역": [
           {
             "매출처명": "쿠팡",
@@ -14799,6 +14807,12 @@
             "수량": 1,
             "매출": 34802,
             "이익": 19182
+          },
+          {
+            "매출처명": "롯데쇼핑(주)e커머스사업본부(m포인트몰) 신전산",
+            "수량": 1,
+            "매출": 24600,
+            "이익": 8980
           }
         ]
       },
@@ -14987,6 +15001,34 @@
         ]
       },
       {
+        "제품ID": 1268,
+        "제품명": "보아르스위프클링",
+        "카테고리명": "침구청소기",
+        "수량": 8,
+        "매출": 265828,
+        "이익": 118660,
+        "판매처내역": [
+          {
+            "매출처명": "카카오(선물하기)",
+            "수량": 4,
+            "매출": 144964,
+            "이익": 71380
+          },
+          {
+            "매출처명": "롯데쇼핑(주)e커머스사업본부(m포인트몰) 신전산",
+            "수량": 3,
+            "매출": 91091,
+            "이익": 35903
+          },
+          {
+            "매출처명": "오렌지스펙트럼 주식회사",
+            "수량": 1,
+            "매출": 29773,
+            "이익": 11377
+          }
+        ]
+      },
+      {
         "제품ID": 198,
         "제품명": "보아르아이워시",
         "카테고리명": "초음파세척기",
@@ -15123,28 +15165,6 @@
             "수량": 2,
             "매출": 29091,
             "이익": 10339
-          }
-        ]
-      },
-      {
-        "제품ID": 1268,
-        "제품명": "보아르스위프클링",
-        "카테고리명": "침구청소기",
-        "수량": 5,
-        "매출": 174737,
-        "이익": 82757,
-        "판매처내역": [
-          {
-            "매출처명": "카카오(선물하기)",
-            "수량": 4,
-            "매출": 144964,
-            "이익": 71380
-          },
-          {
-            "매출처명": "오렌지스펙트럼 주식회사",
-            "수량": 1,
-            "매출": 29773,
-            "이익": 11377
           }
         ]
       },
@@ -15430,7 +15450,7 @@
         618629155,
         670705018,
         736517707,
-        503845398,
+        504284772,
         0,
         0,
         0,
@@ -15474,7 +15494,7 @@
         15572,
         17371,
         21008,
-        13374,
+        13387,
         0,
         0,
         0,
@@ -15484,23 +15504,23 @@
     "category_compare": [
       {
         "카테고리": "침구청소기",
-        "매출": 1051011695,
-        "수량": 24899
+        "매출": 1051193877,
+        "수량": 24905
       },
       {
         "카테고리": "무선청소기",
-        "매출": 774624183,
-        "수량": 15437
+        "매출": 774698202,
+        "수량": 15438
       },
       {
         "카테고리": "건조기",
-        "매출": 534905030,
-        "수량": 16676
+        "매출": 534954230,
+        "수량": 16678
       },
       {
         "카테고리": "휴지통",
-        "매출": 456181723,
-        "수량": 14041
+        "매출": 456293896,
+        "수량": 14044
       },
       {
         "카테고리": "다리미",
@@ -15524,8 +15544,8 @@
       },
       {
         "카테고리": "살균기",
-        "매출": 293799629,
-        "수량": 12250
+        "매출": 293821429,
+        "수량": 12251
       },
       {
         "카테고리": "보틀워머",
@@ -15849,12 +15869,113 @@
         "previous_end": "2025-08-21",
         "categories": [
           {
+            "name": "육아",
+            "current_rev": 168706106,
+            "prev_rev": 137893178,
+            "current_profit": 67456876,
+            "prev_profit": 59626666,
+            "current_qty": 4987,
+            "prev_qty": 3607,
+            "products": [
+              {
+                "name": "보아르아가보틀휴대용분유포트",
+                "current_rev": 8911293,
+                "prev_rev": 38777397,
+                "current_profit": 3731559,
+                "prev_profit": 17951397,
+                "current_qty": 142,
+                "prev_qty": 602
+              },
+              {
+                "name": "보아르아가맘마쪽쪽이살균기",
+                "current_rev": 59047259,
+                "prev_rev": 29666956,
+                "current_profit": 25578809,
+                "prev_profit": 14393996,
+                "current_qty": 2614,
+                "prev_qty": 1286
+              },
+              {
+                "name": "보아르아가온분유포트",
+                "current_rev": 19935119,
+                "prev_rev": 0,
+                "current_profit": 7830317,
+                "prev_profit": 0,
+                "current_qty": 243,
+                "prev_qty": 0
+              },
+              {
+                "name": "보아르아가홀스스프링카",
+                "current_rev": 27170354,
+                "prev_rev": 14672696,
+                "current_profit": 11314388,
+                "prev_profit": 6226475,
+                "current_qty": 378,
+                "prev_qty": 203
+              },
+              {
+                "name": "보아르아가맘마보틀워머",
+                "current_rev": 19544329,
+                "prev_rev": 30702562,
+                "current_profit": 7422172,
+                "prev_profit": 11265146,
+                "current_qty": 489,
+                "prev_qty": 768
+              },
+              {
+                "name": "보아르아가쑥쑥분유쉐이커",
+                "current_rev": 12519557,
+                "prev_rev": 2921991,
+                "current_profit": 4420509,
+                "prev_profit": 1152503,
+                "current_qty": 472,
+                "prev_qty": 98
+              },
+              {
+                "name": "보아르아가윈디유모차쿨시트",
+                "current_rev": 4339886,
+                "prev_rev": 2522247,
+                "current_profit": 1610563,
+                "prev_profit": 1848400,
+                "current_qty": 101,
+                "prev_qty": 54
+              },
+              {
+                "name": "보아르아가맘마퓨어분유포트",
+                "current_rev": 7999847,
+                "prev_rev": 9544915,
+                "current_profit": 2327700,
+                "prev_profit": 3293847,
+                "current_qty": 169,
+                "prev_qty": 198
+              },
+              {
+                "name": "보아르아가퓨어UV젖병소독기",
+                "current_rev": 1290969,
+                "prev_rev": 0,
+                "current_profit": 572737,
+                "prev_profit": 0,
+                "current_qty": 8,
+                "prev_qty": 0
+              },
+              {
+                "name": "보아르허니즈백색소음기",
+                "current_rev": 7947493,
+                "prev_rev": 9084414,
+                "current_profit": 2648122,
+                "prev_profit": 3494902,
+                "current_qty": 371,
+                "prev_qty": 398
+              }
+            ]
+          },
+          {
             "name": "생활가전",
-            "current_rev": 575342421,
+            "current_rev": 575759995,
             "prev_rev": 464806401,
-            "current_profit": 204085235,
+            "current_profit": 204225414,
             "prev_profit": 170954974,
-            "current_qty": 15121,
+            "current_qty": 15133,
             "prev_qty": 12476,
             "products": [
               {
@@ -15877,20 +15998,20 @@
               },
               {
                 "name": "보아르스위프클링",
-                "current_rev": 43660362,
+                "current_rev": 43842544,
                 "prev_rev": 9041754,
-                "current_profit": 20113482,
+                "current_profit": 20185288,
                 "prev_profit": 3960548,
-                "current_qty": 1280,
+                "current_qty": 1286,
                 "prev_qty": 287
               },
               {
                 "name": "보아르포스D14",
-                "current_rev": 27200749,
+                "current_rev": 27274768,
                 "prev_rev": 50333837,
-                "current_profit": 10508934,
+                "current_profit": 10532218,
                 "prev_profit": 11852177,
-                "current_qty": 329,
+                "current_qty": 330,
                 "prev_qty": 729
               },
               {
@@ -15985,11 +16106,11 @@
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 46482895,
+                "current_rev": 46532095,
                 "prev_rev": 38992626,
-                "current_profit": 17730765,
+                "current_profit": 17748725,
                 "prev_profit": 15853825,
-                "current_qty": 1843,
+                "current_qty": 1845,
                 "prev_qty": 1511
               },
               {
@@ -16039,11 +16160,11 @@
               },
               {
                 "name": "보아르컴플릿D20L쓰레기통",
-                "current_rev": 10507902,
+                "current_rev": 10620075,
                 "prev_rev": 13972634,
-                "current_profit": 1776718,
+                "current_profit": 1803847,
                 "prev_profit": 5050483,
-                "current_qty": 308,
+                "current_qty": 311,
                 "prev_qty": 325
               },
               {
@@ -16155,107 +16276,6 @@
                 "prev_qty": 261
               }
             ]
-          },
-          {
-            "name": "육아",
-            "current_rev": 168684306,
-            "prev_rev": 137893178,
-            "current_profit": 67447799,
-            "prev_profit": 59626666,
-            "current_qty": 4986,
-            "prev_qty": 3607,
-            "products": [
-              {
-                "name": "보아르아가보틀휴대용분유포트",
-                "current_rev": 8911293,
-                "prev_rev": 38777397,
-                "current_profit": 3731559,
-                "prev_profit": 17951397,
-                "current_qty": 142,
-                "prev_qty": 602
-              },
-              {
-                "name": "보아르아가맘마쪽쪽이살균기",
-                "current_rev": 59025459,
-                "prev_rev": 29666956,
-                "current_profit": 25569732,
-                "prev_profit": 14393996,
-                "current_qty": 2613,
-                "prev_qty": 1286
-              },
-              {
-                "name": "보아르아가온분유포트",
-                "current_rev": 19935119,
-                "prev_rev": 0,
-                "current_profit": 7830317,
-                "prev_profit": 0,
-                "current_qty": 243,
-                "prev_qty": 0
-              },
-              {
-                "name": "보아르아가홀스스프링카",
-                "current_rev": 27170354,
-                "prev_rev": 14672696,
-                "current_profit": 11314388,
-                "prev_profit": 6226475,
-                "current_qty": 378,
-                "prev_qty": 203
-              },
-              {
-                "name": "보아르아가맘마보틀워머",
-                "current_rev": 19544329,
-                "prev_rev": 30702562,
-                "current_profit": 7422172,
-                "prev_profit": 11265146,
-                "current_qty": 489,
-                "prev_qty": 768
-              },
-              {
-                "name": "보아르아가쑥쑥분유쉐이커",
-                "current_rev": 12519557,
-                "prev_rev": 2921991,
-                "current_profit": 4420509,
-                "prev_profit": 1152503,
-                "current_qty": 472,
-                "prev_qty": 98
-              },
-              {
-                "name": "보아르아가윈디유모차쿨시트",
-                "current_rev": 4339886,
-                "prev_rev": 2522247,
-                "current_profit": 1610563,
-                "prev_profit": 1848400,
-                "current_qty": 101,
-                "prev_qty": 54
-              },
-              {
-                "name": "보아르아가맘마퓨어분유포트",
-                "current_rev": 7999847,
-                "prev_rev": 9544915,
-                "current_profit": 2327700,
-                "prev_profit": 3293847,
-                "current_qty": 169,
-                "prev_qty": 198
-              },
-              {
-                "name": "보아르아가퓨어UV젖병소독기",
-                "current_rev": 1290969,
-                "prev_rev": 0,
-                "current_profit": 572737,
-                "prev_profit": 0,
-                "current_qty": 8,
-                "prev_qty": 0
-              },
-              {
-                "name": "보아르허니즈백색소음기",
-                "current_rev": 7947493,
-                "prev_rev": 9084414,
-                "current_profit": 2648122,
-                "prev_profit": 3494902,
-                "current_qty": 371,
-                "prev_qty": 398
-              }
-            ]
           }
         ]
       },
@@ -16266,12 +16286,113 @@
         "previous_end": "2025-08-21",
         "categories": [
           {
+            "name": "육아",
+            "current_rev": 36155987,
+            "prev_rev": 45908360,
+            "current_profit": 15090416,
+            "prev_profit": 18244832,
+            "current_qty": 1005,
+            "prev_qty": 1045,
+            "products": [
+              {
+                "name": "보아르아가보틀휴대용분유포트",
+                "current_rev": 3906874,
+                "prev_rev": 19300194,
+                "current_profit": 1572346,
+                "prev_profit": 7210194,
+                "current_qty": 64,
+                "prev_qty": 302
+              },
+              {
+                "name": "보아르아가맘마쪽쪽이살균기",
+                "current_rev": 13017960,
+                "prev_rev": 6725080,
+                "current_profit": 6198432,
+                "prev_profit": 3324460,
+                "current_qty": 536,
+                "prev_qty": 289
+              },
+              {
+                "name": "보아르아가온분유포트",
+                "current_rev": 3998810,
+                "prev_rev": 0,
+                "current_profit": 1707366,
+                "prev_profit": 0,
+                "current_qty": 46,
+                "prev_qty": 0
+              },
+              {
+                "name": "보아르아가홀스스프링카",
+                "current_rev": 5138772,
+                "prev_rev": 7956424,
+                "current_profit": 2118588,
+                "prev_profit": 3386488,
+                "current_qty": 72,
+                "prev_qty": 112
+              },
+              {
+                "name": "보아르아가맘마보틀워머",
+                "current_rev": 5177540,
+                "prev_rev": 7016872,
+                "current_profit": 1703720,
+                "prev_profit": 2560366,
+                "current_qty": 140,
+                "prev_qty": 177
+              },
+              {
+                "name": "보아르아가쑥쑥분유쉐이커",
+                "current_rev": 1775400,
+                "prev_rev": -33139,
+                "current_profit": 728701,
+                "prev_profit": -48938,
+                "current_qty": 61,
+                "prev_qty": -1
+              },
+              {
+                "name": "보아르허니즈백색소음기",
+                "current_rev": 1076813,
+                "prev_rev": 2660173,
+                "current_profit": 399214,
+                "prev_profit": 974893,
+                "current_qty": 47,
+                "prev_qty": 120
+              },
+              {
+                "name": "보아르아가맘마퓨어분유포트",
+                "current_rev": 1623565,
+                "prev_rev": 1957297,
+                "current_profit": 482423,
+                "prev_profit": 700639,
+                "current_qty": 34,
+                "prev_qty": 39
+              },
+              {
+                "name": "보아르아가퓨어UV젖병소독기",
+                "current_rev": 314031,
+                "prev_rev": 0,
+                "current_profit": 134473,
+                "prev_profit": 0,
+                "current_qty": 2,
+                "prev_qty": 0
+              },
+              {
+                "name": "보아르아가윈디유모차쿨시트",
+                "current_rev": 126222,
+                "prev_rev": 325459,
+                "current_profit": 45153,
+                "prev_profit": 136730,
+                "current_qty": 3,
+                "prev_qty": 7
+              }
+            ]
+          },
+          {
             "name": "생활가전",
-            "current_rev": 119913335,
+            "current_rev": 120330909,
             "prev_rev": 108656486,
-            "current_profit": 43746700,
+            "current_profit": 43886879,
             "prev_profit": 44245912,
-            "current_qty": 3181,
+            "current_qty": 3193,
             "prev_qty": 2566,
             "products": [
               {
@@ -16285,20 +16406,20 @@
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 13608626,
+                "current_rev": 13657826,
                 "prev_rev": 3731655,
-                "current_profit": 5423746,
+                "current_profit": 5441706,
                 "prev_profit": 1809777,
-                "current_qty": 524,
+                "current_qty": 526,
                 "prev_qty": 124
               },
               {
                 "name": "보아르스위프클링",
-                "current_rev": 11573339,
+                "current_rev": 11755521,
                 "prev_rev": 2231878,
-                "current_profit": 4803611,
+                "current_profit": 4875417,
                 "prev_profit": 1017938,
-                "current_qty": 368,
+                "current_qty": 374,
                 "prev_qty": 68
               },
               {
@@ -16312,11 +16433,11 @@
               },
               {
                 "name": "보아르포스D14",
-                "current_rev": 5886378,
+                "current_rev": 5960397,
                 "prev_rev": 10566893,
-                "current_profit": 2030518,
+                "current_profit": 2053802,
                 "prev_profit": 3394121,
-                "current_qty": 76,
+                "current_qty": 77,
                 "prev_qty": 137
               },
               {
@@ -16339,11 +16460,11 @@
               },
               {
                 "name": "보아르컴플릿D20L쓰레기통",
-                "current_rev": 1367895,
+                "current_rev": 1480068,
                 "prev_rev": 4401713,
-                "current_profit": 460759,
+                "current_profit": 487888,
                 "prev_profit": 1581337,
-                "current_qty": 32,
+                "current_qty": 35,
                 "prev_qty": 102
               },
               {
@@ -16563,107 +16684,6 @@
                 "prev_qty": 22
               }
             ]
-          },
-          {
-            "name": "육아",
-            "current_rev": 36134187,
-            "prev_rev": 45908360,
-            "current_profit": 15081339,
-            "prev_profit": 18244832,
-            "current_qty": 1004,
-            "prev_qty": 1045,
-            "products": [
-              {
-                "name": "보아르아가보틀휴대용분유포트",
-                "current_rev": 3906874,
-                "prev_rev": 19300194,
-                "current_profit": 1572346,
-                "prev_profit": 7210194,
-                "current_qty": 64,
-                "prev_qty": 302
-              },
-              {
-                "name": "보아르아가맘마쪽쪽이살균기",
-                "current_rev": 12996160,
-                "prev_rev": 6725080,
-                "current_profit": 6189355,
-                "prev_profit": 3324460,
-                "current_qty": 535,
-                "prev_qty": 289
-              },
-              {
-                "name": "보아르아가온분유포트",
-                "current_rev": 3998810,
-                "prev_rev": 0,
-                "current_profit": 1707366,
-                "prev_profit": 0,
-                "current_qty": 46,
-                "prev_qty": 0
-              },
-              {
-                "name": "보아르아가홀스스프링카",
-                "current_rev": 5138772,
-                "prev_rev": 7956424,
-                "current_profit": 2118588,
-                "prev_profit": 3386488,
-                "current_qty": 72,
-                "prev_qty": 112
-              },
-              {
-                "name": "보아르아가맘마보틀워머",
-                "current_rev": 5177540,
-                "prev_rev": 7016872,
-                "current_profit": 1703720,
-                "prev_profit": 2560366,
-                "current_qty": 140,
-                "prev_qty": 177
-              },
-              {
-                "name": "보아르아가쑥쑥분유쉐이커",
-                "current_rev": 1775400,
-                "prev_rev": -33139,
-                "current_profit": 728701,
-                "prev_profit": -48938,
-                "current_qty": 61,
-                "prev_qty": -1
-              },
-              {
-                "name": "보아르허니즈백색소음기",
-                "current_rev": 1076813,
-                "prev_rev": 2660173,
-                "current_profit": 399214,
-                "prev_profit": 974893,
-                "current_qty": 47,
-                "prev_qty": 120
-              },
-              {
-                "name": "보아르아가맘마퓨어분유포트",
-                "current_rev": 1623565,
-                "prev_rev": 1957297,
-                "current_profit": 482423,
-                "prev_profit": 700639,
-                "current_qty": 34,
-                "prev_qty": 39
-              },
-              {
-                "name": "보아르아가퓨어UV젖병소독기",
-                "current_rev": 314031,
-                "prev_rev": 0,
-                "current_profit": 134473,
-                "prev_profit": 0,
-                "current_qty": 2,
-                "prev_qty": 0
-              },
-              {
-                "name": "보아르아가윈디유모차쿨시트",
-                "current_rev": 126222,
-                "prev_rev": 325459,
-                "current_profit": 45153,
-                "prev_profit": 136730,
-                "current_qty": 3,
-                "prev_qty": 7
-              }
-            ]
           }
         ]
       },
@@ -16674,21 +16694,122 @@
         "previous_end": "2025-08-21",
         "categories": [
           {
+            "name": "육아",
+            "current_rev": 1127160108,
+            "prev_rev": 801618539,
+            "current_profit": 466818901,
+            "prev_profit": 355546725,
+            "current_qty": 30716,
+            "prev_qty": 23007,
+            "products": [
+              {
+                "name": "보아르아가보틀휴대용분유포트",
+                "current_rev": 151158906,
+                "prev_rev": 42954979,
+                "current_profit": 57373585,
+                "prev_profit": 22014502,
+                "current_qty": 2505,
+                "prev_qty": 678
+              },
+              {
+                "name": "보아르아가맘마쪽쪽이살균기",
+                "current_rev": 285367170,
+                "prev_rev": 196697356,
+                "current_profit": 135660309,
+                "prev_profit": 103792588,
+                "current_qty": 12206,
+                "prev_qty": 8181
+              },
+              {
+                "name": "보아르아가온분유포트",
+                "current_rev": 64361980,
+                "prev_rev": 0,
+                "current_profit": 26632380,
+                "prev_profit": 0,
+                "current_qty": 752,
+                "prev_qty": 0
+              },
+              {
+                "name": "보아르아가쑥쑥분유쉐이커",
+                "current_rev": 51367538,
+                "prev_rev": 7724056,
+                "current_profit": 21342929,
+                "prev_profit": 3284537,
+                "current_qty": 1805,
+                "prev_qty": 261
+              },
+              {
+                "name": "보아르아가맘마보틀워머",
+                "current_rev": 207394664,
+                "prev_rev": 246958713,
+                "current_profit": 78717310,
+                "prev_profit": 98424180,
+                "current_qty": 5275,
+                "prev_qty": 6216
+              },
+              {
+                "name": "보아르아가홀스스프링카",
+                "current_rev": 168118081,
+                "prev_rev": 134498358,
+                "current_profit": 73574845,
+                "prev_profit": 60521569,
+                "current_qty": 2287,
+                "prev_qty": 1843
+              },
+              {
+                "name": "보아르아가윈디유모차쿨시트",
+                "current_rev": 38118722,
+                "prev_rev": 4904057,
+                "current_profit": 15770701,
+                "prev_profit": 4230210,
+                "current_qty": 827,
+                "prev_qty": 114
+              },
+              {
+                "name": "보아르허니즈백색소음기",
+                "current_rev": 71987255,
+                "prev_rev": 91971233,
+                "current_profit": 26810722,
+                "prev_profit": 35666705,
+                "current_qty": 3347,
+                "prev_qty": 4175
+              },
+              {
+                "name": "보아르아가퓨어UV젖병소독기",
+                "current_rev": 8454259,
+                "prev_rev": 0,
+                "current_profit": 3516414,
+                "prev_profit": 0,
+                "current_qty": 45,
+                "prev_qty": 0
+              },
+              {
+                "name": "보아르아가맘마퓨어분유포트",
+                "current_rev": 80831533,
+                "prev_rev": 75909787,
+                "current_profit": 27419706,
+                "prev_profit": 27612434,
+                "current_qty": 1667,
+                "prev_qty": 1539
+              }
+            ]
+          },
+          {
             "name": "생활가전",
-            "current_rev": 4250136277,
+            "current_rev": 4250553851,
             "prev_rev": 4106700938,
-            "current_profit": 1677497269,
+            "current_profit": 1677637448,
             "prev_profit": 1739187807,
-            "current_qty": 107167,
+            "current_qty": 107179,
             "prev_qty": 98891,
             "products": [
               {
                 "name": "보아르스위프클링",
-                "current_rev": 468188189,
+                "current_rev": 468370371,
                 "prev_rev": 114378078,
-                "current_profit": 219215100,
+                "current_profit": 219286906,
                 "prev_profit": 54346943,
-                "current_qty": 13920,
+                "current_qty": 13926,
                 "prev_qty": 3506
               },
               {
@@ -16729,11 +16850,11 @@
               },
               {
                 "name": "보아르포스D14",
-                "current_rev": 250878886,
+                "current_rev": 250952905,
                 "prev_rev": 415430363,
-                "current_profit": 68062889,
+                "current_profit": 68086173,
                 "prev_profit": 134517239,
-                "current_qty": 3607,
+                "current_qty": 3608,
                 "prev_qty": 5409
               },
               {
@@ -16891,11 +17012,11 @@
               },
               {
                 "name": "보아르컴플릿D20L쓰레기통",
-                "current_rev": 139609860,
+                "current_rev": 139722033,
                 "prev_rev": 118494705,
-                "current_profit": 46790596,
+                "current_profit": 46817725,
                 "prev_profit": 45764746,
-                "current_qty": 3384,
+                "current_qty": 3387,
                 "prev_qty": 2779
               },
               {
@@ -16972,113 +17093,12 @@
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 398405612,
+                "current_rev": 398454812,
                 "prev_rev": 404047331,
-                "current_profit": 174269016,
+                "current_profit": 174286976,
                 "prev_profit": 176457088,
-                "current_qty": 15096,
+                "current_qty": 15098,
                 "prev_qty": 15350
-              }
-            ]
-          },
-          {
-            "name": "육아",
-            "current_rev": 1127138308,
-            "prev_rev": 801618539,
-            "current_profit": 466809824,
-            "prev_profit": 355546725,
-            "current_qty": 30715,
-            "prev_qty": 23007,
-            "products": [
-              {
-                "name": "보아르아가보틀휴대용분유포트",
-                "current_rev": 151158906,
-                "prev_rev": 42954979,
-                "current_profit": 57373585,
-                "prev_profit": 22014502,
-                "current_qty": 2505,
-                "prev_qty": 678
-              },
-              {
-                "name": "보아르아가맘마쪽쪽이살균기",
-                "current_rev": 285345370,
-                "prev_rev": 196697356,
-                "current_profit": 135651232,
-                "prev_profit": 103792588,
-                "current_qty": 12205,
-                "prev_qty": 8181
-              },
-              {
-                "name": "보아르아가온분유포트",
-                "current_rev": 64361980,
-                "prev_rev": 0,
-                "current_profit": 26632380,
-                "prev_profit": 0,
-                "current_qty": 752,
-                "prev_qty": 0
-              },
-              {
-                "name": "보아르아가쑥쑥분유쉐이커",
-                "current_rev": 51367538,
-                "prev_rev": 7724056,
-                "current_profit": 21342929,
-                "prev_profit": 3284537,
-                "current_qty": 1805,
-                "prev_qty": 261
-              },
-              {
-                "name": "보아르아가맘마보틀워머",
-                "current_rev": 207394664,
-                "prev_rev": 246958713,
-                "current_profit": 78717310,
-                "prev_profit": 98424180,
-                "current_qty": 5275,
-                "prev_qty": 6216
-              },
-              {
-                "name": "보아르아가홀스스프링카",
-                "current_rev": 168118081,
-                "prev_rev": 134498358,
-                "current_profit": 73574845,
-                "prev_profit": 60521569,
-                "current_qty": 2287,
-                "prev_qty": 1843
-              },
-              {
-                "name": "보아르아가윈디유모차쿨시트",
-                "current_rev": 38118722,
-                "prev_rev": 4904057,
-                "current_profit": 15770701,
-                "prev_profit": 4230210,
-                "current_qty": 827,
-                "prev_qty": 114
-              },
-              {
-                "name": "보아르허니즈백색소음기",
-                "current_rev": 71987255,
-                "prev_rev": 91971233,
-                "current_profit": 26810722,
-                "prev_profit": 35666705,
-                "current_qty": 3347,
-                "prev_qty": 4175
-              },
-              {
-                "name": "보아르아가퓨어UV젖병소독기",
-                "current_rev": 8454259,
-                "prev_rev": 0,
-                "current_profit": 3516414,
-                "prev_profit": 0,
-                "current_qty": 45,
-                "prev_qty": 0
-              },
-              {
-                "name": "보아르아가맘마퓨어분유포트",
-                "current_rev": 80831533,
-                "prev_rev": 75909787,
-                "current_profit": 27419706,
-                "prev_profit": 27612434,
-                "current_qty": 1667,
-                "prev_qty": 1539
               }
             ]
           }
@@ -17091,30 +17111,131 @@
         "previous_end": "2025-08-20",
         "categories": [
           {
+            "name": "육아",
+            "current_rev": 1771524682,
+            "prev_rev": 1234933216,
+            "current_profit": 741109894,
+            "prev_profit": 564479329,
+            "current_qty": 46592,
+            "prev_qty": 35488,
+            "products": [
+              {
+                "name": "보아르아가보틀휴대용분유포트",
+                "current_rev": 362381136,
+                "prev_rev": 41686322,
+                "current_profit": 141427805,
+                "prev_profit": 21525845,
+                "current_qty": 5829,
+                "prev_qty": 658
+              },
+              {
+                "name": "보아르아가맘마쪽쪽이살균기",
+                "current_rev": 395009632,
+                "prev_rev": 306749965,
+                "current_profit": 189885607,
+                "prev_profit": 167347370,
+                "current_qty": 16953,
+                "prev_qty": 12716
+              },
+              {
+                "name": "보아르아가온분유포트",
+                "current_rev": 66743292,
+                "prev_rev": 0,
+                "current_profit": 27756912,
+                "prev_profit": 0,
+                "current_qty": 778,
+                "prev_qty": 0
+              },
+              {
+                "name": "보아르아가맘마보틀워머",
+                "current_rev": 328180589,
+                "prev_rev": 389230649,
+                "current_profit": 127992928,
+                "prev_profit": 160916207,
+                "current_qty": 8267,
+                "prev_qty": 9711
+              },
+              {
+                "name": "보아르아가쑥쑥분유쉐이커",
+                "current_rev": 67166060,
+                "prev_rev": 7724056,
+                "current_profit": 28625790,
+                "prev_profit": 3284537,
+                "current_qty": 2340,
+                "prev_qty": 261
+              },
+              {
+                "name": "보아르아가홀스스프링카",
+                "current_rev": 256594839,
+                "prev_rev": 208586466,
+                "current_profit": 112861525,
+                "prev_profit": 96945082,
+                "current_qty": 3517,
+                "prev_qty": 2847
+              },
+              {
+                "name": "보아르아가윈디유모차쿨시트",
+                "current_rev": 39481770,
+                "prev_rev": 4841394,
+                "current_profit": 16242278,
+                "prev_profit": 4221521,
+                "current_qty": 860,
+                "prev_qty": 112
+              },
+              {
+                "name": "보아르허니즈백색소음기",
+                "current_rev": 119423012,
+                "prev_rev": 148272845,
+                "current_profit": 45317100,
+                "prev_profit": 60401893,
+                "current_qty": 5499,
+                "prev_qty": 6676
+              },
+              {
+                "name": "보아르아가퓨어UV젖병소독기",
+                "current_rev": 16628955,
+                "prev_rev": 0,
+                "current_profit": 10370645,
+                "prev_profit": 0,
+                "current_qty": 93,
+                "prev_qty": 0
+              },
+              {
+                "name": "보아르아가맘마퓨어분유포트",
+                "current_rev": 119915397,
+                "prev_rev": 127841519,
+                "current_profit": 40629304,
+                "prev_profit": 49836874,
+                "current_qty": 2456,
+                "prev_qty": 2507
+              }
+            ]
+          },
+          {
             "name": "생활가전",
-            "current_rev": 6604013812,
+            "current_rev": 6604431386,
             "prev_rev": 6565930138,
-            "current_profit": 2672248073,
+            "current_profit": 2672388252,
             "prev_profit": 2834445107,
-            "current_qty": 167616,
+            "current_qty": 167628,
             "prev_qty": 159449,
             "products": [
               {
                 "name": "보아르포스D14",
-                "current_rev": 412865326,
+                "current_rev": 412939345,
                 "prev_rev": 882917062,
-                "current_profit": 121410629,
+                "current_profit": 121433913,
                 "prev_profit": 296587300,
-                "current_qty": 5680,
+                "current_qty": 5681,
                 "prev_qty": 11298
               },
               {
                 "name": "보아르스위프클링",
-                "current_rev": 634910044,
+                "current_rev": 635092226,
                 "prev_rev": 184062069,
-                "current_profit": 292843764,
+                "current_profit": 292915570,
                 "prev_profit": 112834400,
-                "current_qty": 19278,
+                "current_qty": 19284,
                 "prev_qty": 5587
               },
               {
@@ -17281,11 +17402,11 @@
               },
               {
                 "name": "보아르컴플릿D20L쓰레기통",
-                "current_rev": 182525855,
+                "current_rev": 182638028,
                 "prev_rev": 136760227,
-                "current_profit": 63162680,
+                "current_profit": 63189809,
                 "prev_profit": 58175985,
-                "current_qty": 4378,
+                "current_qty": 4381,
                 "prev_qty": 3198
               },
               {
@@ -17380,11 +17501,11 @@
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 528871171,
+                "current_rev": 528920371,
                 "prev_rev": 532970943,
-                "current_profit": 234944704,
+                "current_profit": 234962664,
                 "prev_profit": 270050562,
-                "current_qty": 19916,
+                "current_qty": 19918,
                 "prev_qty": 19992
               },
               {
@@ -17395,107 +17516,6 @@
                 "prev_profit": 57653174,
                 "current_qty": 5608,
                 "prev_qty": 5419
-              }
-            ]
-          },
-          {
-            "name": "육아",
-            "current_rev": 1771502882,
-            "prev_rev": 1234933216,
-            "current_profit": 741100817,
-            "prev_profit": 564479329,
-            "current_qty": 46591,
-            "prev_qty": 35488,
-            "products": [
-              {
-                "name": "보아르아가보틀휴대용분유포트",
-                "current_rev": 362381136,
-                "prev_rev": 41686322,
-                "current_profit": 141427805,
-                "prev_profit": 21525845,
-                "current_qty": 5829,
-                "prev_qty": 658
-              },
-              {
-                "name": "보아르아가맘마쪽쪽이살균기",
-                "current_rev": 394987832,
-                "prev_rev": 306749965,
-                "current_profit": 189876530,
-                "prev_profit": 167347370,
-                "current_qty": 16952,
-                "prev_qty": 12716
-              },
-              {
-                "name": "보아르아가온분유포트",
-                "current_rev": 66743292,
-                "prev_rev": 0,
-                "current_profit": 27756912,
-                "prev_profit": 0,
-                "current_qty": 778,
-                "prev_qty": 0
-              },
-              {
-                "name": "보아르아가맘마보틀워머",
-                "current_rev": 328180589,
-                "prev_rev": 389230649,
-                "current_profit": 127992928,
-                "prev_profit": 160916207,
-                "current_qty": 8267,
-                "prev_qty": 9711
-              },
-              {
-                "name": "보아르아가쑥쑥분유쉐이커",
-                "current_rev": 67166060,
-                "prev_rev": 7724056,
-                "current_profit": 28625790,
-                "prev_profit": 3284537,
-                "current_qty": 2340,
-                "prev_qty": 261
-              },
-              {
-                "name": "보아르아가홀스스프링카",
-                "current_rev": 256594839,
-                "prev_rev": 208586466,
-                "current_profit": 112861525,
-                "prev_profit": 96945082,
-                "current_qty": 3517,
-                "prev_qty": 2847
-              },
-              {
-                "name": "보아르아가윈디유모차쿨시트",
-                "current_rev": 39481770,
-                "prev_rev": 4841394,
-                "current_profit": 16242278,
-                "prev_profit": 4221521,
-                "current_qty": 860,
-                "prev_qty": 112
-              },
-              {
-                "name": "보아르허니즈백색소음기",
-                "current_rev": 119423012,
-                "prev_rev": 148272845,
-                "current_profit": 45317100,
-                "prev_profit": 60401893,
-                "current_qty": 5499,
-                "prev_qty": 6676
-              },
-              {
-                "name": "보아르아가퓨어UV젖병소독기",
-                "current_rev": 16628955,
-                "prev_rev": 0,
-                "current_profit": 10370645,
-                "prev_profit": 0,
-                "current_qty": 93,
-                "prev_qty": 0
-              },
-              {
-                "name": "보아르아가맘마퓨어분유포트",
-                "current_rev": 119915397,
-                "prev_rev": 127841519,
-                "current_profit": 40629304,
-                "prev_profit": 49836874,
-                "current_qty": 2456,
-                "prev_qty": 2507
               }
             ]
           }
@@ -17736,14 +17756,14 @@
         },
         "8": {
           "생활가전": {
-            "매출": 386836345,
-            "이익": 133817102,
-            "수량": 9944
+            "매출": 387253919,
+            "이익": 133957281,
+            "수량": 9956
           },
           "육아": {
-            "매출": 117009053,
-            "이익": 47125231,
-            "수량": 3430
+            "매출": 117030853,
+            "이익": 47134308,
+            "수량": 3431
           }
         }
       }
@@ -17830,8 +17850,8 @@
             "육아": 152883586
           },
           "8": {
-            "생활": 391818916,
-            "육아": 117682603
+            "생활": 392236490,
+            "육아": 117704403
           }
         }
       },
@@ -17936,8 +17956,8 @@
       "monthly_revenue": 0,
       "ytd_revenue": 0,
       "annual_revenue": 0,
-      "actual_month_revenue": 503845398,
-      "actual_ytd_revenue": 5377274585,
+      "actual_month_revenue": 504284772,
+      "actual_ytd_revenue": 5377713959,
       "achieve_rate_month": 0,
       "achieve_rate_ytd": 0,
       "products": []
