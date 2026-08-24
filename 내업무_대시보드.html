@@ -4730,13 +4730,22 @@ function rolloverIncompleteTodos() {
   const todayIds = new Set(todos[today].map(t => t.id).filter(Boolean));
   const todayAutoKeys = new Set(todos[today].filter(t => t.autoKey).map(t => t.autoKey));
 
+  // v2 (2026-08-24): 매주 반복되는 정기 자동 업무는 rollover 제외.
+  //   놓친 주 것은 그냥 지나가야지, 오늘로 몰리면 안 됨 (수십 개 스팸 발생).
+  //   대상 프리픽스: auto:friday-, auto:thursday-, auto:monday- (오늘끝딜 계열)
+  const WEEKLY_RECURRING_PREFIXES = ['auto:friday-', 'auto:thursday-', 'auto:monday-'];
+  function isWeeklyRecurring(t) {
+    return t.autoKey && WEEKLY_RECURRING_PREFIXES.some(p => t.autoKey.startsWith(p));
+  }
+
   let moved = 0;
   for (const d of dates) {
     const stay = [];
     for (const t of todos[d]) {
       if (t.done) { stay.push(t); continue; }
+      // 정기 주간 자동 업무 → 원래 날짜에 그대로 (오늘로 몰지 않음)
+      if (isWeeklyRecurring(t)) { stay.push(t); continue; }
       // 자동·수동 가릴 것 없이 못 끝낸 일은 오늘로 넘긴다.
-      // (예전엔 자동 항목을 트리거 날짜에 고정해서, 어제 못 한 일이 그냥 묻혔다)
       if (t.autoKey && todayAutoKeys.has(t.autoKey)) continue;   // 중복
       if (t.id && todayIds.has(t.id)) continue;                  // 중복
       const moved_item = {...t, rolledFrom: t.rolledFrom || d};
