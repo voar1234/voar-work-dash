@@ -785,18 +785,7 @@
   "2026-05-10": [],
   "2026-06-07": [],
   "2026-06-05": [],
-  "2026-06-29": [
-    {
-      "id": "t_rdx5v5lalqj",
-      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
-      "done": false,
-      "urgent": true,
-      "autoKey": "auto:monday-ondeal-deadline:2026-06-29",
-      "autoSource": {
-        "type": "매주 월요일 12시 접수마감"
-      }
-    }
-  ],
+  "2026-06-29": [],
   "2026-08-21": [
     {
       "id": "t_whfwhv8h2wd",
@@ -837,6 +826,17 @@
         "type": "생산완료예정일 D-31",
         "발주번호": "260414003",
         "생산완료예정일": "2026-07-30"
+      },
+      "leaveRerouted": "2026-06-29"
+    },
+    {
+      "id": "t_rdx5v5lalqj",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-06-29",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
       },
       "leaveRerouted": "2026-06-29"
     }
@@ -981,17 +981,7 @@
       "done": true
     }
   ],
-  "2026-07-30": [
-    {
-      "id": "t_jtc7zrtoi8h",
-      "text": "[자동·주간] 네이버 오늘끝딜 제안",
-      "done": false,
-      "autoKey": "auto:thursday-ondeal:2026-07-30",
-      "autoSource": {
-        "type": "매주 목요일 정기"
-      }
-    }
-  ],
+  "2026-07-30": [],
   "2026-07-29": [
     {
       "id": "t_1fgeonen0y7",
@@ -1035,6 +1025,16 @@
       "id": "t_7hli7xquskd",
       "text": "브검페 정리하기!!!!",
       "done": true
+    },
+    {
+      "id": "t_jtc7zrtoi8h",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-07-30",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      },
+      "leaveRerouted": "2026-07-30"
     }
   ],
   "2026-07-13": [
@@ -1515,12 +1515,6 @@
       "text": "아가미니 상품등록, 광고등록 마물;ㅣ",
       "done": false,
       "rolledFrom": "2026-08-20"
-    },
-    {
-      "id": "t_eshvs4du8j6",
-      "text": "엘레어PRO 오늘끝딜 오픈! 노출확인/배너삽입",
-      "done": false,
-      "rolledFrom": "2026-08-23"
     }
   ],
   "2026-07-28": [
@@ -2054,10 +2048,6 @@
       "autoKey": "auto:monday-ondeal-deadline:2026-10-19",
       "autoSource": {
         "type": "매주 월요일 12시 접수마감"
-      }
-    }
-  ]
-} "type": "매주 월요일 12시 접수마감"
       }
     }
   ]
