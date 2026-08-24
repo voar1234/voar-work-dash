@@ -1386,95 +1386,9 @@
       "rolledFrom": "2026-02-21"
     },
     {
-      "id": "t_qdq2vflux0g",
-      "text": "[자동] 보아르아가미니휴대용젖병소독기 마케팅샘플 수령일 확인",
-      "done": false,
-      "autoKey": "auto:qa2:1010:2026-02-25",
-      "autoSource": {
-        "품목ID": 1010,
-        "type": "2차 품질검사 완료 후",
-        "트리거일": "2026-02-25"
-      },
-      "rolledFrom": "2026-02-26"
-    },
-    {
-      "id": "t_ae69pvjh1hi",
-      "text": "[D-7] 보아르아가미니휴대용젖병소독기 신제품 출시이벤트 배너 제작",
-      "done": false,
-      "autoKey": "auto:in:1010:2026-08-04:D-7",
-      "autoSource": {
-        "품목ID": 1010,
-        "type": "입고 D-7",
-        "입고예정일": "2026-08-04"
-      },
-      "rolledFrom": "2026-07-28"
-    },
-    {
-      "id": "t_lt224kp4hm",
-      "text": "[D-7] 보아르아가미니휴대용젖병소독기 신제품 출시이벤트 배너 제작",
-      "done": false,
-      "autoKey": "auto:in:1010:2026-08-06:D-7",
-      "autoSource": {
-        "품목ID": 1010,
-        "type": "입고 D-7",
-        "입고예정일": "2026-08-06"
-      },
-      "leaveRerouted": "2026-07-30",
-      "rolledFrom": "2026-07-29"
-    },
-    {
-      "id": "t_r2brwf76k8",
-      "text": "[자동] 보아르아가미니휴대용젖병소독기 카테고리·키워드 조사·공정위 제작",
-      "done": false,
-      "autoKey": "auto:prod:1010:260414003",
-      "autoSource": {
-        "품목ID": 1010,
-        "type": "생산완료일",
-        "발주번호": 260414003
-      },
-      "leaveRerouted": "2026-07-30",
-      "rolledFrom": "2026-07-29"
-    },
-    {
-      "id": "t_urqpjstabke",
-      "text": "[D-2] 보아르아가미니휴대용젖병소독기 전채널 상품등록·광고등록",
-      "done": false,
-      "autoKey": "auto:in:1010:2026-08-04:D-2",
-      "autoSource": {
-        "품목ID": 1010,
-        "type": "입고 D-2",
-        "입고예정일": "2026-08-04"
-      },
-      "rolledFrom": "2026-08-02"
-    },
-    {
-      "id": "t_0eb12o9e9ipt",
-      "text": "[D-7] 보아르아가미니휴대용젖병소독기 신제품 출시이벤트 배너 제작",
-      "done": false,
-      "autoKey": "auto:in:1010:2026-08-21:D-7",
-      "autoSource": {
-        "품목ID": 1010,
-        "type": "입고 D-7",
-        "입고예정일": "2026-08-21"
-      },
-      "rolledFrom": "2026-08-14"
-    },
-    {
       "id": "t_unj0vo7jt0q",
       "text": "보아르아가미니휴대용젖병소독기 원부 생성·원부형 광고등록",
       "done": false,
-      "rolledFrom": "2026-08-21"
-    },
-    {
-      "id": "t_qam6051jyi",
-      "text": "[D-0] 보아르아가미니휴대용젖병소독기 원부 생성·원부형 광고등록",
-      "done": false,
-      "autoKey": "auto:in:1010:2026-08-21:D-0",
-      "autoSource": {
-        "품목ID": 1010,
-        "type": "입고 D-0",
-        "입고예정일": "2026-08-21"
-      },
       "rolledFrom": "2026-08-21"
     },
     {
@@ -1500,6 +1414,187 @@
       "text": "엘레어PRO 오늘끝딜 오픈! 노출확인/배너삽입",
       "done": false,
       "rolledFrom": "2026-08-23"
+    },
+    {
+      "id": "t_j6imgox6xi",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-06-22",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      },
+      "rolledFrom": "2026-06-22"
+    },
+    {
+      "id": "t_x2onajc5ras",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-06-25",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      },
+      "rolledFrom": "2026-06-25"
+    },
+    {
+      "id": "t_kxidwf7biom",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-06-29",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      },
+      "leaveRerouted": "2026-06-29",
+      "rolledFrom": "2026-06-28"
+    },
+    {
+      "id": "t_k9yzwxbdyvn",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-07-02",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      },
+      "rolledFrom": "2026-07-02"
+    },
+    {
+      "id": "t_gfn0cya68qc",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-07-06",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      },
+      "rolledFrom": "2026-07-06"
+    },
+    {
+      "id": "t_ob7xfk505iq",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-07-09",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      },
+      "rolledFrom": "2026-07-09"
+    },
+    {
+      "id": "t_lcvbossrrx",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-07-13",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      },
+      "rolledFrom": "2026-07-13"
+    },
+    {
+      "id": "t_agnvfy3jm4o",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-07-16",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      },
+      "rolledFrom": "2026-07-16"
+    },
+    {
+      "id": "t_hzxi9ee5nsi",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-07-20",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      },
+      "rolledFrom": "2026-07-20"
+    },
+    {
+      "id": "t_64t7tavhxb5",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-07-23",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      },
+      "rolledFrom": "2026-07-23"
+    },
+    {
+      "id": "t_j1ydcgwb5n",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-07-27",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      },
+      "rolledFrom": "2026-07-27"
+    },
+    {
+      "id": "t_3c7n4g2vtz7",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-07-30",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      },
+      "leaveRerouted": "2026-07-30",
+      "rolledFrom": "2026-07-29"
+    },
+    {
+      "id": "t_sbiyz5fkt9k",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-08-03",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      },
+      "rolledFrom": "2026-08-03"
+    },
+    {
+      "id": "t_7s2xnl8cusw",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-08-06",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      },
+      "rolledFrom": "2026-08-06"
+    },
+    {
+      "id": "t_1ia6h8blozy",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-08-10",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      },
+      "rolledFrom": "2026-08-10"
+    },
+    {
+      "id": "t_45uhw3tx87x",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-08-17",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      },
+      "rolledFrom": "2026-08-17"
+    },
+    {
+      "id": "t_hm2ie6t7koe",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-08-20",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      },
+      "rolledFrom": "2026-08-20"
     }
   ],
   "2026-07-28": [

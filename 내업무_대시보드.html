@@ -6282,6 +6282,29 @@ async function boot() {
     if (_rm > 0) { saveTodos(_t2); console.log(`[migrate] 레거시 금요일 오늘끝딜 ${_rm}건 정리`); }
   } catch (_) {}
 
+  // v3 마이그레이션 (2026-08-24): rollover된 정기 주간 자동 항목 스팸 정리
+  //   과거에 rolloverIncompleteTodos가 매주 반복 자동 항목까지 오늘로 옮겨서
+  //   4~7월치 friday/thursday/monday 항목이 오늘 탭에 수십 개 몰림.
+  //   → autoKey의 원래 날짜와 현재 배열 날짜가 다른 정기 주간 항목은 삭제.
+  try {
+    const _t3 = loadTodos();
+    let _rm3 = 0;
+    const re = /^auto:(friday|thursday|monday)-[a-z-]+:(\d{4}-\d{2}-\d{2})$/;
+    for (const d of Object.keys(_t3)) {
+      const before = _t3[d].length;
+      _t3[d] = _t3[d].filter(it => {
+        const ak = it.autoKey || '';
+        const m = re.exec(ak);
+        if (!m) return true;
+        if (m[2] === d) return true;       // 원래 날짜 == 배열 날짜: 정상
+        if (it.done) return true;          // 완료 기록은 보존
+        return false;                       // rollover 스팸 → 제거
+      });
+      _rm3 += (before - _t3[d].length);
+    }
+    if (_rm3 > 0) { saveTodos(_t3); console.log(`[migrate v3] rollover 스팸 ${_rm3}건 정리`); }
+  } catch (_) {}
+
   cleanupStaleAutoTodos();
   rolloverIncompleteTodos();
   generateAutoTodos();
