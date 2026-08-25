@@ -1895,14 +1895,9 @@
   ],
   "2026-08-31": [
     {
-      "id": "t_mlej1qwj50p",
-      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
-      "done": false,
-      "urgent": true,
-      "autoKey": "auto:monday-ondeal-deadline:2026-08-31",
-      "autoSource": {
-        "type": "매주 월요일 12시 접수마감"
-      }
+      "id": "t_r27lvybnpd",
+      "text": "크루특가 진행요청",
+      "done": false
     }
   ],
   "2026-09-10": [
@@ -2066,6 +2061,19 @@
       "id": "t_6w52hb4dy97",
       "text": "9월 슈퍼적립 선정제품 배너 준비",
       "done": false
+    }
+  ],
+  "2026-08-30": [
+    {
+      "id": "t_mlej1qwj50p",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-08-31",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      },
+      "leaveRerouted": "2026-08-31"
     }
   ]
 }
