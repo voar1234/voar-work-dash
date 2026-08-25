@@ -4828,20 +4828,20 @@ function generateAutoTodos() {
       });
     }
 
-    // 3. 생산완료예정일 D-31일 → 신제품 시장조사·판매가 측정
-    //    (이미 생산완료된 건 또는 입고완료된 건은 제외)
+    // 3. 생산완료(예정)일 D-7일 → 신제품 시장조사·판매가 측정  (v4 2026-08-25: D-31 → D-7)
+    //    (이미 입고완료된 건은 제외. 아직 미완료면 예정일, 완료됐으면 완료일 기준)
     for (const o of (p.발주 || [])) {
       if (o._입고완료) continue;
       const ono = o.발주번호;
-      const dueDate = o.생산완료예정일자;
-      if (dueDate && !o.생산완료일자) {
-        const trig = addDays(dueDate.slice(0,10), -31);
+      const baseDate = (o.생산완료일자 || o.생산완료예정일자 || '').slice(0,10);
+      if (baseDate) {
+        const trig = addDays(baseDate, -7);
         addAuto(trig, {
           id: 't_'+Math.random().toString(36).slice(2),
-          text: `[자동·D-31] ${pname} 신제품 시장조사·판매가 측정`,
+          text: `[자동·D-7] ${pname} 신제품 시장조사·판매가 측정`,
           done: false,
           autoKey: `auto:po:${pid}:${ono}`,
-          autoSource: { 품목ID: pid, type: '생산완료예정일 D-31', 발주번호: ono, 생산완료예정일: dueDate.slice(0,10) },
+          autoSource: { 품목ID: pid, type: '생산완료(예정)일 D-7', 발주번호: ono, 기준일: baseDate },
         });
       }
       // 4. 생산완료일 당일 → 카테고리·키워드 조사·공정위 제작
@@ -6280,6 +6280,24 @@ async function boot() {
       _rm += (before - _t2[d].length);
     }
     if (_rm > 0) { saveTodos(_t2); console.log(`[migrate] 레거시 금요일 오늘끝딜 ${_rm}건 정리`); }
+  } catch (_) {}
+
+  // v4 마이그레이션 (2026-08-25): 시장조사 트리거 D-31 → D-7 변경
+  //   기존 auto:po:* 항목은 D-31 날짜에 붙어있음. 미완료 것 삭제 → 부팅 시 D-7 날짜로 자동 재생성.
+  try {
+    const _t4 = loadTodos();
+    let _rm4 = 0;
+    for (const d of Object.keys(_t4)) {
+      const before = _t4[d].length;
+      _t4[d] = _t4[d].filter(it => {
+        if (!it.autoKey?.startsWith('auto:po:')) return true;
+        if (it.done) return true;                         // 완료된 기록은 보존
+        if (/D-7/.test(it.text || '')) return true;       // 이미 D-7 신 규칙으로 생성된 것
+        return false;                                      // 옛 D-31 미완료 → 제거
+      });
+      _rm4 += (before - _t4[d].length);
+    }
+    if (_rm4 > 0) { saveTodos(_t4); console.log(`[migrate v4] 옛 D-31 시장조사 자동항목 ${_rm4}건 정리 → D-7 재생성`); }
   } catch (_) {}
 
   // v3 마이그레이션 (2026-08-24): rollover된 정기 주간 자동 항목 스팸 정리
