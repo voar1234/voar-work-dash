@@ -830,7 +830,7 @@
       "leaveRerouted": "2026-06-29"
     },
     {
-      "id": "t_52kjr664y3e",
+      "id": "t_jfkmqxctj19",
       "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
       "done": false,
       "urgent": true,
@@ -939,7 +939,7 @@
     {
       "id": "t_slhnou6wt4",
       "text": "브랜드커넥터 미작성자 업로드 체크/연락",
-      "done": true,
+    : "done": true,
       "rolledFrom": "2026-07-01"
     },
     {
@@ -1032,7 +1032,7 @@
       "done": true
     },
     {
-      "id": "t_yv1vjjqs04o",
+      "id": "t_oiszmmt0ckr",
       "text": "[자동·주간] 네이버 오늘끝딜 제안",
       "done": false,
       "autoKey": "auto:thursday-ondeal:2026-07-30",
@@ -1237,31 +1237,7 @@
       "rolledFrom": "2026-07-15"
     },
     {
-      "id": "t_sjnphmuen1r",
-      "text": "라이브 빅배너  / 디가프로모션 신청하기(오늘마감)",
-      "done": true
-    },
-    {
-      "id": "t_ufq1chmkyl",
-      "text": "9월 브랜드데이 제안",
-      "done": true
-    },
-    {
-      "id": "t_rsd9okbbe4k",
-      "text": "[자동·주간] 네이버 오늘끝딜 제안",
-      "done": false,
-      "autoKey": "auto:thursday-ondeal:2026-07-16",
-      "autoSource": {
-        "type": "매주 목요일 정기"
-      }
-    }
-  ],
-  "2026-07-22": [
-    {
-      "id": "t_2b3ucqs9ixb",
-      "text": "브랜드데이 브검페 등록(검수 지연되어 꼭 등록 필요)",
-      "done": true
-    },
+      "id": "t_sjnphmu},
     {
       "id": "t_kg3vvg5fawm",
       "text": "브랜드커넥트 선정/제품발송",
@@ -1560,6 +1536,27 @@
       "id": "t_uduwg5bxo4r",
       "text": "[자동·주간] 네이버 오늘끝딜 제안",
       "done": false,
+      "aut{
+      "id": "t_5llpm5py8i",
+      "text": "아가미니젖병소독기 공정위제작,키워드조사 진행",
+      "done": true,
+      "rolledFrom": "2026-08-04"
+    },
+    {
+      "id": "t_g7dx7qbvidq",
+      "text": "[D-0] 보아르아가미니휴대용젖병소독기 원부 생성·원부형 광고등록",
+      "done": true,
+      "autoKey": "auto:in:1010:2026-08-06:D-0",
+      "autoSource": {
+        "품목ID": 1010,
+        "type": "입고 D-0",
+        "입고예정일": "2026-08-06"
+      }
+    },
+    {
+      "id": "t_uduwg5bxo4r",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
       "autoKey": "auto:thursday-ondeal:2026-08-06",
       "autoSource": {
         "type": "매주 목요일 정기"
@@ -1758,12 +1755,6 @@
       "rolledFrom": "2026-08-24"
     },
     {
-      "id": "t_unj0vo7jt0q",
-      "text": "보아르아가미니휴대용젖병소독기 원부 생성·원부형 광고등록",
-      "done": false,
-      "rolledFrom": "2026-08-21"
-    },
-    {
       "id": "t_6z8w3wasvsb",
       "text": "스마트락 크루특가 원복",
       "done": true,
@@ -1773,11 +1764,6 @@
       "id": "t_t288fmfdlz",
       "text": "베이비페어 디자인 래퍼 전달",
       "done": true
-    },
-    {
-      "id": "t_95u924fbiy",
-      "text": "터보스티머 3시 당일배송 설정",
-      "done": false
     },
     {
       "id": "t_q7i2obbz2ua",
@@ -1848,30 +1834,7 @@
       "leaveRerouted": "2026-08-18"
     },
     {
-      "id": "t_7078atpbsey",
-      "text": "플릿M 행사가 셋팅 649 / 셋팅 후 화연님 전달",
-      "done": true,
-      "leaveRerouted": "2026-08-18"
-    },
-    {
-      "id": "t_5l5osxizf5q",
-      "text": "디가 이벤트배너 삽입",
-      "done": true,
-      "leaveRerouted": "2026-08-18"
-    },
-    {
-      "id": "t_zpy3alpupz",
-      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
-      "done": false,
-      "urgent": true,
-      "autoKey": "auto:monday-ondeal-deadline:2026-08-17",
-      "autoSource": {
-        "type": "매주 월요일 12시 접수마감"
-      }
-    }
-  ],
-  "2026-08-23": [],
-  "2026-08-27": [
+      "id": "t_7078atpbsey",[
     {
       "id": "t_wna05qk7h4c",
       "text": "[자동·주간] 네이버 오늘끝딜 제안",
@@ -2061,15 +2024,58 @@
       "id": "t_6w52hb4dy97",
       "text": "9월 슈퍼적립 선정제품 배너 준비",
       "done": false
+    },
+    {
+      "id": "t_unj0vo7jt0q",
+      "text": "보아르아가미니휴대용젖병소독기 원부 생성·원부형 광고등록",
+      "done": false,
+      "rolledFrom": "2026-08-21"
+    },
+    {
+      "id": "t_95u924fbiy",
+      "text": "터보스티머 3시 당일배송 설정",
+      "done": false,
+      "rolledFrom": "2026-08-25"
     }
   ],
-  "2026-08-30": [
+  "2026-08-30": []
+}��일 정기"
+      }
+    }
+  ],
+  "2026-10-19": [
     {
-      "id": "t_mlej1qwj50p",
+      "id": "t_6eb85g1ldmi",
       "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
       "done": false,
       "urgent": true,
-      "autoKey": "auto:monday-ondeal-deadline:2026-08-31",
+      "autoKey": "auto:monday-ondeal-deadline:2026-10-19",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      }
+    }
+  ],
+  "2026-08-26": [
+    {
+      "id": "t_6w52hb4dy97",
+      "text": "9월 슈퍼적립 선정제품 배너 준비",
+      "done": false
+    },
+    {
+      "id": "t_unj0vo7jt0q",
+      "text": "보아르아가미니휴대용젖병소독기 원부 생성·원부형 광고등록",
+      "done": false,
+      "rolledFrom": "2026-08-21"
+    },
+    {
+      "id": "t_95u924fbiy",
+      "text": "터보스티머 3시 당일배송 설정",
+      "done": false,
+      "rolledFrom": "2026-08-25"
+    }
+  ],
+  "2026-08-30": []
+}8-31",
       "autoSource": {
         "type": "매주 월요일 12시 접수마감"
       },
