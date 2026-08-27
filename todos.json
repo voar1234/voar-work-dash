@@ -828,6 +828,17 @@
         "생산완료예정일": "2026-07-30"
       },
       "leaveRerouted": "2026-06-29"
+    },
+    {
+      "id": "t_djux9xg4lht",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-06-29",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      },
+      "leaveRerouted": "2026-06-29"
     }
   ],
   "2026-07-01": [
@@ -920,6 +931,11 @@
     {
       "id": "t_5ot6a0l8xev",
       "text": "김장가전 프로모션 제안 (마감일)",
+      "done": false
+    },
+    {
+      "id": "t_xou5zl3nj0a",
+      "text": "베이비바우처 행사장 링크 변경",
       "done": false
     }
   ],
@@ -1024,6 +1040,16 @@
       "id": "t_7hli7xquskd",
       "text": "브검페 정리하기!!!!",
       "done": true
+    },
+    {
+      "id": "t_oz4xx6x1fkl",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-07-30",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      },
+      "leaveRerouted": "2026-07-30"
     }
   ],
   "2026-07-13": [
@@ -1853,6 +1879,17 @@
       "autoSource": {
         "type": "매주 목요일 정기"
       }
+    },
+    {
+      "id": "t_c9pf016qd5c",
+      "text": "네이버 효도가전 특별전 제안 (오늘 마감)",
+      "done": false,
+      "rolledFrom": "2026-08-26"
+    },
+    {
+      "id": "t_xdh92gg4zt",
+      "text": "베이비바우처 배너/링크 재셋팅",
+      "done": false
     }
   ],
   "2026-09-03": [
@@ -2041,11 +2078,6 @@
       "rolledFrom": "2026-08-21"
     },
     {
-      "id": "t_c9pf016qd5c",
-      "text": "네이버 효도가전 특별전 제안 (오늘 마감)",
-      "done": false
-    },
-    {
       "id": "t_g78v2f0fgm6",
       "text": "베이비페어 디자인 규리님께 요청",
       "done": true
@@ -2056,6 +2088,17 @@
       "id": "t_r27lvybnpd",
       "text": "크루특가 진행요청",
       "done": false,
+      "leaveRerouted": "2026-08-31"
+    },
+    {
+      "id": "t_4s8zyaclijc",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-08-31",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      },
       "leaveRerouted": "2026-08-31"
     }
   ],
