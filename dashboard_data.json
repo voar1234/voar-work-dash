@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-08-28T00:48:28",
+    "extracted_at": "2026-08-28T00:59:22",
     "product_count": 48,
     "data_unit": "상품(SKU) 단위"
   },
@@ -4578,8 +4578,8 @@
         "발주중수량": 0
       },
       "매출_통계": {
-        "매출_7일합": 50,
-        "매출_28일합": 230,
+        "매출_7일합": 51,
+        "매출_28일합": 231,
         "일평균_7일": 7,
         "일평균_28일": 8,
         "소진_잔여일수": 176,
@@ -14769,23 +14769,23 @@
   "sales": {
     "today_date": "2026-08-28",
     "kpi": {
-      "today_revenue": 110785,
-      "today_profit": 45975,
-      "today_qty": 3,
+      "today_revenue": 131746,
+      "today_profit": 55180,
+      "today_qty": 4,
       "today_orders": 1,
       "yesterday_revenue": 13785556,
-      "week_revenue": 184580642,
+      "week_revenue": 184601603,
       "last_week_revenue": 159658476,
-      "month_revenue": 692051997,
+      "month_revenue": 692072958,
       "last_month_revenue": 677138355
     },
     "channels_today": [
       {
         "매출처명": "스마트스토어",
         "매출처ID": 465,
-        "수량": 3,
-        "매출": 110785,
-        "이익": 45975,
+        "수량": 4,
+        "매출": 131746,
+        "이익": 55180,
         "비중": 100.0
       }
     ],
@@ -14807,6 +14807,22 @@
         ]
       },
       {
+        "제품ID": 621,
+        "제품명": "보아르트래블스티머",
+        "카테고리명": "다리미",
+        "수량": 2,
+        "매출": 41922,
+        "이익": 18410,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 2,
+            "매출": 41922,
+            "이익": 18410
+          }
+        ]
+      },
+      {
         "제품ID": 198,
         "제품명": "보아르아이워시",
         "카테고리명": "초음파세척기",
@@ -14819,22 +14835,6 @@
             "수량": 1,
             "매출": 35029,
             "이익": 11110
-          }
-        ]
-      },
-      {
-        "제품ID": 621,
-        "제품명": "보아르트래블스티머",
-        "카테고리명": "다리미",
-        "수량": 1,
-        "매출": 20961,
-        "이익": 9205,
-        "판매처내역": [
-          {
-            "매출처명": "스마트스토어",
-            "수량": 1,
-            "매출": 20961,
-            "이익": 9205
           }
         ]
       }
@@ -14876,7 +14876,7 @@
         618629155,
         670705018,
         736517706,
-        692051997,
+        692072958,
         0,
         0,
         0,
@@ -14920,7 +14920,7 @@
         15572,
         17371,
         21008,
-        18709,
+        18710,
         0,
         0,
         0,
@@ -14945,8 +14945,8 @@
       },
       {
         "카테고리": "다리미",
-        "매출": 478807230,
-        "수량": 18091
+        "매출": 478828191,
+        "수량": 18092
       },
       {
         "카테고리": "휴지통",
@@ -15373,11 +15373,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 586924915,
+            "current_rev": 586945876,
             "prev_rev": 495466235,
-            "current_profit": 208272280,
+            "current_profit": 208281485,
             "prev_profit": 188235758,
-            "current_qty": 15559,
+            "current_qty": 15560,
             "prev_qty": 12824,
             "products": [
               {
@@ -15598,11 +15598,11 @@
               },
               {
                 "name": "보아르트래블스티머",
-                "current_rev": 5316825,
+                "current_rev": 5337786,
                 "prev_rev": 6739954,
-                "current_profit": 2460117,
+                "current_profit": 2469322,
                 "prev_profit": 2920729,
-                "current_qty": 243,
+                "current_qty": 244,
                 "prev_qty": 333
               },
               {
@@ -15799,11 +15799,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 151715457,
+            "current_rev": 151736418,
             "prev_rev": 120754120,
-            "current_profit": 56426222,
+            "current_profit": 56435427,
             "prev_profit": 50171570,
-            "current_qty": 4497,
+            "current_qty": 4498,
             "prev_qty": 2709,
             "products": [
               {
@@ -16014,15 +16014,6 @@
                 "prev_qty": 198
               },
               {
-                "name": "보아르트래블스티머",
-                "current_rev": 1131049,
-                "prev_rev": 1603690,
-                "current_profit": 543249,
-                "prev_profit": 775556,
-                "current_qty": 50,
-                "prev_qty": 74
-              },
-              {
                 "name": "보아르워시스핀",
                 "current_rev": 608501,
                 "prev_rev": 1077402,
@@ -16039,6 +16030,15 @@
                 "prev_profit": 856246,
                 "current_qty": 38,
                 "prev_qty": 43
+              },
+              {
+                "name": "보아르트래블스티머",
+                "current_rev": 1152010,
+                "prev_rev": 1603690,
+                "current_profit": 552454,
+                "prev_profit": 775556,
+                "current_qty": 51,
+                "prev_qty": 74
               },
               {
                 "name": "보아르TV스탠드와이드",
@@ -16216,11 +16216,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 4408447728,
+            "current_rev": 4408468689,
             "prev_rev": 4210150817,
-            "current_profit": 1735833988,
+            "current_profit": 1735843193,
             "prev_profit": 1782849781,
-            "current_qty": 111745,
+            "current_qty": 111746,
             "prev_qty": 101158,
             "products": [
               {
@@ -16405,11 +16405,11 @@
               },
               {
                 "name": "보아르트래블스티머",
-                "current_rev": 39903183,
+                "current_rev": 39924144,
                 "prev_rev": 71497118,
-                "current_profit": 18141314,
+                "current_profit": 18150519,
                 "prev_profit": 32821407,
-                "current_qty": 1892,
+                "current_qty": 1893,
                 "prev_qty": 3488
               },
               {
@@ -16642,11 +16642,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 6659124540,
+            "current_rev": 6659145501,
             "prev_rev": 6488984583,
-            "current_profit": 2688349557,
+            "current_profit": 2688358762,
             "prev_profit": 2798737471,
-            "current_qty": 169858,
+            "current_qty": 169859,
             "prev_qty": 156190,
             "products": [
               {
@@ -16822,11 +16822,11 @@
               },
               {
                 "name": "보아르트래블스티머",
-                "current_rev": 65874475,
+                "current_rev": 65895436,
                 "prev_rev": 121508352,
-                "current_profit": 30202193,
+                "current_profit": 30211398,
                 "prev_profit": 57784972,
-                "current_qty": 3121,
+                "current_qty": 3122,
                 "prev_qty": 5794
               },
               {
@@ -17295,9 +17295,9 @@
         },
         "8": {
           "생활가전": {
-            "매출": 545147797,
-            "이익": 192153822,
-            "수량": 14522
+            "매출": 545168758,
+            "이익": 192163027,
+            "수량": 14523
           },
           "육아": {
             "매출": 146904200,
@@ -17389,7 +17389,7 @@
             "육아": 152883586
           },
           "8": {
-            "생활": 551735666,
+            "생활": 551756627,
             "육아": 147587567
           }
         }
@@ -17495,8 +17495,8 @@
       "monthly_revenue": 0,
       "ytd_revenue": 0,
       "annual_revenue": 0,
-      "actual_month_revenue": 692051997,
-      "actual_ytd_revenue": 5565481183,
+      "actual_month_revenue": 692072958,
+      "actual_ytd_revenue": 5565502144,
       "achieve_rate_month": 0,
       "achieve_rate_ytd": 0,
       "products": []
