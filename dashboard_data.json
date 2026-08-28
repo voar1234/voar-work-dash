@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-08-29T06:06:21",
+    "extracted_at": "2026-08-29T06:14:01",
     "product_count": 48,
     "data_unit": "상품(SKU) 단위"
   },
@@ -6876,13 +6876,13 @@
         "발주중수량": 0
       },
       "매출_통계": {
-        "매출_7일합": 69,
-        "매출_28일합": 249,
+        "매출_7일합": 70,
+        "매출_28일합": 250,
         "일평균_7일": 10,
         "일평균_28일": 9,
-        "소진_잔여일수": 162,
-        "소진_예상일": "2027-02-07",
-        "재고발주_권장일": "2026-11-24"
+        "소진_잔여일수": 161,
+        "소진_예상일": "2027-02-06",
+        "재고발주_권장일": "2026-11-23"
       },
       "구성제품": [
         {
@@ -14778,23 +14778,23 @@
   "sales": {
     "today_date": "2026-08-29",
     "kpi": {
-      "today_revenue": 70058,
-      "today_profit": 29625,
-      "today_qty": 2,
+      "today_revenue": 93200,
+      "today_profit": 38350,
+      "today_qty": 3,
       "today_orders": 1,
       "yesterday_revenue": 16789951,
-      "week_revenue": 183592854,
+      "week_revenue": 183615996,
       "last_week_revenue": 158735801,
-      "month_revenue": 710553538,
+      "month_revenue": 710576680,
       "last_month_revenue": 704343185
     },
     "channels_today": [
       {
         "매출처명": "스마트스토어",
         "매출처ID": 465,
-        "수량": 2,
-        "매출": 70058,
-        "이익": 29625,
+        "수량": 3,
+        "매출": 93200,
+        "이익": 38350,
         "비중": 100.0
       }
     ],
@@ -14828,6 +14828,22 @@
             "수량": 1,
             "매출": 27995,
             "이익": 12375
+          }
+        ]
+      },
+      {
+        "제품ID": 410,
+        "제품명": "보아르허니즈백색소음기",
+        "카테고리명": "백색소음기",
+        "수량": 1,
+        "매출": 23142,
+        "이익": 8725,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 23142,
+            "이익": 8725
           }
         ]
       }
@@ -14869,7 +14885,7 @@
         618629155,
         670705018,
         736517706,
-        710553538,
+        710576680,
         0,
         0,
         0,
@@ -14913,7 +14929,7 @@
         15572,
         17371,
         21008,
-        19242,
+        19243,
         0,
         0,
         0,
@@ -14988,8 +15004,8 @@
       },
       {
         "카테고리": "백색소음기",
-        "매출": 73735070,
-        "수량": 3423
+        "매출": 73758212,
+        "수량": 3424
       },
       {
         "카테고리": "기타생활가전",
@@ -15705,11 +15721,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 158309464,
+            "current_rev": 158332606,
             "prev_rev": 142413261,
-            "current_profit": 63635745,
+            "current_profit": 63644470,
             "prev_profit": 59854055,
-            "current_qty": 4555,
+            "current_qty": 4556,
             "prev_qty": 3416,
             "products": [
               {
@@ -15794,15 +15810,6 @@
                 "prev_qty": 0
               },
               {
-                "name": "보아르허니즈백색소음기",
-                "current_rev": 8276338,
-                "prev_rev": 8342944,
-                "current_profit": 2740210,
-                "prev_profit": 3273060,
-                "current_qty": 384,
-                "prev_qty": 363
-              },
-              {
                 "name": "보아르아가맘마퓨어분유포트",
                 "current_rev": 8283184,
                 "prev_rev": 8328646,
@@ -15810,6 +15817,15 @@
                 "prev_profit": 2850906,
                 "current_qty": 174,
                 "prev_qty": 168
+              },
+              {
+                "name": "보아르허니즈백색소음기",
+                "current_rev": 8299480,
+                "prev_rev": 8342944,
+                "current_profit": 2748935,
+                "prev_profit": 3273060,
+                "current_qty": 385,
+                "prev_qty": 363
               }
             ]
           }
@@ -16122,11 +16138,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 29792196,
+            "current_rev": 29815338,
             "prev_rev": 37659742,
-            "current_profit": 12139278,
+            "current_profit": 12148003,
             "prev_profit": 16122516,
-            "current_qty": 749,
+            "current_qty": 750,
             "prev_qty": 853,
             "products": [
               {
@@ -16221,11 +16237,11 @@
               },
               {
                 "name": "보아르허니즈백색소음기",
-                "current_rev": 1583077,
+                "current_rev": 1606219,
                 "prev_rev": 1719671,
-                "current_profit": 588304,
+                "current_profit": 597029,
                 "prev_profit": 708503,
-                "current_qty": 69,
+                "current_qty": 70,
                 "prev_qty": 74
               }
             ]
@@ -16548,11 +16564,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 1159891593,
+            "current_rev": 1159914735,
             "prev_rev": 839278281,
-            "current_profit": 480164793,
+            "current_profit": 480173518,
             "prev_profit": 371669241,
-            "current_qty": 31550,
+            "current_qty": 31551,
             "prev_qty": 23860,
             "products": [
               {
@@ -16620,11 +16636,11 @@
               },
               {
                 "name": "보아르허니즈백색소음기",
-                "current_rev": 73735070,
+                "current_rev": 73758212,
                 "prev_rev": 93690904,
-                "current_profit": 27462845,
+                "current_profit": 27471570,
                 "prev_profit": 36375208,
-                "current_qty": 3423,
+                "current_qty": 3424,
                 "prev_qty": 4249
               },
               {
@@ -16974,11 +16990,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 1765581457,
+            "current_rev": 1765604599,
             "prev_rev": 1237587075,
-            "current_profit": 737923071,
+            "current_profit": 737931796,
             "prev_profit": 563165436,
-            "current_qty": 46547,
+            "current_qty": 46548,
             "prev_qty": 35376,
             "products": [
               {
@@ -17046,11 +17062,11 @@
               },
               {
                 "name": "보아르허니즈백색소음기",
-                "current_rev": 118496281,
+                "current_rev": 118519423,
                 "prev_rev": 148415940,
-                "current_profit": 44923781,
+                "current_profit": 44932506,
                 "prev_profit": 60209124,
-                "current_qty": 5457,
+                "current_qty": 5458,
                 "prev_qty": 6690
               },
               {
@@ -17324,9 +17340,9 @@
             "수량": 14977
           },
           "육아": {
-            "매출": 149762338,
-            "이익": 60480200,
-            "수량": 4265
+            "매출": 149785480,
+            "이익": 60488925,
+            "수량": 4266
           }
         }
       }
@@ -17414,7 +17430,7 @@
           },
           "8": {
             "생활": 567505328,
-            "육아": 150471403
+            "육아": 150494545
           }
         }
       },
@@ -17519,8 +17535,8 @@
       "monthly_revenue": 0,
       "ytd_revenue": 0,
       "annual_revenue": 0,
-      "actual_month_revenue": 710553538,
-      "actual_ytd_revenue": 5583982724,
+      "actual_month_revenue": 710576680,
+      "actual_ytd_revenue": 5584005866,
       "achieve_rate_month": 0,
       "achieve_rate_ytd": 0,
       "products": []
