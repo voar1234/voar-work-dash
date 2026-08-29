@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-08-30T01:46:36",
+    "extracted_at": "2026-08-30T01:53:40",
     "product_count": 48,
     "data_unit": "상품(SKU) 단위"
   },
@@ -9537,8 +9537,8 @@
         "발주중수량": 2000
       },
       "매출_통계": {
-        "매출_7일합": 105,
-        "매출_28일합": 306,
+        "매출_7일합": 106,
+        "매출_28일합": 307,
         "일평균_7일": 15,
         "일평균_28일": 11,
         "소진_잔여일수": 12,
@@ -14778,27 +14778,43 @@
   "sales": {
     "today_date": "2026-08-30",
     "kpi": {
-      "today_revenue": 91136,
-      "today_profit": 28796,
-      "today_qty": 2,
+      "today_revenue": 174135,
+      "today_profit": 61060,
+      "today_qty": 3,
       "today_orders": 1,
       "yesterday_revenue": 10176541,
-      "week_revenue": 184807789,
+      "week_revenue": 184890788,
       "last_week_revenue": 156159873,
-      "month_revenue": 721885372,
+      "month_revenue": 721968371,
       "last_month_revenue": 723367628
     },
     "channels_today": [
       {
         "매출처명": "스마트스토어",
         "매출처ID": 465,
-        "수량": 2,
-        "매출": 91136,
-        "이익": 28796,
+        "수량": 3,
+        "매출": 174135,
+        "이익": 61060,
         "비중": 100.0
       }
     ],
     "products_today": [
+      {
+        "제품ID": 166,
+        "제품명": "보아르포스D14-화이트",
+        "카테고리명": "무선청소기",
+        "수량": 1,
+        "매출": 82999,
+        "이익": 32264,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 82999,
+            "이익": 32264
+          }
+        ]
+      },
       {
         "제품ID": 7391,
         "제품명": "보아르아가미니휴대용젖병소독기-화이트",
@@ -14869,7 +14885,7 @@
         618629155,
         670705018,
         736517706,
-        721885372,
+        721968371,
         0,
         0,
         0,
@@ -14913,7 +14929,7 @@
         15572,
         17371,
         21008,
-        19542,
+        19543,
         0,
         0,
         0,
@@ -14928,8 +14944,8 @@
       },
       {
         "카테고리": "무선청소기",
-        "매출": 807326408,
-        "수량": 16138
+        "매출": 807409407,
+        "수량": 16139
       },
       {
         "카테고리": "건조기",
@@ -15488,11 +15504,11 @@
           },
           {
             "name": "생활가전",
-            "current_rev": 579528662,
+            "current_rev": 579611661,
             "prev_rev": 491172607,
-            "current_profit": 205612200,
+            "current_profit": 205644464,
             "prev_profit": 186639479,
-            "current_qty": 15466,
+            "current_qty": 15467,
             "prev_qty": 12756,
             "products": [
               {
@@ -15533,11 +15549,11 @@
               },
               {
                 "name": "보아르포스D14",
-                "current_rev": 26877713,
+                "current_rev": 26960712,
                 "prev_rev": 52752912,
-                "current_profit": 9982958,
+                "current_profit": 10015222,
                 "prev_profit": 12805284,
-                "current_qty": 333,
+                "current_qty": 334,
                 "prev_qty": 757
               },
               {
@@ -15914,11 +15930,11 @@
           },
           {
             "name": "생활가전",
-            "current_rev": 154967344,
+            "current_rev": 155050343,
             "prev_rev": 118576606,
-            "current_profit": 56904582,
+            "current_profit": 56936846,
             "prev_profit": 49443284,
-            "current_qty": 4636,
+            "current_qty": 4637,
             "prev_qty": 2647,
             "products": [
               {
@@ -16022,11 +16038,11 @@
               },
               {
                 "name": "보아르포스D14",
-                "current_rev": 8132007,
+                "current_rev": 8215006,
                 "prev_rev": 11088880,
-                "current_profit": 2804832,
+                "current_profit": 2837096,
                 "prev_profit": 3706684,
-                "current_qty": 105,
+                "current_qty": 106,
                 "prev_qty": 141
               },
               {
@@ -16331,11 +16347,11 @@
           },
           {
             "name": "생활가전",
-            "current_rev": 4433278078,
+            "current_rev": 4433361077,
             "prev_rev": 4235943684,
-            "current_profit": 1745454843,
+            "current_profit": 1745487107,
             "prev_profit": 1793367990,
-            "current_qty": 112444,
+            "current_qty": 112445,
             "prev_qty": 101763,
             "products": [
               {
@@ -16385,11 +16401,11 @@
               },
               {
                 "name": "보아르포스D14",
-                "current_rev": 260116057,
+                "current_rev": 260199056,
                 "prev_rev": 428208368,
-                "current_profit": 71211860,
+                "current_profit": 71244124,
                 "prev_profit": 138761216,
-                "current_qty": 3727,
+                "current_qty": 3728,
                 "prev_qty": 5572
               },
               {
@@ -16757,11 +16773,11 @@
           },
           {
             "name": "생활가전",
-            "current_rev": 6650210691,
+            "current_rev": 6650293690,
             "prev_rev": 6478908596,
-            "current_profit": 2683758764,
+            "current_profit": 2683791028,
             "prev_profit": 2794019152,
-            "current_qty": 169809,
+            "current_qty": 169810,
             "prev_qty": 155920,
             "products": [
               {
@@ -16775,11 +16791,11 @@
               },
               {
                 "name": "보아르포스D14",
-                "current_rev": 409486110,
+                "current_rev": 409569109,
                 "prev_rev": 844009274,
-                "current_profit": 120424885,
+                "current_profit": 120457149,
                 "prev_profit": 281854814,
-                "current_qty": 5638,
+                "current_qty": 5639,
                 "prev_qty": 10842
               },
               {
@@ -17300,9 +17316,9 @@
         },
         "8": {
           "생활가전": {
-            "매출": 569978147,
-            "이익": 201774677,
-            "수량": 15221
+            "매출": 570061146,
+            "이익": 201806941,
+            "수량": 15222
           },
           "육아": {
             "매출": 151907225,
@@ -17394,7 +17410,7 @@
             "육아": 152883586
           },
           "8": {
-            "생활": 576803687,
+            "생활": 576886686,
             "육아": 152616290
           }
         }
@@ -17500,8 +17516,8 @@
       "monthly_revenue": 0,
       "ytd_revenue": 0,
       "annual_revenue": 0,
-      "actual_month_revenue": 721885372,
-      "actual_ytd_revenue": 5595314558,
+      "actual_month_revenue": 721968371,
+      "actual_ytd_revenue": 5595397557,
       "achieve_rate_month": 0,
       "achieve_rate_ytd": 0,
       "products": []
