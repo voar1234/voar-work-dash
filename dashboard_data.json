@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-08-31T04:00:17",
+    "extracted_at": "2026-08-31T04:18:56",
     "product_count": 48,
     "data_unit": "상품(SKU) 단위"
   },
@@ -5654,8 +5654,8 @@
         "발주중수량": 0
       },
       "매출_통계": {
-        "매출_7일합": 22,
-        "매출_28일합": 259,
+        "매출_7일합": 23,
+        "매출_28일합": 260,
         "일평균_7일": 3,
         "일평균_28일": 9,
         "소진_잔여일수": 87,
@@ -14778,27 +14778,43 @@
   "sales": {
     "today_date": "2026-08-31",
     "kpi": {
-      "today_revenue": 63950,
-      "today_profit": 37293,
-      "today_qty": 2,
+      "today_revenue": 150527,
+      "today_profit": 73716,
+      "today_qty": 3,
       "today_orders": 1,
       "yesterday_revenue": 13419355,
-      "week_revenue": 185867739,
+      "week_revenue": 185954316,
       "last_week_revenue": 158489955,
-      "month_revenue": 736623522,
+      "month_revenue": 736710099,
       "last_month_revenue": 736517706
     },
     "channels_today": [
       {
         "매출처명": "스마트스토어",
         "매출처ID": 465,
-        "수량": 2,
-        "매출": 63950,
-        "이익": 37293,
+        "수량": 3,
+        "매출": 150527,
+        "이익": 73716,
         "비중": 100.0
       }
     ],
     "products_today": [
+      {
+        "제품ID": 491,
+        "제품명": "보아르컴포트클링",
+        "카테고리명": "침구청소기",
+        "수량": 1,
+        "매출": 86577,
+        "이익": 36423,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 86577,
+            "이익": 36423
+          }
+        ]
+      },
       {
         "제품ID": 1700,
         "제품명": "보아르슈즈쏙-화이트",
@@ -14869,7 +14885,7 @@
         618629155,
         670705018,
         736517706,
-        736623522,
+        736710099,
         0,
         0,
         0,
@@ -14913,7 +14929,7 @@
         15572,
         17371,
         21008,
-        19933,
+        19934,
         0,
         0,
         0,
@@ -14923,8 +14939,8 @@
     "category_compare": [
       {
         "카테고리": "침구청소기",
-        "매출": 1087975713,
-        "수량": 25991
+        "매출": 1088062290,
+        "수량": 25992
       },
       {
         "카테고리": "무선청소기",
@@ -15406,11 +15422,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 582882600,
+            "current_rev": 582969177,
             "prev_rev": 491193137,
-            "current_profit": 206971496,
+            "current_profit": 207007919,
             "prev_profit": 186736700,
-            "current_qty": 15562,
+            "current_qty": 15563,
             "prev_qty": 12775,
             "products": [
               {
@@ -15604,11 +15620,11 @@
               },
               {
                 "name": "보아르컴포트클링",
-                "current_rev": 17674265,
+                "current_rev": 17760842,
                 "prev_rev": 20593089,
-                "current_profit": 4383455,
+                "current_profit": 4419878,
                 "prev_profit": 8684877,
-                "current_qty": 265,
+                "current_qty": 266,
                 "prev_qty": 224
               },
               {
@@ -15832,11 +15848,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 157329201,
+            "current_rev": 157415778,
             "prev_rev": 121304879,
-            "current_profit": 57845018,
+            "current_profit": 57881441,
             "prev_profit": 50574338,
-            "current_qty": 4738,
+            "current_qty": 4739,
             "prev_qty": 2714,
             "products": [
               {
@@ -15957,15 +15973,6 @@
                 "prev_qty": 0
               },
               {
-                "name": "보아르컴포트클링",
-                "current_rev": 1819092,
-                "prev_rev": 4027923,
-                "current_profit": 715704,
-                "prev_profit": 1625389,
-                "current_qty": 22,
-                "prev_qty": 44
-              },
-              {
                 "name": "보아르워터스핀B1",
                 "current_rev": 1225609,
                 "prev_rev": 3426152,
@@ -15982,6 +15989,15 @@
                 "prev_profit": 886173,
                 "current_qty": 269,
                 "prev_qty": 122
+              },
+              {
+                "name": "보아르컴포트클링",
+                "current_rev": 1905669,
+                "prev_rev": 4027923,
+                "current_profit": 752127,
+                "prev_profit": 1625389,
+                "current_qty": 23,
+                "prev_qty": 44
               },
               {
                 "name": "보아르미스팀클링",
@@ -16249,11 +16265,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 4446182531,
+            "current_rev": 4446269108,
             "prev_rev": 4246156035,
-            "current_profit": 1750651662,
+            "current_profit": 1750688085,
             "prev_profit": 1797837197,
-            "current_qty": 112785,
+            "current_qty": 112786,
             "prev_qty": 102002,
             "products": [
               {
@@ -16294,11 +16310,11 @@
               },
               {
                 "name": "보아르컴포트클링",
-                "current_rev": 145418576,
+                "current_rev": 145505153,
                 "prev_rev": 334852584,
-                "current_profit": 51292476,
+                "current_profit": 51328899,
                 "prev_profit": 154883869,
-                "current_qty": 1908,
+                "current_qty": 1909,
                 "prev_qty": 3683
               },
               {
@@ -16675,11 +16691,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 6653513079,
+            "current_rev": 6653599656,
             "prev_rev": 6465496524,
-            "current_profit": 2684712687,
+            "current_profit": 2684749110,
             "prev_profit": 2788353534,
-            "current_qty": 169920,
+            "current_qty": 169921,
             "prev_qty": 155586,
             "products": [
               {
@@ -16711,11 +16727,11 @@
               },
               {
                 "name": "보아르컴포트클링",
-                "current_rev": 278098568,
+                "current_rev": 278185145,
                 "prev_rev": 635662321,
-                "current_profit": 111204316,
+                "current_profit": 111240739,
                 "prev_profit": 284698634,
-                "current_qty": 3372,
+                "current_qty": 3373,
                 "prev_qty": 7117
               },
               {
@@ -17328,9 +17344,9 @@
         },
         "8": {
           "생활가전": {
-            "매출": 582882600,
-            "이익": 206971496,
-            "수량": 15562
+            "매출": 582969177,
+            "이익": 207007919,
+            "수량": 15563
           },
           "육아": {
             "매출": 153740922,
@@ -17422,7 +17438,7 @@
             "육아": 152883586
           },
           "8": {
-            "생활": 589902045,
+            "생활": 589988622,
             "육아": 154471011
           }
         }
@@ -17528,8 +17544,8 @@
       "monthly_revenue": 0,
       "ytd_revenue": 0,
       "annual_revenue": 0,
-      "actual_month_revenue": 736623522,
-      "actual_ytd_revenue": 5610052708,
+      "actual_month_revenue": 736710099,
+      "actual_ytd_revenue": 5610139285,
       "achieve_rate_month": 0,
       "achieve_rate_ytd": 0,
       "products": []
