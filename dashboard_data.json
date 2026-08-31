@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-09-01T04:46:42",
+    "extracted_at": "2026-09-01T04:59:09",
     "product_count": 48,
     "data_unit": "상품(SKU) 단위"
   },
@@ -3706,8 +3706,8 @@
         "발주중수량": 5010
       },
       "매출_통계": {
-        "매출_7일합": 448,
-        "매출_28일합": 2184,
+        "매출_7일합": 449,
+        "매출_28일합": 2185,
         "일평균_7일": 64,
         "일평균_28일": 78,
         "소진_잔여일수": 21,
@@ -14778,23 +14778,23 @@
   "sales": {
     "today_date": "2026-09-01",
     "kpi": {
-      "today_revenue": 420187,
-      "today_profit": 196389,
-      "today_qty": 9,
+      "today_revenue": 446501,
+      "today_profit": 207083,
+      "today_qty": 10,
       "today_orders": 1,
       "yesterday_revenue": 19547960,
-      "week_revenue": 177062255,
+      "week_revenue": 177088569,
       "last_week_revenue": 180601820,
-      "month_revenue": 420187,
+      "month_revenue": 446501,
       "last_month_revenue": 13882468
     },
     "channels_today": [
       {
         "매출처명": "스마트스토어",
         "매출처ID": 465,
-        "수량": 9,
-        "매출": 420187,
-        "이익": 196389,
+        "수량": 10,
+        "매출": 446501,
+        "이익": 207083,
         "비중": 100.0
       }
     ],
@@ -14864,6 +14864,22 @@
         ]
       },
       {
+        "제품ID": 1700,
+        "제품명": "보아르슈즈쏙-화이트",
+        "카테고리명": "건조기",
+        "수량": 2,
+        "매출": 52628,
+        "이익": 21388,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 2,
+            "매출": 52628,
+            "이익": 21388
+          }
+        ]
+      },
+      {
         "제품ID": 198,
         "제품명": "보아르아이워시",
         "카테고리명": "초음파세척기",
@@ -14876,22 +14892,6 @@
             "수량": 1,
             "매출": 42046,
             "이익": 18127
-          }
-        ]
-      },
-      {
-        "제품ID": 1700,
-        "제품명": "보아르슈즈쏙-화이트",
-        "카테고리명": "건조기",
-        "수량": 1,
-        "매출": 26314,
-        "이익": 10694,
-        "판매처내역": [
-          {
-            "매출처명": "스마트스토어",
-            "수량": 1,
-            "매출": 26314,
-            "이익": 10694
           }
         ]
       },
@@ -14950,7 +14950,7 @@
         670705018,
         736517706,
         763622215,
-        420187,
+        446501,
         0,
         0,
         0
@@ -14994,7 +14994,7 @@
         17371,
         21008,
         20628,
-        9,
+        10,
         0,
         0,
         0
@@ -15013,8 +15013,8 @@
       },
       {
         "카테고리": "건조기",
-        "매출": 564884232,
-        "수량": 17660
+        "매출": 564910546,
+        "수량": 17661
       },
       {
         "카테고리": "다리미",
@@ -15348,11 +15348,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 594484165,
+            "current_rev": 594510479,
             "prev_rev": 501138480,
-            "current_profit": 211199803,
+            "current_profit": 211210497,
             "prev_profit": 202714685,
-            "current_qty": 15906,
+            "current_qty": 15907,
             "prev_qty": 11622,
             "products": [
               {
@@ -15402,11 +15402,11 @@
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 55547667,
+                "current_rev": 55573981,
                 "prev_rev": 31655691,
-                "current_profit": 20871267,
+                "current_profit": 20881961,
                 "prev_profit": 12907185,
-                "current_qty": 2220,
+                "current_qty": 2221,
                 "prev_qty": 1232
               },
               {
@@ -15774,11 +15774,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 151997004,
+            "current_rev": 152023318,
             "prev_rev": 148932344,
-            "current_profit": 56089472,
+            "current_profit": 56100166,
             "prev_profit": 70042886,
-            "current_qty": 4488,
+            "current_qty": 4489,
             "prev_qty": 3116,
             "products": [
               {
@@ -15810,11 +15810,11 @@
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 12219610,
+                "current_rev": 12245924,
                 "prev_rev": 3964000,
-                "current_profit": 5221850,
+                "current_profit": 5232544,
                 "prev_profit": 1917529,
-                "current_qty": 448,
+                "current_qty": 449,
                 "prev_qty": 139
               },
               {
@@ -16191,11 +16191,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 4468664085,
+            "current_rev": 4468690399,
             "prev_rev": 4284024757,
-            "current_profit": 1759450640,
+            "current_profit": 1759461334,
             "prev_profit": 1821870156,
-            "current_qty": 113368,
+            "current_qty": 113369,
             "prev_qty": 102609,
             "products": [
               {
@@ -16470,11 +16470,11 @@
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 418238171,
+                "current_rev": 418264485,
                 "prev_rev": 408597002,
-                "current_profit": 182636495,
+                "current_profit": 182647189,
                 "prev_profit": 178639975,
-                "current_qty": 15830,
+                "current_qty": 15831,
                 "prev_qty": 15510
               },
               {
@@ -16617,11 +16617,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 6665782282,
+            "current_rev": 6665808596,
             "prev_rev": 6466330385,
-            "current_profit": 2689042458,
+            "current_profit": 2689053152,
             "prev_profit": 2788631298,
-            "current_qty": 170264,
+            "current_qty": 170265,
             "prev_qty": 155618,
             "products": [
               {
@@ -16905,11 +16905,11 @@
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 544537499,
+                "current_rev": 544563813,
                 "prev_rev": 536249580,
-                "current_profit": 241291248,
+                "current_profit": 241301942,
                 "prev_profit": 271183903,
-                "current_qty": 20506,
+                "current_qty": 20507,
                 "prev_qty": 20085
               },
               {
@@ -17282,9 +17282,9 @@
         },
         "9": {
           "생활가전": {
-            "매출": 270162,
-            "이익": 126480,
-            "수량": 5
+            "매출": 296476,
+            "이익": 137174,
+            "수량": 6
           },
           "육아": {
             "매출": 150025,
@@ -17380,7 +17380,7 @@
             "육아": 159258312
           },
           "9": {
-            "생활": 320863,
+            "생활": 347177,
             "육아": 150025
           }
         }
@@ -17486,8 +17486,8 @@
       "monthly_revenue": 0,
       "ytd_revenue": 0,
       "annual_revenue": 0,
-      "actual_month_revenue": 420187,
-      "actual_ytd_revenue": 5637471588,
+      "actual_month_revenue": 446501,
+      "actual_ytd_revenue": 5637497902,
       "achieve_rate_month": 0,
       "achieve_rate_ytd": 0,
       "products": []
