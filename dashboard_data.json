@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-09-01T02:05:23",
+    "extracted_at": "2026-09-01T02:15:09",
     "product_count": 48,
     "data_unit": "상품(SKU) 단위"
   },
@@ -600,13 +600,13 @@
         "발주중수량": 0
       },
       "매출_통계": {
-        "매출_7일합": 70,
-        "매출_28일합": 283,
+        "매출_7일합": 71,
+        "매출_28일합": 284,
         "일평균_7일": 10,
         "일평균_28일": 10,
-        "소진_잔여일수": 317,
-        "소진_예상일": "2027-07-15",
-        "재고발주_권장일": "2027-05-01"
+        "소진_잔여일수": 315,
+        "소진_예상일": "2027-07-13",
+        "재고발주_권장일": "2027-04-29"
       },
       "구성제품": [
         {
@@ -2379,9 +2379,9 @@
         "발주중수량": 0
       },
       "매출_통계": {
-        "매출_7일합": 52,
-        "매출_28일합": 370,
-        "일평균_7일": 7,
+        "매출_7일합": 53,
+        "매출_28일합": 371,
+        "일평균_7일": 8,
         "일평균_28일": 13,
         "소진_잔여일수": 106,
         "소진_예상일": "2026-12-16",
@@ -14778,27 +14778,43 @@
   "sales": {
     "today_date": "2026-09-01",
     "kpi": {
-      "today_revenue": 258482,
-      "today_profit": 122415,
-      "today_qty": 6,
+      "today_revenue": 397046,
+      "today_profit": 185971,
+      "today_qty": 8,
       "today_orders": 1,
       "yesterday_revenue": 19547960,
-      "week_revenue": 176900550,
+      "week_revenue": 177039114,
       "last_week_revenue": 180601820,
-      "month_revenue": 258482,
+      "month_revenue": 397046,
       "last_month_revenue": 13882468
     },
     "channels_today": [
       {
         "매출처명": "스마트스토어",
         "매출처ID": 465,
-        "수량": 6,
-        "매출": 258482,
-        "이익": 122415,
+        "수량": 8,
+        "매출": 397046,
+        "이익": 185971,
         "비중": 100.0
       }
     ],
     "products_today": [
+      {
+        "제품ID": 4304,
+        "제품명": "보아르미스팀클링-화이트",
+        "카테고리명": "스팀청소기",
+        "수량": 1,
+        "매출": 126924,
+        "이익": 58217,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 126924,
+            "이익": 58217
+          }
+        ]
+      },
       {
         "제품ID": 427,
         "제품명": "보아르아가홀스스프링카",
@@ -14878,6 +14894,22 @@
             "이익": 10694
           }
         ]
+      },
+      {
+        "제품ID": 6743,
+        "제품명": "보아르클링워시습식청소기전용세제-1L",
+        "카테고리명": "기타생활가전",
+        "수량": 1,
+        "매출": 11640,
+        "이익": 5339,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 11640,
+            "이익": 5339
+          }
+        ]
       }
     ],
     "monthly_compare": {
@@ -14918,7 +14950,7 @@
         670705018,
         736517706,
         763622215,
-        258482,
+        397046,
         0,
         0,
         0
@@ -14962,7 +14994,7 @@
         17371,
         21008,
         20628,
-        6,
+        8,
         0,
         0,
         0
@@ -14996,8 +15028,8 @@
       },
       {
         "카테고리": "스팀청소기",
-        "매출": 350139462,
-        "수량": 3138
+        "매출": 350266386,
+        "수량": 3139
       },
       {
         "카테고리": "초음파세척기",
@@ -15041,8 +15073,8 @@
       },
       {
         "카테고리": "기타생활가전",
-        "매출": 59524464,
-        "수량": 1560
+        "매출": 59536104,
+        "수량": 1561
       },
       {
         "카테고리": "기타유아",
@@ -15316,11 +15348,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 594345601,
+            "current_rev": 594484165,
             "prev_rev": 501138480,
-            "current_profit": 211136247,
+            "current_profit": 211199803,
             "prev_profit": 202714685,
-            "current_qty": 15904,
+            "current_qty": 15906,
             "prev_qty": 11622,
             "products": [
               {
@@ -15433,11 +15465,11 @@
               },
               {
                 "name": "보아르미스팀클링",
-                "current_rev": 46148876,
+                "current_rev": 46275800,
                 "prev_rev": 38871983,
-                "current_profit": 19971509,
+                "current_profit": 20029726,
                 "prev_profit": 20422317,
-                "current_qty": 381,
+                "current_qty": 382,
                 "prev_qty": 247
               },
               {
@@ -15469,11 +15501,11 @@
               },
               {
                 "name": "보아르클링워시습식청소기전용세제",
-                "current_rev": 4553758,
+                "current_rev": 4565398,
                 "prev_rev": 0,
-                "current_profit": 2720167,
+                "current_profit": 2725506,
                 "prev_profit": 0,
-                "current_qty": 291,
+                "current_qty": 292,
                 "prev_qty": 0
               },
               {
@@ -15742,11 +15774,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 151858440,
+            "current_rev": 151997004,
             "prev_rev": 148932344,
-            "current_profit": 56025916,
+            "current_profit": 56089472,
             "prev_profit": 70042886,
-            "current_qty": 4486,
+            "current_qty": 4488,
             "prev_qty": 3116,
             "products": [
               {
@@ -15886,11 +15918,11 @@
               },
               {
                 "name": "보아르미스팀클링",
-                "current_rev": 7079438,
+                "current_rev": 7206362,
                 "prev_rev": 9293073,
-                "current_profit": 3506674,
+                "current_profit": 3564891,
                 "prev_profit": 5923919,
-                "current_qty": 52,
+                "current_qty": 53,
                 "prev_qty": 51
               },
               {
@@ -15922,11 +15954,11 @@
               },
               {
                 "name": "보아르클링워시습식청소기전용세제",
-                "current_rev": 1128367,
+                "current_rev": 1140007,
                 "prev_rev": 0,
-                "current_profit": 687297,
+                "current_profit": 692636,
                 "prev_profit": 0,
-                "current_qty": 70,
+                "current_qty": 71,
                 "prev_qty": 0
               },
               {
@@ -16159,11 +16191,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 4468525521,
+            "current_rev": 4468664085,
             "prev_rev": 4284024757,
-            "current_profit": 1759387084,
+            "current_profit": 1759450640,
             "prev_profit": 1821870156,
-            "current_qty": 113366,
+            "current_qty": 113368,
             "prev_qty": 102609,
             "products": [
               {
@@ -16303,11 +16335,11 @@
               },
               {
                 "name": "보아르클링워시습식청소기전용세제",
-                "current_rev": 59524464,
+                "current_rev": 59536104,
                 "prev_rev": 0,
-                "current_profit": 50345082,
+                "current_profit": 50350421,
                 "prev_profit": 0,
-                "current_qty": 1560,
+                "current_qty": 1561,
                 "prev_qty": 0
               },
               {
@@ -16330,11 +16362,11 @@
               },
               {
                 "name": "보아르미스팀클링",
-                "current_rev": 303257622,
+                "current_rev": 303384546,
                 "prev_rev": 341158784,
-                "current_profit": 133742588,
+                "current_profit": 133800805,
                 "prev_profit": 238473533,
-                "current_qty": 2520,
+                "current_qty": 2521,
                 "prev_qty": 2154
               },
               {
@@ -16585,11 +16617,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 6665643718,
+            "current_rev": 6665782282,
             "prev_rev": 6466330385,
-            "current_profit": 2688978902,
+            "current_profit": 2689042458,
             "prev_profit": 2788631298,
-            "current_qty": 170262,
+            "current_qty": 170264,
             "prev_qty": 155618,
             "products": [
               {
@@ -16675,11 +16707,11 @@
               },
               {
                 "name": "보아르미스팀클링",
-                "current_rev": 498525086,
+                "current_rev": 498652010,
                 "prev_rev": 340966764,
-                "current_profit": 241709650,
+                "current_profit": 241767867,
                 "prev_profit": 238214462,
-                "current_qty": 3810,
+                "current_qty": 3811,
                 "prev_qty": 2153
               },
               {
@@ -16756,11 +16788,11 @@
               },
               {
                 "name": "보아르클링워시습식청소기전용세제",
-                "current_rev": 59524464,
+                "current_rev": 59536104,
                 "prev_rev": 0,
-                "current_profit": 50345082,
+                "current_profit": 50350421,
                 "prev_profit": 0,
-                "current_qty": 1560,
+                "current_qty": 1561,
                 "prev_qty": 0
               },
               {
@@ -17250,9 +17282,9 @@
         },
         "9": {
           "생활가전": {
-            "매출": 131598,
-            "이익": 62924,
-            "수량": 3
+            "매출": 270162,
+            "이익": 126480,
+            "수량": 5
           },
           "육아": {
             "매출": 126884,
@@ -17348,7 +17380,7 @@
             "육아": 159258312
           },
           "9": {
-            "생활": 138042,
+            "생활": 276606,
             "육아": 126884
           }
         }
@@ -17454,8 +17486,8 @@
       "monthly_revenue": 0,
       "ytd_revenue": 0,
       "annual_revenue": 0,
-      "actual_month_revenue": 258482,
-      "actual_ytd_revenue": 5637309883,
+      "actual_month_revenue": 397046,
+      "actual_ytd_revenue": 5637448447,
       "achieve_rate_month": 0,
       "achieve_rate_ytd": 0,
       "products": []
