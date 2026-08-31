@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-09-01T01:24:03",
+    "extracted_at": "2026-09-01T01:36:22",
     "product_count": 48,
     "data_unit": "상품(SKU) 단위"
   },
@@ -5933,8 +5933,8 @@
         "발주중수량": 0
       },
       "매출_통계": {
-        "매출_7일합": 36,
-        "매출_28일합": 281,
+        "매출_7일합": 37,
+        "매출_28일합": 282,
         "일평균_7일": 5,
         "일평균_28일": 10,
         "소진_잔여일수": 111,
@@ -14778,27 +14778,43 @@
   "sales": {
     "today_date": "2026-09-01",
     "kpi": {
-      "today_revenue": 159376,
-      "today_profit": 77979,
-      "today_qty": 4,
+      "today_revenue": 235340,
+      "today_profit": 111996,
+      "today_qty": 5,
       "today_orders": 1,
       "yesterday_revenue": 19547960,
-      "week_revenue": 176801444,
+      "week_revenue": 176877408,
       "last_week_revenue": 180601820,
-      "month_revenue": 159376,
+      "month_revenue": 235340,
       "last_month_revenue": 13882468
     },
     "channels_today": [
       {
         "매출처명": "스마트스토어",
         "매출처ID": 465,
-        "수량": 4,
-        "매출": 159376,
-        "이익": 77979,
+        "수량": 5,
+        "매출": 235340,
+        "이익": 111996,
         "비중": 100.0
       }
     ],
     "products_today": [
+      {
+        "제품ID": 427,
+        "제품명": "보아르아가홀스스프링카",
+        "카테고리명": "스프링카",
+        "수량": 1,
+        "매출": 75964,
+        "이익": 34017,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 75964,
+            "이익": 34017
+          }
+        ]
+      },
       {
         "제품ID": 7245,
         "제품명": "보아르컴플릿M20L쓰레기통-베이지",
@@ -14902,7 +14918,7 @@
         670705018,
         736517706,
         763622215,
-        159376,
+        235340,
         0,
         0,
         0
@@ -14946,7 +14962,7 @@
         17371,
         21008,
         20628,
-        4,
+        5,
         0,
         0,
         0
@@ -15005,8 +15021,8 @@
       },
       {
         "카테고리": "스프링카",
-        "매출": 172190051,
-        "수량": 2339
+        "매출": 172266015,
+        "수량": 2340
       },
       {
         "카테고리": "물걸레청소기",
@@ -15300,11 +15316,11 @@
         "categories": [
           {
             "name": "육아",
-            "current_rev": 155553522,
+            "current_rev": 155629486,
             "prev_rev": 139962635,
-            "current_profit": 62902623,
+            "current_profit": 62936640,
             "prev_profit": 57303174,
-            "current_qty": 4411,
+            "current_qty": 4412,
             "prev_qty": 3360,
             "products": [
               {
@@ -15336,11 +15352,11 @@
               },
               {
                 "name": "보아르아가홀스스프링카",
-                "current_rev": 24563065,
+                "current_rev": 24639029,
                 "prev_rev": 15716982,
-                "current_profit": 10301085,
+                "current_profit": 10335102,
                 "prev_profit": 6841298,
-                "current_qty": 340,
+                "current_qty": 341,
                 "prev_qty": 218
               },
               {
@@ -15726,11 +15742,11 @@
         "categories": [
           {
             "name": "육아",
-            "current_rev": 24943004,
+            "current_rev": 25018968,
             "prev_rev": 41471664,
-            "current_profit": 10404700,
+            "current_profit": 10438717,
             "prev_profit": 17510844,
-            "current_qty": 649,
+            "current_qty": 650,
             "prev_qty": 952,
             "products": [
               {
@@ -15753,11 +15769,11 @@
               },
               {
                 "name": "보아르아가홀스스프링카",
-                "current_rev": 2781730,
+                "current_rev": 2857694,
                 "prev_rev": 5726031,
-                "current_profit": 1271638,
+                "current_profit": 1305655,
                 "prev_profit": 2481161,
-                "current_qty": 36,
+                "current_qty": 37,
                 "prev_qty": 80
               },
               {
@@ -16143,11 +16159,11 @@
         "categories": [
           {
             "name": "육아",
-            "current_rev": 1168685256,
+            "current_rev": 1168761220,
             "prev_rev": 850417262,
-            "current_profit": 483950385,
+            "current_profit": 483984402,
             "prev_profit": 376092288,
-            "current_qty": 31774,
+            "current_qty": 31775,
             "prev_qty": 24121,
             "products": [
               {
@@ -16206,11 +16222,11 @@
               },
               {
                 "name": "보아르아가홀스스프링카",
-                "current_rev": 172190051,
+                "current_rev": 172266015,
                 "prev_rev": 140315572,
-                "current_profit": 75465571,
+                "current_profit": 75499588,
                 "prev_profit": 63053110,
-                "current_qty": 2339,
+                "current_qty": 2340,
                 "prev_qty": 1924
               },
               {
@@ -16569,11 +16585,11 @@
         "categories": [
           {
             "name": "육아",
-            "current_rev": 1763512345,
+            "current_rev": 1763588309,
             "prev_rev": 1242714038,
-            "current_profit": 737133271,
+            "current_profit": 737167288,
             "prev_profit": 564761027,
-            "current_qty": 46529,
+            "current_qty": 46530,
             "prev_qty": 35444,
             "products": [
               {
@@ -16623,11 +16639,11 @@
               },
               {
                 "name": "보아르아가홀스스프링카",
-                "current_rev": 251552868,
+                "current_rev": 251628832,
                 "prev_rev": 205409186,
-                "current_profit": 110884762,
+                "current_profit": 110918779,
                 "prev_profit": 94765612,
-                "current_qty": 3440,
+                "current_qty": 3441,
                 "prev_qty": 2803
               },
               {
@@ -17239,9 +17255,9 @@
             "수량": 3
           },
           "육아": {
-            "매출": 27778,
-            "이익": 15055,
-            "수량": 1
+            "매출": 103742,
+            "이익": 49072,
+            "수량": 2
           }
         }
       }
@@ -17333,7 +17349,7 @@
           },
           "9": {
             "생활": 138042,
-            "육아": 27778
+            "육아": 103742
           }
         }
       },
@@ -17438,8 +17454,8 @@
       "monthly_revenue": 0,
       "ytd_revenue": 0,
       "annual_revenue": 0,
-      "actual_month_revenue": 159376,
-      "actual_ytd_revenue": 5637210777,
+      "actual_month_revenue": 235340,
+      "actual_ytd_revenue": 5637286741,
       "achieve_rate_month": 0,
       "achieve_rate_ytd": 0,
       "products": []
