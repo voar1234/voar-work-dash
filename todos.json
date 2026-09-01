@@ -995,17 +995,7 @@
       "done": true
     }
   ],
-  "2026-07-30": [
-    {
-      "id": "t_qhp1zwuhcc",
-      "text": "[자동·주간] 네이버 오늘끝딜 제안",
-      "done": false,
-      "autoKey": "auto:thursday-ondeal:2026-07-30",
-      "autoSource": {
-        "type": "매주 목요일 정기"
-      }
-    }
-  ],
+  "2026-07-30": [],
   "2026-07-29": [
     {
       "id": "t_1fgeonen0y7",
@@ -1049,6 +1039,16 @@
       "id": "t_7hli7xquskd",
       "text": "브검페 정리하기!!!!",
       "done": true
+    },
+    {
+      "id": "t_qhp1zwuhcc",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-07-30",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      },
+      "leaveRerouted": "2026-07-30"
     }
   ],
   "2026-07-13": [
@@ -1917,18 +1917,7 @@
       }
     }
   ],
-  "2026-08-31": [
-    {
-      "id": "t_ao311ljdd75",
-      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
-      "done": false,
-      "urgent": true,
-      "autoKey": "auto:monday-ondeal-deadline:2026-08-31",
-      "autoSource": {
-        "type": "매주 월요일 12시 접수마감"
-      }
-    }
-  ],
+  "2026-08-31": [],
   "2026-09-10": [
     {
       "id": "t_hgfn70rirx6",
@@ -2114,6 +2103,17 @@
       "text": "크루특가 진행요청",
       "done": true,
       "leaveRerouted": "2026-08-31"
+    },
+    {
+      "id": "t_ao311ljdd75",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-08-31",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      },
+      "leaveRerouted": "2026-08-31"
     }
   ],
   "2026-09-02": [
@@ -2179,6 +2179,11 @@
       "id": "t_gwchsnscy5k",
       "text": "아가미니 브커 콘텐츠 확인 및 숏클립 등록",
       "done": true
+    },
+    {
+      "id": "t_ct9qjfx3at",
+      "text": "스티머인젝터 예판 설정",
+      "done": false
     }
   ],
   "2026-10-29": [
@@ -2201,10 +2206,6 @@
       "autoKey": "auto:monday-ondeal-deadline:2026-10-26",
       "autoSource": {
         "type": "매주 월요일 12시 접수마감"
-      }
-    }
-  ]
-} "type": "매주 월요일 12시 접수마감"
       }
     }
   ]
