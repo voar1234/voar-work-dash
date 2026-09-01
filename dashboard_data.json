@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-09-02T01:25:13",
+    "extracted_at": "2026-09-02T01:39:01",
     "product_count": 48,
     "data_unit": "상품(SKU) 단위"
   },
@@ -193,13 +193,13 @@
         "발주중수량": 0
       },
       "매출_통계": {
-        "매출_7일합": 19,
-        "매출_28일합": 28,
+        "매출_7일합": 20,
+        "매출_28일합": 29,
         "일평균_7일": 3,
         "일평균_28일": 1,
-        "소진_잔여일수": 1967,
-        "소진_예상일": "2032-01-21",
-        "재고발주_권장일": "2031-11-07"
+        "소진_잔여일수": 1899,
+        "소진_예상일": "2031-11-14",
+        "재고발주_권장일": "2031-08-31"
       },
       "구성제품": [
         {
@@ -14793,23 +14793,23 @@
   "sales": {
     "today_date": "2026-09-02",
     "kpi": {
-      "today_revenue": 297063,
-      "today_profit": 131977,
-      "today_qty": 6,
+      "today_revenue": 355319,
+      "today_profit": 143513,
+      "today_qty": 7,
       "today_orders": 1,
       "yesterday_revenue": 42558984,
-      "week_revenue": 173248567,
+      "week_revenue": 173306823,
       "last_week_revenue": 205903355,
-      "month_revenue": 42856047,
+      "month_revenue": 42914303,
       "last_month_revenue": 26978895
     },
     "channels_today": [
       {
         "매출처명": "스마트스토어",
         "매출처ID": 465,
-        "수량": 6,
-        "매출": 297063,
-        "이익": 131977,
+        "수량": 7,
+        "매출": 355319,
+        "이익": 143513,
         "비중": 100.0
       }
     ],
@@ -14827,6 +14827,22 @@
             "수량": 1,
             "매출": 124953,
             "이익": 64009
+          }
+        ]
+      },
+      {
+        "제품ID": 7391,
+        "제품명": "보아르아가미니휴대용젖병소독기-화이트",
+        "카테고리명": "살균기",
+        "수량": 1,
+        "매출": 58256,
+        "이익": 11536,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 58256,
+            "이익": 11536
           }
         ]
       },
@@ -14933,7 +14949,7 @@
         670705018,
         736499860,
         766486227,
-        42856047,
+        42914303,
         0,
         0,
         0
@@ -14977,7 +14993,7 @@
         17371,
         21008,
         20730,
-        1120,
+        1121,
         0,
         0,
         0
@@ -15026,8 +15042,8 @@
       },
       {
         "카테고리": "살균기",
-        "매출": 306988628,
-        "수량": 12735
+        "매출": 307046884,
+        "수량": 12736
       },
       {
         "카테고리": "보틀워머",
@@ -15676,11 +15692,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 162727645,
+            "current_rev": 162785901,
             "prev_rev": 149733149,
-            "current_profit": 64962662,
+            "current_profit": 64974198,
             "prev_profit": 61011360,
-            "current_qty": 4576,
+            "current_qty": 4577,
             "prev_qty": 3541,
             "products": [
               {
@@ -15766,11 +15782,11 @@
               },
               {
                 "name": "보아르아가미니휴대용젖병소독기",
-                "current_rev": 1333472,
+                "current_rev": 1391728,
                 "prev_rev": 0,
-                "current_profit": 25312,
+                "current_profit": 36848,
                 "prev_profit": 0,
-                "current_qty": 28,
+                "current_qty": 29,
                 "prev_qty": 0
               },
               {
@@ -16093,11 +16109,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 29174091,
+            "current_rev": 29232347,
             "prev_rev": 43665974,
-            "current_profit": 11860299,
+            "current_profit": 11871835,
             "prev_profit": 18077128,
-            "current_qty": 714,
+            "current_qty": 715,
             "prev_qty": 928,
             "products": [
               {
@@ -16156,11 +16172,11 @@
               },
               {
                 "name": "보아르아가미니휴대용젖병소독기",
-                "current_rev": 983285,
+                "current_rev": 1041541,
                 "prev_rev": 0,
-                "current_profit": 95605,
+                "current_profit": 107141,
                 "prev_profit": 0,
-                "current_qty": 19,
+                "current_qty": 20,
                 "prev_qty": 0
               },
               {
@@ -16510,11 +16526,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 1178632882,
+            "current_rev": 1178691138,
             "prev_rev": 861702213,
-            "current_profit": 487257523,
+            "current_profit": 487269059,
             "prev_profit": 380484315,
-            "current_qty": 32013,
+            "current_qty": 32014,
             "prev_qty": 24345,
             "products": [
               {
@@ -16609,11 +16625,11 @@
               },
               {
                 "name": "보아르아가미니휴대용젖병소독기",
-                "current_rev": 1333472,
+                "current_rev": 1391728,
                 "prev_rev": 0,
-                "current_profit": 25312,
+                "current_profit": 36848,
                 "prev_profit": 0,
-                "current_qty": 28,
+                "current_qty": 29,
                 "prev_qty": 0
               }
             ]
@@ -16936,11 +16952,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 1767060252,
+            "current_rev": 1767118508,
             "prev_rev": 1247006376,
-            "current_profit": 738086169,
+            "current_profit": 738097705,
             "prev_profit": 565992045,
-            "current_qty": 46616,
+            "current_qty": 46617,
             "prev_qty": 35531,
             "products": [
               {
@@ -17035,11 +17051,11 @@
               },
               {
                 "name": "보아르아가미니휴대용젖병소독기",
-                "current_rev": 1333472,
+                "current_rev": 1391728,
                 "prev_rev": 0,
-                "current_profit": 25312,
+                "current_profit": 36848,
                 "prev_profit": 0,
-                "current_qty": 28,
+                "current_qty": 29,
                 "prev_qty": 0
               }
             ]
@@ -17298,9 +17314,9 @@
             "수량": 895
           },
           "육아": {
-            "매출": 9899629,
-            "이익": 3498555,
-            "수량": 225
+            "매출": 9957885,
+            "이익": 3510091,
+            "수량": 226
           }
         }
       }
@@ -17392,7 +17408,7 @@
           },
           "9": {
             "생활": 33291244,
-            "육아": 9936237
+            "육아": 9994493
           }
         }
       },
@@ -17497,8 +17513,8 @@
       "monthly_revenue": 0,
       "ytd_revenue": 0,
       "annual_revenue": 0,
-      "actual_month_revenue": 42856047,
-      "actual_ytd_revenue": 5682753614,
+      "actual_month_revenue": 42914303,
+      "actual_ytd_revenue": 5682811870,
       "achieve_rate_month": 0,
       "achieve_rate_ytd": 0,
       "products": []
