@@ -1329,14 +1329,15 @@
     <!-- ─── Page: 긴급알림 ─── -->
     <section class="page" id="page-alerts">
       <div class="panel">
-        <div class="alert-section">
+        <div class="alert-section" style="display:none">
+          <!-- v3 2026-08-26: 재고 절대량(<10) 알림 폐기. DOM 유지(호환용) / 화면에서 숨김 -->
           <h3>📦 재고 부족 (10개 미만) <span class="badge-count" id="alert-lowstock-count">0</span></h3>
-          <div class="todo-note">본품·구성품 중 현재고 10개 미만 (지속판매·단종 모두 / 재고 0은 노란색 · 체크 시 사라짐)</div>
+          <div class="todo-note">폐기됨</div>
           <div id="alert-lowstock"></div>
         </div>
         <div class="alert-section">
-          <h3>⏰ 7일내 소진 예정 <span class="badge-count" id="alert-depletion-count">0</span></h3>
-          <div class="todo-note">지속판매 제품만 / 알림 발생 후 3일 지나면 자동 사라짐 / 재고 10개 미만 떨어지면 위로 이동</div>
+          <h3>🚨 3일내 품절 예정 <span class="badge-count" id="alert-depletion-count">0</span></h3>
+          <div class="todo-note">지속판매 제품만 · 재고 수량 상관없이 소진 잔여 3일 이하 · dismiss(체크) 버튼 눌러야만 사라짐</div>
           <div id="alert-depletion"></div>
         </div>
         <div class="alert-section">
@@ -2255,68 +2256,27 @@ function computeDailySpike() {
 // 기존 computeNoStock — 호환 유지 (다른 곳에서 호출하는 경우 대비)
 function computeNoStock() { return computeLowStock().filter(x => x.현재고 === 0); }
 
-// 새 규칙 1: 재고 10개 미만 (지속판매·단종 모두). 미출시 신제품·dismiss 처리된 0재고 제외
-function computeLowStock() {
-  const dismissed = getDismissedLowStock();
-  const out = [];
-  for (const p of (DATA.products || [])) {
-    if (p.미출시) continue;
-    const stock = p.재고_요약?.현재고 || 0;
-    if (stock >= 10) continue;
-    const isDisc = ['단종', '단종(전파)', '단종고려'].includes(p.엑셀_분류);
-    const key = `p:${p.품목ID}`;
-    // 재고 0이고 dismiss 됐으면 제외
-    if (stock === 0 && dismissed.has(key)) continue;
-    out.push({
-      제품ID: p.품목ID, key, type: '본품',
-      제품명: p.상품명 || p.품목명,
-      카테고리: p.영업카테고리1,
-      현재고: stock,
-      발주중: p.재고_요약?.발주중수량 || 0,
-      isDiscontinued: isDisc,
-    });
-  }
-  for (const a of (DATA.accessories || [])) {
-    const stock = a.재고_요약?.현재고 || 0;
-    if (stock >= 10) continue;
-    const isDisc = ['단종', '단종(전파)', '단종고려'].includes(a.엑셀_분류);
-    const key = `a:${a.제품ID}`;
-    if (stock === 0 && dismissed.has(key)) continue;
-    out.push({
-      제품ID: a.제품ID, key, type: '구성품',
-      제품명: a.상품명 || a.품목명,
-      모품목: a.모품목명,
-      현재고: stock,
-      발주중: a.재고_요약?.발주중수량 || 0,
-      isDiscontinued: isDisc,
-    });
-  }
-  // 정렬: 재고 0 (단종 제외) 위 → 재고 적은 순 → 단종은 맨 아래
-  out.sort((x, y) => {
-    if (x.isDiscontinued !== y.isDiscontinued) return x.isDiscontinued ? 1 : -1;
-    return x.현재고 - y.현재고;
-  });
-  return out;
-}
+// v3 (2026-08-26): 사용자 규칙 변경 — 재고 절대량 <10 알림 폐기.
+//   폐기 사유: 정상 회전하는 소량 SKU가 매번 알림 스팸이 되고, 실제 위험은 절대량이
+//   아니라 "일평균 대비 소진 임박"이므로 computeDepletionSoon7d 로 일원화.
+//   호환용으로 함수 자체는 남기고 항상 빈 배열 반환 → 기존 호출 지점 전부 안전.
+function computeLowStock() { return []; }
 
-// 새 규칙 2: 7일 이내 소진 예정 (지속판매만, 재고 10개 미만이면 1번으로 이동, dismiss 후 3일 지나면 자동 사라짐)
-function computeDepletionSoon7d() {
-  const seen = getDepletionSeen();
-  const now = Date.now();
-  const THREE_DAYS = 3 * 86400000;
+// v3 (2026-08-26): 사용자 규칙 최종 — "재고 수량 상관없이 3일 이내 품절되면 알림"
+//   · 재고 <10 조건 삭제 (재고량 상관없이 뜸)
+//   · 임계값 7일 → 3일
+//   · 지속판매만 (단종·미출시 제외 유지)
+//   · dismiss 버튼 눌러야만 사라짐 (자동 소멸 없음)
+function computeDepletionSoon7d() {  // 함수명은 호환용으로 유지 (호출부 다수)
   const out = [];
   for (const p of (DATA.products || [])) {
     if (p.미출시) continue;
     const isDisc = ['단종', '단종(전파)', '단종고려'].includes(p.엑셀_분류);
     if (isDisc) continue;  // 지속판매만
-    const stock = p.재고_요약?.현재고 || 0;
-    if (stock < 10) continue;  // 10 미만이면 위 섹션으로
     const days = p.매출_통계?.소진_잔여일수;
-    if (days == null || days > 7) continue;
+    if (days == null || days > 3) continue;  // 3일 이내 소진 예정만
+    const stock = p.재고_요약?.현재고 || 0;
     const key = `p:${p.품목ID}`;
-    const firstSeen = seen[key];
-    if (firstSeen && (now - firstSeen) > THREE_DAYS) continue;  // 3일 지났으면 자동 사라짐
-    if (!firstSeen) markDepletionSeen(key);  // 처음 보면 timestamp 기록
     out.push({
       제품ID: p.품목ID, key, type: '본품',
       제품명: p.상품명 || p.품목명,
