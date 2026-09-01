@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-09-02T00:28:41",
+    "extracted_at": "2026-09-02T00:37:35",
     "product_count": 48,
     "data_unit": "상품(SKU) 단위"
   },
@@ -3721,8 +3721,8 @@
         "발주중수량": 5010
       },
       "매출_통계": {
-        "매출_7일합": 639,
-        "매출_28일합": 2536,
+        "매출_7일합": 640,
+        "매출_28일합": 2537,
         "일평균_7일": 91,
         "일평균_28일": 91,
         "소진_잔여일수": 14,
@@ -9194,8 +9194,8 @@
         "발주중수량": 1500
       },
       "매출_통계": {
-        "매출_7일합": 117,
-        "매출_28일합": 451,
+        "매출_7일합": 118,
+        "매출_28일합": 452,
         "일평균_7일": 17,
         "일평균_28일": 16,
         "소진_잔여일수": 1,
@@ -14793,23 +14793,23 @@
   "sales": {
     "today_date": "2026-09-02",
     "kpi": {
-      "today_revenue": 50573,
-      "today_profit": 21438,
-      "today_qty": 1,
+      "today_revenue": 103476,
+      "today_profit": 40987,
+      "today_qty": 3,
       "today_orders": 1,
       "yesterday_revenue": 42558984,
-      "week_revenue": 173002077,
+      "week_revenue": 173054980,
       "last_week_revenue": 205903355,
-      "month_revenue": 42609557,
+      "month_revenue": 42662460,
       "last_month_revenue": 26978895
     },
     "channels_today": [
       {
         "매출처명": "스마트스토어",
         "매출처ID": 465,
-        "수량": 1,
-        "매출": 50573,
-        "이익": 21438,
+        "수량": 3,
+        "매출": 103476,
+        "이익": 40987,
         "비중": 100.0
       }
     ],
@@ -14827,6 +14827,38 @@
             "수량": 1,
             "매출": 50573,
             "이익": 21438
+          }
+        ]
+      },
+      {
+        "제품ID": 185,
+        "제품명": "보아르스티머인젝터",
+        "카테고리명": "다리미",
+        "수량": 1,
+        "매출": 26589,
+        "이익": 8855,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 26589,
+            "이익": 8855
+          }
+        ]
+      },
+      {
+        "제품ID": 1700,
+        "제품명": "보아르슈즈쏙-화이트",
+        "카테고리명": "건조기",
+        "수량": 1,
+        "매출": 26314,
+        "이익": 10694,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 26314,
+            "이익": 10694
           }
         ]
       }
@@ -14869,7 +14901,7 @@
         670705018,
         736499860,
         766486227,
-        42609557,
+        42662460,
         0,
         0,
         0
@@ -14913,7 +14945,7 @@
         17371,
         21008,
         20730,
-        1115,
+        1117,
         0,
         0,
         0
@@ -14932,13 +14964,13 @@
       },
       {
         "카테고리": "건조기",
-        "매출": 575735158,
-        "수량": 18046
+        "매출": 575761472,
+        "수량": 18047
       },
       {
         "카테고리": "다리미",
-        "매출": 483259104,
-        "수량": 18275
+        "매출": 483285693,
+        "수량": 18276
       },
       {
         "카테고리": "휴지통",
@@ -15304,11 +15336,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 619389244,
+            "current_rev": 619442147,
             "prev_rev": 511530718,
-            "current_profit": 220211690,
+            "current_profit": 220231239,
             "prev_profit": 206882831,
-            "current_qty": 16648,
+            "current_qty": 16650,
             "prev_qty": 11874,
             "products": [
               {
@@ -15331,11 +15363,11 @@
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 64105275,
+                "current_rev": 64131589,
                 "prev_rev": 32195331,
-                "current_profit": 23977495,
+                "current_profit": 23988189,
                 "prev_profit": 13151328,
-                "current_qty": 2569,
+                "current_qty": 2570,
                 "prev_qty": 1253
               },
               {
@@ -15529,11 +15561,11 @@
               },
               {
                 "name": "보아르스티머인젝터",
-                "current_rev": 13614226,
+                "current_rev": 13640815,
                 "prev_rev": 12069127,
-                "current_profit": 5013236,
+                "current_profit": 5022091,
                 "prev_profit": 4714191,
-                "current_qty": 485,
+                "current_qty": 486,
                 "prev_qty": 434
               },
               {
@@ -15730,11 +15762,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 143827986,
+            "current_rev": 143880889,
             "prev_rev": 147473803,
-            "current_profit": 54583583,
+            "current_profit": 54603132,
             "prev_profit": 69626604,
-            "current_qty": 4077,
+            "current_qty": 4079,
             "prev_qty": 3103,
             "products": [
               {
@@ -15757,11 +15789,11 @@
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 16870573,
+                "current_rev": 16896887,
                 "prev_rev": 4332703,
-                "current_profit": 6889393,
+                "current_profit": 6900087,
                 "prev_profit": 2082253,
-                "current_qty": 639,
+                "current_qty": 640,
                 "prev_qty": 154
               },
               {
@@ -15973,11 +16005,11 @@
               },
               {
                 "name": "보아르스티머인젝터",
-                "current_rev": 3182780,
+                "current_rev": 3209369,
                 "prev_rev": 2957764,
-                "current_profit": 1107902,
+                "current_profit": 1116757,
                 "prev_profit": 1126380,
-                "current_qty": 117,
+                "current_qty": 118,
                 "prev_qty": 106
               },
               {
@@ -16138,11 +16170,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 4503874242,
+            "current_rev": 4503927145,
             "prev_rev": 4306212591,
-            "current_profit": 1773124519,
+            "current_profit": 1773144068,
             "prev_profit": 1830777596,
-            "current_qty": 114340,
+            "current_qty": 114342,
             "prev_qty": 103119,
             "products": [
               {
@@ -16327,11 +16359,11 @@
               },
               {
                 "name": "보아르스티머인젝터",
-                "current_rev": 71824736,
+                "current_rev": 71851325,
                 "prev_rev": 104968030,
-                "current_profit": 26697779,
+                "current_profit": 26706634,
                 "prev_profit": 39969856,
-                "current_qty": 2558,
+                "current_qty": 2559,
                 "prev_qty": 3829
               },
               {
@@ -16354,11 +16386,11 @@
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 427250039,
+                "current_rev": 427276353,
                 "prev_rev": 409500567,
-                "current_profit": 185962683,
+                "current_profit": 185973377,
                 "prev_profit": 179065007,
-                "current_qty": 16194,
+                "current_qty": 16195,
                 "prev_qty": 15543
               },
               {
@@ -16564,11 +16596,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 6663123717,
+            "current_rev": 6663176620,
             "prev_rev": 6489498784,
-            "current_profit": 2678683378,
+            "current_profit": 2678702927,
             "prev_profit": 2806058393,
-            "current_qty": 170629,
+            "current_qty": 170631,
             "prev_qty": 155901,
             "products": [
               {
@@ -16834,11 +16866,11 @@
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 552722305,
+                "current_rev": 552748619,
                 "prev_rev": 536987511,
-                "current_profit": 244225404,
+                "current_profit": 244236098,
                 "prev_profit": 271486804,
-                "current_qty": 20840,
+                "current_qty": 20841,
                 "prev_qty": 20112
               },
               {
@@ -16861,11 +16893,11 @@
               },
               {
                 "name": "보아르스티머인젝터",
-                "current_rev": 151668526,
+                "current_rev": 151695115,
                 "prev_rev": 146195487,
-                "current_profit": 55471219,
+                "current_profit": 55480074,
                 "prev_profit": 56765084,
-                "current_qty": 5563,
+                "current_qty": 5564,
                 "prev_qty": 5300
               }
             ]
@@ -17229,9 +17261,9 @@
         },
         "9": {
           "생활가전": {
-            "매출": 32709928,
-            "이익": 12784156,
-            "수량": 890
+            "매출": 32762831,
+            "이익": 12803705,
+            "수량": 892
           },
           "육아": {
             "매출": 9899629,
@@ -17327,7 +17359,7 @@
             "육아": 159351832
           },
           "9": {
-            "생활": 33044754,
+            "생활": 33097657,
             "육아": 9936237
           }
         }
@@ -17433,8 +17465,8 @@
       "monthly_revenue": 0,
       "ytd_revenue": 0,
       "annual_revenue": 0,
-      "actual_month_revenue": 42609557,
-      "actual_ytd_revenue": 5682507124,
+      "actual_month_revenue": 42662460,
+      "actual_ytd_revenue": 5682560027,
       "achieve_rate_month": 0,
       "achieve_rate_ytd": 0,
       "products": []
