@@ -828,17 +828,6 @@
         "생산완료예정일": "2026-07-30"
       },
       "leaveRerouted": "2026-06-29"
-    },
-    {
-      "id": "t_ugc0hk6tem",
-      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
-      "done": false,
-      "urgent": true,
-      "autoKey": "auto:monday-ondeal-deadline:2026-06-29",
-      "autoSource": {
-        "type": "매주 월요일 12시 접수마감"
-      },
-      "leaveRerouted": "2026-06-29"
     }
   ],
   "2026-07-01": [
@@ -942,11 +931,6 @@
       "id": "t_9636ml226vo",
       "text": "9/1일 베이비라이브방송 행사가 예약셋팅",
       "done": true
-    },
-    {
-      "id": "t_v0j1u1wmj2d",
-      "text": "슈트쏙 발주",
-      "done": false
     },
     {
       "id": "t_0wypjbi97jh",
@@ -1057,7 +1041,7 @@
       "done": true
     },
     {
-      "id": "t_ukhdffx99vp",
+      "id": "t_s1jqmmv85z",
       "text": "[자동·주간] 네이버 오늘끝딜 제안",
       "done": false,
       "autoKey": "auto:thursday-ondeal:2026-07-30",
@@ -1612,6 +1596,11 @@
       "id": "t_3hu1dfyhxff",
       "text": "아가미니젖병소독기 출시특가 종료/원복(출근직후)",
       "done": false
+    },
+    {
+      "id": "t_o0g6qwqkm4q",
+      "text": "베이비바우처 행사배너 삭제 / 슈퍼적립은 슈퍼배너로 변경",
+      "done": false
     }
   ],
   "2026-08-05": [
@@ -2116,7 +2105,7 @@
       "leaveRerouted": "2026-08-31"
     },
     {
-      "id": "t_ho81v4tysf",
+      "id": "t_5lwc2edrkh",
       "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
       "done": false,
       "urgent": true,
@@ -2169,6 +2158,35 @@
       "id": "t_r64bnjr5ass",
       "text": "컴플릿M 오늘끝딜 배너 먼저 만들 (초급건!!)",
       "done": false
+    },
+    {
+      "id": "t_v0j1u1wmj2d",
+      "text": "슈트쏙 발주",
+      "done": false,
+      "rolledFrom": "2026-08-28"
+    }
+  ],
+  "2026-10-29": [
+    {
+      "id": "t_utyq1trp6jj",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-10-29",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      }
+    }
+  ],
+  "2026-10-26": [
+    {
+      "id": "t_h7qk3j3ls",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-10-26",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      }
     }
   ]
 }
