@@ -1116,6 +1116,22 @@ function touch(o) {
   return o;
 }
 
+/* 지운 항목의 id 를 적어두는 곳.
+   합치기는 '한쪽에만 있으면 살린다'가 원칙이라, 이게 없으면
+   서버에서 지워도 브라우저 사본이 다시 밀어 넣어 되살아난다. */
+function graveyard() {
+  S.graveyard = S.graveyard || {};
+  return S.graveyard;
+}
+function bury(id) {
+  if (!id) return;
+  const g = graveyard();
+  g[id] = new Date().toISOString();
+}
+function isBuried(id) {
+  return !!(S.graveyard && S.graveyard[id]);
+}
+
 function itemStamp(o) {
   if (!o || typeof o !== 'object') return '';
   return [o.updated, o.editedAt, o.approvedAt,
@@ -1124,8 +1140,10 @@ function itemStamp(o) {
 }
 
 function mergeList(mine, theirs) {
-  if (!Array.isArray(theirs)) return mine || [];
-  if (!Array.isArray(mine)) return theirs;
+  if (!Array.isArray(theirs)) return (mine || []).filter(x => !x || !isBuried(x.id));
+  if (!Array.isArray(mine)) return theirs.filter(x => !x || !isBuried(x.id));
+  mine = mine.filter(x => !x || !isBuried(x.id));
+  theirs = theirs.filter(x => !x || !isBuried(x.id));
   const out = [], seen = new Set();
   const byId = new Map(mine.filter(x => x && x.id).map(x => [x.id, x]));
   for (const t of theirs) {
@@ -1150,6 +1168,9 @@ function mergeList(mine, theirs) {
 
 function mergeRemote(rd) {
   let touched = 0;
+  if (rd.graveyard) {                       // 무덤은 합집합 — 되살아나면 안 된다
+    S.graveyard = Object.assign({}, rd.graveyard, S.graveyard || {});
+  }
   for (const k of LISTS) {
     if (!(k in rd) && !(k in S)) continue;
     const before = JSON.stringify(S[k] || []);
@@ -1915,6 +1936,7 @@ document.getElementById('idea-grid').addEventListener('click', e => {
   const t = e.target;
   if (t.dataset.delIdea) {
     if (!confirm('이 소재를 삭제할까요?')) return;
+    bury(t.dataset.delIdea);
     S.ideas = S.ideas.filter(x => x.id !== t.dataset.delIdea);
     save(); renderIdeas(); renderDash();
     return;
@@ -1923,6 +1945,7 @@ document.getElementById('idea-grid').addEventListener('click', e => {
     const idea = S.ideas.find(x => x.id === t.dataset.reelMake);
     if (!idea) return;
     addReel({ ideaId: idea.id, title: idea.topic, pillar: idea.pillar });
+    bury(idea.id);                                     // 되살아나지 않게
     S.ideas = S.ideas.filter(x => x.id !== idea.id);   // 릴스로 넘어간 소재도 즉시 제거
     save(); renderIdeas(); renderReels();
     alert('릴스 제작을 요청했습니다.\n「릴스」 탭에서 진행 상황을 확인하실 수 있습니다.');
@@ -1945,6 +1968,7 @@ document.getElementById('idea-grid').addEventListener('click', e => {
     });
     // 제작으로 넘어간 소재는 소재 목록에서 즉시 뺀다.
     // 게시물 탭에 이미 올라가 있어 양쪽에 남으면 중복이다.
+    bury(idea.id);
     S.ideas = S.ideas.filter(x => x.id !== idea.id);
     save(); renderIdeas(); renderQueue(); renderDash();
     alert('게시물 제작을 요청했습니다.\n소재 목록에서는 빠지고 「게시물」 탭으로 옮겨집니다.');
@@ -2090,6 +2114,8 @@ function renderQueue() {
   // 발행하고 하루 지난 글은 목록에서 치운다 (인스타에 이미 올라가 있다)
   const gone = (S.queue || []).filter(isCleared);
   if (gone.length) {
+    gone.forEach(q => bury(q.id));
+    (S.reels || []).filter(isCleared).forEach(r => bury(r.id));
     S.queue = S.queue.filter(q => !gone.includes(q));
     S.reels = (S.reels || []).filter(r => !isCleared(r));
     save({ localOnly: true });
@@ -2489,6 +2515,7 @@ document.getElementById('r-queue-list').addEventListener('click', e => {
   const id = t.dataset?.rDel;
   if (!id) return;
   if (!confirm('이 릴스를 삭제할까요?')) return;
+  bury(id);
   S.reels = S.reels.filter(x => x.id !== id);
   save(); renderReels();
 });
