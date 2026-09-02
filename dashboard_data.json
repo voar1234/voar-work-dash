@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-09-03T01:36:59",
+    "extracted_at": "2026-09-03T01:57:22",
     "product_count": 47,
     "data_unit": "상품(SKU) 단위"
   },
@@ -49,13 +49,13 @@
         "발주중수량": 0
       },
       "매출_통계": {
-        "매출_7일합": 46,
-        "매출_28일합": 196,
+        "매출_7일합": 47,
+        "매출_28일합": 197,
         "일평균_7일": 7,
         "일평균_28일": 7,
-        "소진_잔여일수": 142,
-        "소진_예상일": "2027-01-23",
-        "재고발주_권장일": "2026-11-09"
+        "소진_잔여일수": 141,
+        "소진_예상일": "2027-01-22",
+        "재고발주_권장일": "2026-11-08"
       },
       "구성제품": [
         {
@@ -10878,13 +10878,13 @@
         "발주중수량": 2000
       },
       "매출_통계": {
-        "매출_7일합": 112,
-        "매출_28일합": 550,
+        "매출_7일합": 113,
+        "매출_28일합": 551,
         "일평균_7일": 16,
         "일평균_28일": 20,
         "소진_잔여일수": 87,
         "소진_예상일": "2026-11-29",
-        "재고발주_권장일": "2026-12-26"
+        "재고발주_권장일": "2026-12-25"
       },
       "구성제품": [
         {
@@ -14701,23 +14701,23 @@
   "sales": {
     "today_date": "2026-09-03",
     "kpi": {
-      "today_revenue": 236935,
-      "today_profit": 105076,
-      "today_qty": 7,
+      "today_revenue": 338789,
+      "today_profit": 152982,
+      "today_qty": 9,
       "today_orders": 1,
       "yesterday_revenue": 110257998,
-      "week_revenue": 242578779,
+      "week_revenue": 242680633,
       "last_week_revenue": 192057494,
-      "month_revenue": 154655183,
+      "month_revenue": 154757037,
       "last_month_revenue": 46615467
     },
     "channels_today": [
       {
         "매출처명": "스마트스토어",
         "매출처ID": 465,
-        "수량": 7,
-        "매출": 236935,
-        "이익": 105076,
+        "수량": 9,
+        "매출": 338789,
+        "이익": 152982,
         "비중": 100.0
       }
     ],
@@ -14735,6 +14735,38 @@
             "수량": 4,
             "매출": 161391,
             "이익": 65715
+          }
+        ]
+      },
+      {
+        "제품ID": 7245,
+        "제품명": "보아르컴플릿M20L쓰레기통-베이지",
+        "카테고리명": "휴지통",
+        "수량": 1,
+        "매출": 63238,
+        "이익": 34103,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 63238,
+            "이익": 34103
+          }
+        ]
+      },
+      {
+        "제품ID": 97,
+        "제품명": "보아르아가맘마보틀워머",
+        "카테고리명": "보틀워머",
+        "수량": 1,
+        "매출": 38616,
+        "이익": 13803,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 38616,
+            "이익": 13803
           }
         ]
       },
@@ -14825,7 +14857,7 @@
         670705018,
         736078289,
         767060586,
-        154655183,
+        154757037,
         0,
         0,
         0
@@ -14869,7 +14901,7 @@
         17371,
         21007,
         20743,
-        5311,
+        5313,
         0,
         0,
         0
@@ -14898,8 +14930,8 @@
       },
       {
         "카테고리": "휴지통",
-        "매출": 478050091,
-        "수량": 14714
+        "매출": 478113329,
+        "수량": 14715
       },
       {
         "카테고리": "스팀청소기",
@@ -14923,8 +14955,8 @@
       },
       {
         "카테고리": "보틀워머",
-        "매출": 271599005,
-        "수량": 7431
+        "매출": 271637621,
+        "수량": 7432
       },
       {
         "카테고리": "스프링카",
@@ -15300,11 +15332,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 708624841,
+            "current_rev": 708688079,
             "prev_rev": 521740229,
-            "current_profit": 247076775,
+            "current_profit": 247110878,
             "prev_profit": 210166589,
-            "current_qty": 20136,
+            "current_qty": 20137,
             "prev_qty": 12209,
             "products": [
               {
@@ -15417,11 +15449,11 @@
               },
               {
                 "name": "보아르컴플릿M20L쓰레기통",
-                "current_rev": 9618085,
+                "current_rev": 9681323,
                 "prev_rev": 0,
-                "current_profit": 3470600,
+                "current_profit": 3504703,
                 "prev_profit": 0,
-                "current_qty": 211,
+                "current_qty": 212,
                 "prev_qty": 0
               },
               {
@@ -15608,11 +15640,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 166475461,
+            "current_rev": 166514077,
             "prev_rev": 161332521,
-            "current_profit": 66424618,
+            "current_profit": 66438421,
             "prev_profit": 65557211,
-            "current_qty": 4823,
+            "current_qty": 4824,
             "prev_qty": 3773,
             "products": [
               {
@@ -15662,11 +15694,11 @@
               },
               {
                 "name": "보아르아가맘마보틀워머",
-                "current_rev": 22724883,
+                "current_rev": 22763499,
                 "prev_rev": 28479131,
-                "current_profit": 8184465,
+                "current_profit": 8198268,
                 "prev_profit": 11316263,
-                "current_qty": 586,
+                "current_qty": 587,
                 "prev_qty": 706
               },
               {
@@ -15726,11 +15758,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 206203262,
+            "current_rev": 206266500,
             "prev_rev": 147574458,
-            "current_profit": 73036258,
+            "current_profit": 73070361,
             "prev_profit": 69772562,
-            "current_qty": 6598,
+            "current_qty": 6599,
             "prev_qty": 3229,
             "products": [
               {
@@ -15843,11 +15875,11 @@
               },
               {
                 "name": "보아르컴플릿M20L쓰레기통",
-                "current_rev": 2401534,
+                "current_rev": 2464772,
                 "prev_rev": 0,
-                "current_profit": 1061324,
+                "current_profit": 1095427,
                 "prev_profit": 0,
-                "current_qty": 46,
+                "current_qty": 47,
                 "prev_qty": 0
               },
               {
@@ -16025,11 +16057,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 36375517,
+            "current_rev": 36414133,
             "prev_rev": 48009153,
-            "current_profit": 14693780,
+            "current_profit": 14707583,
             "prev_profit": 19781553,
-            "current_qty": 1023,
+            "current_qty": 1024,
             "prev_qty": 1040,
             "products": [
               {
@@ -16052,11 +16084,11 @@
               },
               {
                 "name": "보아르아가맘마보틀워머",
-                "current_rev": 4417823,
+                "current_rev": 4456439,
                 "prev_rev": 9370623,
-                "current_profit": 1638767,
+                "current_profit": 1652570,
                 "prev_profit": 4142127,
-                "current_qty": 112,
+                "current_qty": 113,
                 "prev_qty": 234
               },
               {
@@ -16134,11 +16166,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 4605115061,
+            "current_rev": 4605178299,
             "prev_rev": 4327345333,
-            "current_profit": 1805019292,
+            "current_profit": 1805053395,
             "prev_profit": 1839229675,
-            "current_qty": 118148,
+            "current_qty": 118149,
             "prev_qty": 103695,
             "products": [
               {
@@ -16404,11 +16436,11 @@
               },
               {
                 "name": "보아르컴플릿M20L쓰레기통",
-                "current_rev": 12806054,
+                "current_rev": 12869292,
                 "prev_rev": 0,
-                "current_profit": 4269499,
+                "current_profit": 4303602,
                 "prev_profit": 0,
-                "current_qty": 293,
+                "current_qty": 294,
                 "prev_qty": 0
               },
               {
@@ -16442,11 +16474,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 1189552159,
+            "current_rev": 1189590775,
             "prev_rev": 875594651,
-            "current_profit": 491697805,
+            "current_profit": 491711608,
             "prev_profit": 386060968,
-            "current_qty": 32413,
+            "current_qty": 32414,
             "prev_qty": 24634,
             "products": [
               {
@@ -16487,11 +16519,11 @@
               },
               {
                 "name": "보아르아가맘마보틀워머",
-                "current_rev": 218077287,
+                "current_rev": 218115903,
                 "prev_rev": 258290552,
-                "current_profit": 82576358,
+                "current_profit": 82590161,
                 "prev_profit": 103419691,
-                "current_qty": 5550,
+                "current_qty": 5551,
                 "prev_qty": 6494
               },
               {
@@ -16560,11 +16592,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 6742176702,
+            "current_rev": 6742239940,
             "prev_rev": 6466036722,
-            "current_profit": 2701670711,
+            "current_profit": 2701704814,
             "prev_profit": 2797036705,
-            "current_qty": 173927,
+            "current_qty": 173928,
             "prev_qty": 155312,
             "products": [
               {
@@ -16839,11 +16871,11 @@
               },
               {
                 "name": "보아르컴플릿M20L쓰레기통",
-                "current_rev": 12806054,
+                "current_rev": 12869292,
                 "prev_rev": 0,
-                "current_profit": 4269499,
+                "current_profit": 4303602,
                 "prev_profit": 0,
-                "current_qty": 293,
+                "current_qty": 294,
                 "prev_qty": 0
               },
               {
@@ -16868,11 +16900,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 1766694578,
+            "current_rev": 1766733194,
             "prev_rev": 1251408808,
-            "current_profit": 738134424,
+            "current_profit": 738148227,
             "prev_profit": 567461850,
-            "current_qty": 46792,
+            "current_qty": 46793,
             "prev_qty": 35564,
             "products": [
               {
@@ -16913,11 +16945,11 @@
               },
               {
                 "name": "보아르아가맘마보틀워머",
-                "current_rev": 327553810,
+                "current_rev": 327592426,
                 "prev_rev": 385078032,
-                "current_profit": 126890566,
+                "current_profit": 126904369,
                 "prev_profit": 158852517,
-                "current_qty": 8264,
+                "current_qty": 8265,
                 "prev_qty": 9598
               },
               {
@@ -17225,14 +17257,14 @@
         },
         "9": {
           "생활가전": {
-            "매출": 133888098,
-            "이익": 44839775,
-            "수량": 4688
+            "매출": 133951336,
+            "이익": 44873878,
+            "수량": 4689
           },
           "육아": {
-            "매출": 20767085,
-            "이익": 7912462,
-            "수량": 623
+            "매출": 20805701,
+            "이익": 7926265,
+            "수량": 624
           }
         }
       }
@@ -17323,8 +17355,8 @@
             "육아": 159403653
           },
           "9": {
-            "생활": 134502897,
-            "육아": 20824845
+            "생활": 134566135,
+            "육아": 20863461
           }
         }
       },
@@ -17429,8 +17461,8 @@
       "monthly_revenue": 0,
       "ytd_revenue": 0,
       "annual_revenue": 0,
-      "actual_month_revenue": 154655183,
-      "actual_ytd_revenue": 5794667220,
+      "actual_month_revenue": 154757037,
+      "actual_ytd_revenue": 5794769074,
       "achieve_rate_month": 0,
       "achieve_rate_ytd": 0,
       "products": []
