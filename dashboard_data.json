@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-09-02T19:57:08",
+    "extracted_at": "2026-09-02T20:27:40",
     "product_count": 47,
     "data_unit": "상품(SKU) 단위"
   },
@@ -3721,9 +3721,9 @@
         "발주중수량": 5010
       },
       "매출_통계": {
-        "매출_7일합": 766,
-        "매출_28일합": 2663,
-        "일평균_7일": 109,
+        "매출_7일합": 767,
+        "매출_28일합": 2664,
+        "일평균_7일": 110,
         "일평균_28일": 95,
         "소진_잔여일수": 13,
         "소진_예상일": "2026-09-15",
@@ -6297,8 +6297,8 @@
         "발주중수량": 4032
       },
       "매출_통계": {
-        "매출_7일합": 580,
-        "매출_28일합": 2463,
+        "매출_7일합": 581,
+        "매출_28일합": 2464,
         "일평균_7일": 83,
         "일평균_28일": 88,
         "소진_잔여일수": 53,
@@ -6891,8 +6891,8 @@
         "발주중수량": 0
       },
       "매출_통계": {
-        "매출_7일합": 67,
-        "매출_28일합": 263,
+        "매출_7일합": 68,
+        "매출_28일합": 264,
         "일평균_7일": 10,
         "일평균_28일": 9,
         "소진_잔여일수": 148,
@@ -7892,8 +7892,8 @@
         "발주중수량": 1000
       },
       "매출_통계": {
-        "매출_7일합": 204,
-        "매출_28일합": 640,
+        "매출_7일합": 203,
+        "매출_28일합": 639,
         "일평균_7일": 29,
         "일평균_28일": 23,
         "소진_잔여일수": 25,
@@ -14701,15 +14701,15 @@
   "sales": {
     "today_date": "2026-09-02",
     "kpi": {
-      "today_revenue": 107557768,
-      "today_profit": 34510855,
-      "today_qty": 4090,
+      "today_revenue": 107635002,
+      "today_profit": 34545329,
+      "today_qty": 4093,
       "today_orders": 41,
       "yesterday_revenue": 44092405,
-      "week_revenue": 282462866,
-      "last_week_revenue": 205928035,
-      "month_revenue": 151650173,
-      "last_month_revenue": 26876232
+      "week_revenue": 282523684,
+      "last_week_revenue": 205947755,
+      "month_revenue": 151727407,
+      "last_month_revenue": 26924548
     },
     "channels_today": [
       {
@@ -14718,7 +14718,7 @@
         "수량": 2698,
         "매출": 71374364,
         "이익": 20875898,
-        "비중": 66.36
+        "비중": 66.31
       },
       {
         "매출처명": "쿠팡",
@@ -14726,7 +14726,7 @@
         "수량": 522,
         "매출": 13516967,
         "이익": 4966536,
-        "비중": 12.57
+        "비중": 12.56
       },
       {
         "매출처명": "(주)이마트",
@@ -14739,10 +14739,10 @@
       {
         "매출처명": "스마트스토어",
         "매출처ID": 465,
-        "수량": 104,
-        "매출": 4410550,
-        "이익": 1876196,
-        "비중": 4.1
+        "수량": 107,
+        "매출": 4487784,
+        "이익": 1910670,
+        "비중": 4.17
       },
       {
         "매출처명": "카카오(선물하기)",
@@ -14750,7 +14750,7 @@
         "수량": 68,
         "매출": 2221439,
         "이익": 966542,
-        "비중": 2.07
+        "비중": 2.06
       },
       {
         "매출처명": "고려기프트(운영코드)",
@@ -15114,9 +15114,9 @@
         "제품ID": 412,
         "제품명": "보아르아가맘마쪽쪽이살균기",
         "카테고리명": "살균기",
-        "수량": 320,
-        "매출": 7040112,
-        "이익": 2968752,
+        "수량": 321,
+        "매출": 7067890,
+        "이익": 2983807,
         "판매처내역": [
           {
             "매출처명": "쿠팡",
@@ -15132,9 +15132,9 @@
           },
           {
             "매출처명": "스마트스토어",
-            "수량": 3,
-            "매출": 78696,
-            "이익": 40527
+            "수량": 4,
+            "매출": 106474,
+            "이익": 55582
           },
           {
             "매출처명": "(주)휴먼스케이프-마미톡",
@@ -15172,9 +15172,9 @@
         "제품ID": 1700,
         "제품명": "보아르슈즈쏙-화이트",
         "카테고리명": "건조기",
-        "수량": 124,
-        "매출": 3052179,
-        "이익": 1115299,
+        "수량": 125,
+        "매출": 3078493,
+        "이익": 1125993,
         "판매처내역": [
           {
             "매출처명": "쿠팡",
@@ -15184,9 +15184,9 @@
           },
           {
             "매출처명": "스마트스토어",
-            "수량": 18,
-            "매출": 470893,
-            "이익": 189733
+            "수량": 19,
+            "매출": 497207,
+            "이익": 200427
           },
           {
             "매출처명": "카카오(선물하기)",
@@ -16263,6 +16263,34 @@
         ]
       },
       {
+        "제품ID": 410,
+        "제품명": "보아르허니즈백색소음기",
+        "카테고리명": "백색소음기",
+        "수량": 5,
+        "매출": 118652,
+        "이익": 46567,
+        "판매처내역": [
+          {
+            "매출처명": "카카오(선물하기)",
+            "수량": 3,
+            "매출": 73950,
+            "이익": 30699
+          },
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 23142,
+            "이익": 8725
+          },
+          {
+            "매출처명": "(주)휴먼스케이프-마미톡",
+            "수량": 1,
+            "매출": 21560,
+            "이익": 7143
+          }
+        ]
+      },
+      {
         "제품ID": 7391,
         "제품명": "보아르아가미니휴대용젖병소독기-화이트",
         "카테고리명": "살균기",
@@ -16303,28 +16331,6 @@
             "수량": 1,
             "매출": 24701,
             "이익": 18400
-          }
-        ]
-      },
-      {
-        "제품ID": 410,
-        "제품명": "보아르허니즈백색소음기",
-        "카테고리명": "백색소음기",
-        "수량": 4,
-        "매출": 95510,
-        "이익": 37842,
-        "판매처내역": [
-          {
-            "매출처명": "카카오(선물하기)",
-            "수량": 3,
-            "매출": 73950,
-            "이익": 30699
-          },
-          {
-            "매출처명": "(주)휴먼스케이프-마미톡",
-            "수량": 1,
-            "매출": 21560,
-            "이익": 7143
           }
         ]
       },
@@ -16431,9 +16437,9 @@
         704506849,
         618590837,
         670705018,
-        736110337,
-        766791852,
-        151650173,
+        736078289,
+        766949070,
+        151727407,
         0,
         0,
         0
@@ -16476,8 +16482,8 @@
         15572,
         17371,
         21007,
-        20741,
-        5241,
+        20740,
+        5244,
         0,
         0,
         0
@@ -16486,22 +16492,22 @@
     "category_compare": [
       {
         "카테고리": "침구청소기",
-        "매출": 1106009858,
+        "매출": 1106019846,
         "수량": 26491
       },
       {
         "카테고리": "무선청소기",
-        "매출": 823037843,
-        "수량": 16429
+        "매출": 823057138,
+        "수량": 16428
       },
       {
         "카테고리": "건조기",
-        "매출": 579593434,
-        "수량": 18187
+        "매출": 579728807,
+        "수량": 18188
       },
       {
         "카테고리": "다리미",
-        "매출": 565153954,
+        "매출": 565173699,
         "수량": 21559
       },
       {
@@ -16516,13 +16522,13 @@
       },
       {
         "카테고리": "초음파세척기",
-        "매출": 335796356,
+        "매출": 335763439,
         "수량": 9735
       },
       {
         "카테고리": "살균기",
-        "매출": 314244034,
-        "수량": 13061
+        "매출": 314271812,
+        "수량": 13062
       },
       {
         "카테고리": "분유포트",
@@ -16551,8 +16557,8 @@
       },
       {
         "카테고리": "백색소음기",
-        "매출": 74686923,
-        "수량": 3466
+        "매출": 74710065,
+        "수량": 3467
       },
       {
         "카테고리": "기타생활가전",
@@ -16962,9 +16968,9 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 718426604,
+            "current_rev": 718561820,
             "prev_rev": 511530718,
-            "current_profit": 251237758,
+            "current_profit": 251366730,
             "prev_profit": 206882831,
             "current_qty": 20402,
             "prev_qty": 11874,
@@ -16980,27 +16986,27 @@
               },
               {
                 "name": "보아르스위프클링",
-                "current_rev": 57215156,
+                "current_rev": 57220095,
                 "prev_rev": 15101357,
-                "current_profit": 23495288,
+                "current_profit": 23500227,
                 "prev_profit": 6534409,
                 "current_qty": 1833,
                 "prev_qty": 490
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 67236911,
+                "current_rev": 67290868,
                 "prev_rev": 32195331,
-                "current_profit": 25125391,
+                "current_profit": 25163728,
                 "prev_profit": 13151328,
-                "current_qty": 2696,
+                "current_qty": 2697,
                 "prev_qty": 1253
               },
               {
                 "name": "보아르아이워시",
-                "current_rev": 77244177,
+                "current_rev": 77249446,
                 "prev_rev": 50357791,
-                "current_profit": 23330751,
+                "current_profit": 23336020,
                 "prev_profit": 16317316,
                 "current_qty": 2254,
                 "prev_qty": 1509
@@ -17016,9 +17022,9 @@
               },
               {
                 "name": "보아르슈트쏙의류관리기",
-                "current_rev": 23085864,
+                "current_rev": 23128005,
                 "prev_rev": 0,
-                "current_profit": 7520341,
+                "current_profit": 7562482,
                 "prev_profit": 0,
                 "current_qty": 811,
                 "prev_qty": 0
@@ -17115,9 +17121,9 @@
               },
               {
                 "name": "보아르포스D12",
-                "current_rev": 11788290,
+                "current_rev": 11798080,
                 "prev_rev": 17902257,
-                "current_profit": 2628218,
+                "current_profit": 2638008,
                 "prev_profit": 4796032,
                 "current_qty": 184,
                 "prev_qty": 273
@@ -17151,9 +17157,9 @@
               },
               {
                 "name": "보아르딥슬립클링",
-                "current_rev": 32208850,
+                "current_rev": 32213899,
                 "prev_rev": 28078928,
-                "current_profit": 10222738,
+                "current_profit": 10227787,
                 "prev_profit": 10176578,
                 "current_qty": 921,
                 "prev_qty": 801
@@ -17178,9 +17184,9 @@
               },
               {
                 "name": "보아르워시스핀",
-                "current_rev": 3711816,
+                "current_rev": 3714005,
                 "prev_rev": 5863277,
-                "current_profit": 1837132,
+                "current_profit": 1839321,
                 "prev_profit": 2891406,
                 "current_qty": 284,
                 "prev_qty": 451
@@ -17196,20 +17202,20 @@
               },
               {
                 "name": "보아르스티머인젝터",
-                "current_rev": 13806531,
+                "current_rev": 13818378,
                 "prev_rev": 12069127,
-                "current_profit": 5081403,
+                "current_profit": 5093250,
                 "prev_profit": 4714191,
                 "current_qty": 492,
                 "prev_qty": 434
               },
               {
                 "name": "보아르워시스핀C",
-                "current_rev": 11483164,
+                "current_rev": 11483199,
                 "prev_rev": 9828742,
-                "current_profit": 4835580,
+                "current_profit": 4844991,
                 "prev_profit": 4133359,
-                "current_qty": 709,
+                "current_qty": 708,
                 "prev_qty": 615
               },
               {
@@ -17270,11 +17276,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 173139189,
+            "current_rev": 173190109,
             "prev_rev": 149733149,
-            "current_profit": 69183998,
+            "current_profit": 69207778,
             "prev_profit": 61011360,
-            "current_qty": 4962,
+            "current_qty": 4964,
             "prev_qty": 3541,
             "products": [
               {
@@ -17288,11 +17294,11 @@
               },
               {
                 "name": "보아르아가맘마쪽쪽이살균기",
-                "current_rev": 60623524,
+                "current_rev": 60651302,
                 "prev_rev": 24304618,
-                "current_profit": 26907574,
+                "current_profit": 26922629,
                 "prev_profit": 11919202,
-                "current_qty": 2650,
+                "current_qty": 2651,
                 "prev_qty": 1048
               },
               {
@@ -17333,11 +17339,11 @@
               },
               {
                 "name": "보아르허니즈백색소음기",
-                "current_rev": 6576262,
+                "current_rev": 6599404,
                 "prev_rev": 8687551,
-                "current_profit": 2453000,
+                "current_profit": 2461725,
                 "prev_profit": 3378919,
-                "current_qty": 286,
+                "current_qty": 287,
                 "prev_qty": 380
               },
               {
@@ -17388,9 +17394,9 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 242877231,
+            "current_rev": 242887129,
             "prev_rev": 147473803,
-            "current_profit": 85623334,
+            "current_profit": 85626988,
             "prev_profit": 69626604,
             "current_qty": 7832,
             "prev_qty": 3103,
@@ -17415,11 +17421,11 @@
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 20002209,
+                "current_rev": 20028523,
                 "prev_rev": 4332703,
-                "current_profit": 8037289,
+                "current_profit": 8047983,
                 "prev_profit": 2082253,
-                "current_qty": 766,
+                "current_qty": 767,
                 "prev_qty": 154
               },
               {
@@ -17649,11 +17655,11 @@
               },
               {
                 "name": "보아르워시스핀C",
-                "current_rev": 3223902,
+                "current_rev": 3207486,
                 "prev_rev": 3057648,
-                "current_profit": 1311198,
+                "current_profit": 1304158,
                 "prev_profit": 1338813,
-                "current_qty": 204,
+                "current_qty": 203,
                 "prev_qty": 185
               },
               {
@@ -17687,11 +17693,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 39585635,
+            "current_rev": 39636555,
             "prev_rev": 43665974,
-            "current_profit": 16081635,
+            "current_profit": 16105415,
             "prev_profit": 18077128,
-            "current_qty": 1100,
+            "current_qty": 1102,
             "prev_qty": 928,
             "products": [
               {
@@ -17705,11 +17711,11 @@
               },
               {
                 "name": "보아르아가맘마쪽쪽이살균기",
-                "current_rev": 13507496,
+                "current_rev": 13535274,
                 "prev_rev": 3388948,
-                "current_profit": 6128156,
+                "current_profit": 6143211,
                 "prev_profit": 1754264,
-                "current_qty": 580,
+                "current_qty": 581,
                 "prev_qty": 139
               },
               {
@@ -17768,11 +17774,11 @@
               },
               {
                 "name": "보아르허니즈백색소음기",
-                "current_rev": 1559162,
+                "current_rev": 1582304,
                 "prev_rev": 2263557,
-                "current_profit": 593223,
+                "current_profit": 601948,
                 "prev_profit": 873201,
-                "current_qty": 67,
+                "current_qty": 68,
                 "prev_qty": 99
               },
               {
@@ -17796,9 +17802,9 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 4602381098,
+            "current_rev": 4602532582,
             "prev_rev": 4306212591,
-            "current_profit": 1803736296,
+            "current_profit": 1803881536,
             "prev_profit": 1830777596,
             "current_qty": 118090,
             "prev_qty": 103119,
@@ -17814,9 +17820,9 @@
               },
               {
                 "name": "보아르스위프클링",
-                "current_rev": 497412840,
+                "current_rev": 497417779,
                 "prev_rev": 124046010,
-                "current_profit": 229767811,
+                "current_profit": 229772750,
                 "prev_profit": 58586829,
                 "current_qty": 14935,
                 "prev_qty": 3819
@@ -17868,11 +17874,11 @@
               },
               {
                 "name": "보아르워시스핀C",
-                "current_rev": 57386079,
+                "current_rev": 57391206,
                 "prev_rev": 144681821,
-                "current_profit": 26394662,
+                "current_profit": 26409165,
                 "prev_profit": 57060067,
-                "current_qty": 3340,
+                "current_qty": 3339,
                 "prev_qty": 9718
               },
               {
@@ -17886,9 +17892,9 @@
               },
               {
                 "name": "보아르아이워시",
-                "current_rev": 335796356,
+                "current_rev": 335763439,
                 "prev_rev": 254475957,
-                "current_profit": 116605919,
+                "current_profit": 116573002,
                 "prev_profit": 92256139,
                 "current_qty": 9735,
                 "prev_qty": 7266
@@ -17913,9 +17919,9 @@
               },
               {
                 "name": "보아르딥슬립클링",
-                "current_rev": 254735485,
+                "current_rev": 254740534,
                 "prev_rev": 324974928,
-                "current_profit": 94506381,
+                "current_profit": 94511430,
                 "prev_profit": 121927954,
                 "current_qty": 7226,
                 "prev_qty": 9387
@@ -17958,9 +17964,9 @@
               },
               {
                 "name": "보아르슈트쏙의류관리기",
-                "current_rev": 39260651,
+                "current_rev": 39338118,
                 "prev_rev": 0,
-                "current_profit": 13402699,
+                "current_profit": 13480166,
                 "prev_profit": 0,
                 "current_qty": 1360,
                 "prev_qty": 0
@@ -17985,29 +17991,29 @@
               },
               {
                 "name": "보아르스티머인젝터",
-                "current_rev": 71981974,
+                "current_rev": 72001719,
                 "prev_rev": 104968030,
-                "current_profit": 26748613,
+                "current_profit": 26768358,
                 "prev_profit": 39969856,
                 "current_qty": 2564,
                 "prev_qty": 3829
               },
               {
                 "name": "보아르워시스핀",
-                "current_rev": 25995291,
+                "current_rev": 25999669,
                 "prev_rev": 56307121,
-                "current_profit": 13097772,
+                "current_profit": 13102150,
                 "prev_profit": 27825954,
                 "current_qty": 2006,
                 "prev_qty": 4446
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 430381675,
+                "current_rev": 430439581,
                 "prev_rev": 409500567,
-                "current_profit": 187110579,
+                "current_profit": 187152865,
                 "prev_profit": 179065007,
-                "current_qty": 16321,
+                "current_qty": 16322,
                 "prev_qty": 15543
               },
               {
@@ -18084,9 +18090,9 @@
               },
               {
                 "name": "보아르포스D12",
-                "current_rev": 105974504,
+                "current_rev": 105984294,
                 "prev_rev": 114350248,
-                "current_profit": 27237011,
+                "current_profit": 27246801,
                 "prev_profit": 28470483,
                 "current_qty": 1614,
                 "prev_qty": 1808
@@ -18104,20 +18110,20 @@
           },
           {
             "name": "육아",
-            "current_rev": 1189044426,
+            "current_rev": 1189095346,
             "prev_rev": 861702213,
-            "current_profit": 491478859,
+            "current_profit": 491502639,
             "prev_profit": 380484315,
-            "current_qty": 32399,
+            "current_qty": 32401,
             "prev_qty": 24345,
             "products": [
               {
                 "name": "보아르아가맘마쪽쪽이살균기",
-                "current_rev": 303864412,
+                "current_rev": 303892190,
                 "prev_rev": 204189191,
-                "current_profit": 144271780,
+                "current_profit": 144286835,
                 "prev_profit": 107537775,
-                "current_qty": 12983,
+                "current_qty": 12984,
                 "prev_qty": 8501
               },
               {
@@ -18176,11 +18182,11 @@
               },
               {
                 "name": "보아르허니즈백색소음기",
-                "current_rev": 74686923,
+                "current_rev": 74710065,
                 "prev_rev": 95051378,
-                "current_profit": 27794767,
+                "current_profit": 27803492,
                 "prev_profit": 36907086,
-                "current_qty": 3466,
+                "current_qty": 3467,
                 "prev_qty": 4308
               },
               {
@@ -18222,18 +18228,18 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 6761630573,
+            "current_rev": 6761782057,
             "prev_rev": 6489498784,
-            "current_profit": 2709295155,
+            "current_profit": 2709440395,
             "prev_profit": 2806058393,
             "current_qty": 174379,
             "prev_qty": 155901,
             "products": [
               {
                 "name": "보아르스위프클링",
-                "current_rev": 654879233,
+                "current_rev": 654884172,
                 "prev_rev": 189900632,
-                "current_profit": 299291587,
+                "current_profit": 299296526,
                 "prev_profit": 113522389,
                 "current_qty": 19996,
                 "prev_qty": 5771
@@ -18321,11 +18327,11 @@
               },
               {
                 "name": "보아르워시스핀C",
-                "current_rev": 112559812,
+                "current_rev": 112564939,
                 "prev_rev": 255833402,
-                "current_profit": 44060628,
+                "current_profit": 44075131,
                 "prev_profit": 99179860,
-                "current_qty": 7367,
+                "current_qty": 7366,
                 "prev_qty": 17627
               },
               {
@@ -18339,9 +18345,9 @@
               },
               {
                 "name": "보아르딥슬립클링",
-                "current_rev": 407110646,
+                "current_rev": 407115695,
                 "prev_rev": 535729746,
-                "current_profit": 153716932,
+                "current_profit": 153721981,
                 "prev_profit": 202697938,
                 "current_qty": 11501,
                 "prev_qty": 15679
@@ -18393,9 +18399,9 @@
               },
               {
                 "name": "보아르아이워시",
-                "current_rev": 413157136,
+                "current_rev": 413124219,
                 "prev_rev": 355082612,
-                "current_profit": 145912491,
+                "current_profit": 145879574,
                 "prev_profit": 130939954,
                 "current_qty": 11923,
                 "prev_qty": 10069
@@ -18420,18 +18426,18 @@
               },
               {
                 "name": "보아르워시스핀",
-                "current_rev": 47556510,
+                "current_rev": 47560888,
                 "prev_rev": 86986759,
-                "current_profit": 24321477,
+                "current_profit": 24325855,
                 "prev_profit": 44090743,
                 "current_qty": 3623,
                 "prev_qty": 6807
               },
               {
                 "name": "보아르슈트쏙의류관리기",
-                "current_rev": 39260651,
+                "current_rev": 39338118,
                 "prev_rev": 0,
-                "current_profit": 13402699,
+                "current_profit": 13480166,
                 "prev_profit": 0,
                 "current_qty": 1360,
                 "prev_qty": 0
@@ -18474,20 +18480,20 @@
               },
               {
                 "name": "보아르포스D12",
-                "current_rev": 157699665,
+                "current_rev": 157709455,
                 "prev_rev": 176956873,
-                "current_profit": 41645175,
+                "current_profit": 41654965,
                 "prev_profit": 47702535,
                 "current_qty": 2393,
                 "prev_qty": 2763
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 555853941,
+                "current_rev": 555911847,
                 "prev_rev": 536987511,
-                "current_profit": 245373300,
+                "current_profit": 245415586,
                 "prev_profit": 271486804,
-                "current_qty": 20967,
+                "current_qty": 20968,
                 "prev_qty": 20112
               },
               {
@@ -18519,9 +18525,9 @@
               },
               {
                 "name": "보아르스티머인젝터",
-                "current_rev": 151825764,
+                "current_rev": 151845509,
                 "prev_rev": 146195487,
-                "current_profit": 55522053,
+                "current_profit": 55541798,
                 "prev_profit": 56765084,
                 "current_qty": 5569,
                 "prev_qty": 5300
@@ -18530,11 +18536,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 1777471796,
+            "current_rev": 1777522716,
             "prev_rev": 1247006376,
-            "current_profit": 742307505,
+            "current_profit": 742331285,
             "prev_profit": 565992045,
-            "current_qty": 47002,
+            "current_qty": 47004,
             "prev_qty": 35531,
             "products": [
               {
@@ -18548,11 +18554,11 @@
               },
               {
                 "name": "보아르아가맘마쪽쪽이살균기",
-                "current_rev": 405814524,
+                "current_rev": 405842302,
                 "prev_rev": 301300710,
-                "current_profit": 194646832,
+                "current_profit": 194661887,
                 "prev_profit": 164053953,
-                "current_qty": 17402,
+                "current_qty": 17403,
                 "prev_qty": 12490
               },
               {
@@ -18602,11 +18608,11 @@
               },
               {
                 "name": "보아르허니즈백색소음기",
-                "current_rev": 118332172,
+                "current_rev": 118355314,
                 "prev_rev": 147904200,
-                "current_profit": 44827897,
+                "current_profit": 44836622,
                 "prev_profit": 59842373,
-                "current_qty": 5451,
+                "current_qty": 5452,
                 "prev_qty": 6672
               },
               {
@@ -18863,8 +18869,8 @@
         },
         "7": {
           "생활가전": {
-            "매출": 583703313,
-            "이익": 220968206,
+            "매출": 583671265,
+            "이익": 220936158,
             "수량": 16576
           },
           "육아": {
@@ -18875,9 +18881,9 @@
         },
         "8": {
           "생활가전": {
-            "매출": 608152177,
-            "이익": 216706653,
-            "수량": 16237
+            "매출": 608309395,
+            "이익": 216873247,
+            "수량": 16236
           },
           "육아": {
             "매출": 158639675,
@@ -18887,14 +18893,14 @@
         },
         "9": {
           "생활가전": {
-            "매출": 131356932,
-            "이익": 43726684,
-            "수량": 4631
+            "매출": 131383246,
+            "이익": 43737378,
+            "수량": 4632
           },
           "육아": {
-            "매출": 20293241,
-            "이익": 7714682,
-            "수량": 610
+            "매출": 20344161,
+            "이익": 7738462,
+            "수량": 612
           }
         }
       }
@@ -18977,16 +18983,16 @@
             "육아": 116161278
           },
           "7": {
-            "생활": 596355142,
+            "생활": 596323094,
             "육아": 152865841
           },
           "8": {
-            "생활": 615481983,
+            "생활": 615639201,
             "육아": 159369764
           },
           "9": {
-            "생활": 131921454,
-            "육아": 20333486
+            "생활": 131947768,
+            "육아": 20384406
           }
         }
       },
@@ -19091,8 +19097,8 @@
       "monthly_revenue": 0,
       "ytd_revenue": 0,
       "annual_revenue": 0,
-      "actual_month_revenue": 151650173,
-      "actual_ytd_revenue": 5791425524,
+      "actual_month_revenue": 151727407,
+      "actual_ytd_revenue": 5791627928,
       "achieve_rate_month": 0,
       "achieve_rate_ytd": 0,
       "products": []
