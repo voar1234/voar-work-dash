@@ -537,13 +537,13 @@
     padding: 16px 18px; cursor: pointer; transition: box-shadow .15s, transform .15s;
   }
   .product-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
-  /* Priority: 신제품(red) > 발주필요(blue) > 소진임박(yellow). 단일 색상만 적용. */
+  /* Priority: 신제품(red) > 발주필요(green, ≤3일) > 소진임박(yellow). 단일 색상만 적용. */
   .product-card.new-product    { border-left: 4px solid #ef4444; }
-  .product-card.reorder-needed { border-left: 4px solid #3b82f6; }
+  .product-card.reorder-needed { border-left: 4px solid #10b981; }
   .product-card.depletion-soon { border-left: 4px solid #f59e0b; }
   .product-card.new-product.depletion-soon { border-left: 4px solid #ef4444; }
   .product-card.new-product.reorder-needed { border-left: 4px solid #ef4444; }
-  .product-card.reorder-needed.depletion-soon { border-left: 4px solid #3b82f6; }
+  .product-card.reorder-needed.depletion-soon { border-left: 4px solid #10b981; }
   .product-card.discontinued { border-left: 4px solid #6b7280; background: #fafafa; opacity: 0.85; }
   .product-card.discontinued .pc-title { color: #6b7280; }
   .pc-badge-disc {
@@ -569,7 +569,12 @@
   }
   .pc-badge-reorder {
     display: inline-block; padding: 2px 7px; border-radius: 4px;
-    background: #3b82f6; color: #fff; font-size: 10px; font-weight: 700;
+    background: #10b981; color: #fff; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .pc-badge-depletion {
+    display: inline-block; padding: 2px 7px; border-radius: 4px;
+    background: #f59e0b; color: #fff; font-size: 10px; font-weight: 700;
     letter-spacing: 0.5px;
   }
   .pc-badge-nostock {
@@ -3404,7 +3409,7 @@ function renderProducts() {
     let needsReorder = false;
     if (rd) {
       const days = Math.round((new Date(rd).setHours(0,0,0,0) - todayMs) / 86400000);
-      needsReorder = days <= 7;
+      needsReorder = days <= 3;  // v3 2026-09-01: 7일 → 3일 (사용자 요청)
     }
     if (needsReorder) return [1, p.매출_통계?.소진_잔여일수 ?? 99999];
     if ((p.재고_요약?.현재고 || 0) === 0) return [2, 0];
@@ -3555,16 +3560,16 @@ function productCard(p) {
     dDay = Math.round((target - today) / 86400000);
   }
 
-  // 재고부족 = 2주 이내 소진 예정 (사용자 요청). 발주권장일도 14일 임계로 확장.
+  // v3 (2026-09-01): 발주필요 = 재고발주 권장일 ≤ 3일 (초록 배지)
   let needsReorder = false;
   if (!isNew && sales.재고발주_권장일) {
     const rdMs = new Date(sales.재고발주_권장일).setHours(0,0,0,0);
     const tMs  = new Date().setHours(0,0,0,0);
     const daysToReorder = Math.round((rdMs - tMs) / 86400000);
-    needsReorder = daysToReorder <= 14;  // 14일 이내 발주 권장
+    needsReorder = daysToReorder <= 3;
   }
-  // 소진 임박 = 14일 이내 (재고부족 판정 기준)
-  const depletionSoon = sales.소진_잔여일수 != null && sales.소진_잔여일수 <= 14;
+  // 소진 임박 = 3일 이내 (긴급알림 규칙과 동일)
+  const depletionSoon = sales.소진_잔여일수 != null && sales.소진_잔여일수 <= 3;
 
   // 엑셀 분류 기반 단종 판정
   const excelCat = p.엑셀_분류;
@@ -3589,7 +3594,8 @@ function productCard(p) {
   else if (isDiscPropagated)  titleEl.append(el('span', {class:'pc-badge-disc-soft', title:'본품 단종에 따른 자동 표시'}, '단종(연계)'));
   else if (isDiscConsidering) titleEl.append(el('span', {class:'pc-badge-disc-soft'}, '단종고려'));
   else if (noStock) titleEl.append(el('span', {class:'pc-badge-nostock'}, '재고없음'));
-  else if (needsReorder || depletionSoon) titleEl.append(el('span', {class:'pc-badge-reorder'}, '재고부족'));
+  else if (needsReorder) titleEl.append(el('span', {class:'pc-badge-reorder'}, '발주필요'));
+  else if (depletionSoon) titleEl.append(el('span', {class:'pc-badge-depletion'}, '소진임박'));
   titleEl.append(p.상품명 || p.품목명);  // 상품명(SKU 단위) 우선 표시
   card.append(el('div', {class:'pc-header'},
     titleEl,
