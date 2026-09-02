@@ -1039,6 +1039,16 @@
       "id": "t_7hli7xquskd",
       "text": "브검페 정리하기!!!!",
       "done": true
+    },
+    {
+      "id": "t_k3v9rweetn",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-07-30",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      },
+      "leaveRerouted": "2026-07-30"
     }
   ],
   "2026-07-13": [
@@ -2098,6 +2108,17 @@
       "text": "크루특가 진행요청",
       "done": true,
       "leaveRerouted": "2026-08-31"
+    },
+    {
+      "id": "t_4vy4egav1ec",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-08-31",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      },
+      "leaveRerouted": "2026-08-31"
     }
   ],
   "2026-09-02": [
@@ -2125,6 +2146,12 @@
       "id": "t_0w886x53uojp",
       "text": "컴플릿M 오늘끝딜 종료 배너 삭제",
       "done": false
+    },
+    {
+      "id": "t_ct9qjfx3at",
+      "text": "스티머인젝터 예판 설정",
+      "done": false,
+      "rolledFrom": "2026-09-01"
     }
   ],
   "2026-09-01": [
@@ -2163,11 +2190,6 @@
       "id": "t_gwchsnscy5k",
       "text": "아가미니 브커 콘텐츠 확인 및 숏클립 등록",
       "done": true
-    },
-    {
-      "id": "t_ct9qjfx3at",
-      "text": "스티머인젝터 예판 설정",
-      "done": false
     }
   ],
   "2026-10-29": [
@@ -2191,6 +2213,13 @@
       "autoSource": {
         "type": "매주 월요일 12시 접수마감"
       }
+    }
+  ],
+  "2026-09-15": [
+    {
+      "id": "t_qa46vbgqruf",
+      "text": "슈즈쏙 생완일/ 인스펙션 완료 체크/지영님 입고일 푸쉬 요청",
+      "done": false
     }
   ]
 }
