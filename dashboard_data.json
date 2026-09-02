@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-09-03T01:04:10",
+    "extracted_at": "2026-09-03T01:23:42",
     "product_count": 47,
     "data_unit": "상품(SKU) 단위"
   },
@@ -615,13 +615,13 @@
         "발주중수량": 0
       },
       "매출_통계": {
-        "매출_7일합": 74,
-        "매출_28일합": 291,
+        "매출_7일합": 75,
+        "매출_28일합": 292,
         "일평균_7일": 11,
         "일평균_28일": 10,
-        "소진_잔여일수": 306,
-        "소진_예상일": "2027-07-06",
-        "재고발주_권장일": "2027-04-22"
+        "소진_잔여일수": 305,
+        "소진_예상일": "2027-07-05",
+        "재고발주_권장일": "2027-04-21"
       },
       "구성제품": [
         {
@@ -8665,8 +8665,8 @@
         "발주중수량": 6016
       },
       "매출_통계": {
-        "매출_7일합": 236,
-        "매출_28일합": 2037,
+        "매출_7일합": 237,
+        "매출_28일합": 2038,
         "일평균_7일": 34,
         "일평균_28일": 73,
         "소진_잔여일수": 4,
@@ -14701,23 +14701,23 @@
   "sales": {
     "today_date": "2026-09-03",
     "kpi": {
-      "today_revenue": 103837,
-      "today_profit": 43276,
-      "today_qty": 3,
+      "today_revenue": 169678,
+      "today_profit": 78897,
+      "today_qty": 5,
       "today_orders": 1,
       "yesterday_revenue": 110257998,
-      "week_revenue": 242445681,
+      "week_revenue": 242511522,
       "last_week_revenue": 192057494,
-      "month_revenue": 154522085,
+      "month_revenue": 154587926,
       "last_month_revenue": 46615467
     },
     "channels_today": [
       {
         "매출처명": "스마트스토어",
         "매출처ID": 465,
-        "수량": 3,
-        "매출": 103837,
-        "이익": 43276,
+        "수량": 5,
+        "매출": 169678,
+        "이익": 78897,
         "비중": 100.0
       }
     ],
@@ -14726,15 +14726,31 @@
         "제품ID": 198,
         "제품명": "보아르아이워시",
         "카테고리명": "초음파세척기",
-        "수량": 2,
-        "매출": 80696,
-        "이익": 32858,
+        "수량": 3,
+        "매출": 121836,
+        "이익": 50079,
         "판매처내역": [
           {
             "매출처명": "스마트스토어",
-            "수량": 2,
-            "매출": 80696,
-            "이익": 32858
+            "수량": 3,
+            "매출": 121836,
+            "이익": 50079
+          }
+        ]
+      },
+      {
+        "제품ID": 6743,
+        "제품명": "보아르클링워시습식청소기전용세제-1L",
+        "카테고리명": "기타생활가전",
+        "수량": 1,
+        "매출": 24701,
+        "이익": 18400,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 24701,
+            "이익": 18400
           }
         ]
       },
@@ -14793,7 +14809,7 @@
         670705018,
         736078289,
         767060586,
-        154522085,
+        154587926,
         0,
         0,
         0
@@ -14837,7 +14853,7 @@
         17371,
         21007,
         20743,
-        5307,
+        5309,
         0,
         0,
         0
@@ -14876,8 +14892,8 @@
       },
       {
         "카테고리": "초음파세척기",
-        "매출": 336207970,
-        "수량": 9746
+        "매출": 336249110,
+        "수량": 9747
       },
       {
         "카테고리": "살균기",
@@ -14916,8 +14932,8 @@
       },
       {
         "카테고리": "기타생활가전",
-        "매출": 61285965,
-        "수량": 1581
+        "매출": 61310666,
+        "수량": 1582
       },
       {
         "카테고리": "기타유아",
@@ -15268,11 +15284,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 708519445,
+            "current_rev": 708585286,
             "prev_rev": 521740229,
-            "current_profit": 247025518,
+            "current_profit": 247061139,
             "prev_profit": 210166589,
-            "current_qty": 20133,
+            "current_qty": 20135,
             "prev_qty": 12209,
             "products": [
               {
@@ -15340,11 +15356,11 @@
               },
               {
                 "name": "보아르아이워시",
-                "current_rev": 77046911,
+                "current_rev": 77088051,
                 "prev_rev": 55307417,
-                "current_profit": 23253080,
+                "current_profit": 23270301,
                 "prev_profit": 17816819,
-                "current_qty": 2249,
+                "current_qty": 2250,
                 "prev_qty": 1666
               },
               {
@@ -15439,11 +15455,11 @@
               },
               {
                 "name": "보아르클링워시습식청소기전용세제",
-                "current_rev": 5751106,
+                "current_rev": 5775807,
                 "prev_rev": 0,
-                "current_profit": 3835602,
+                "current_profit": 3854002,
                 "prev_profit": 0,
-                "current_qty": 304,
+                "current_qty": 305,
                 "prev_qty": 0
               },
               {
@@ -15694,11 +15710,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 206097866,
+            "current_rev": 206163707,
             "prev_rev": 147574458,
-            "current_profit": 72985001,
+            "current_profit": 73020622,
             "prev_profit": 69772562,
-            "current_qty": 6595,
+            "current_qty": 6597,
             "prev_qty": 3229,
             "products": [
               {
@@ -15748,11 +15764,11 @@
               },
               {
                 "name": "보아르아이워시",
-                "current_rev": 9262452,
+                "current_rev": 9303592,
                 "prev_rev": 16680854,
-                "current_profit": 3617568,
+                "current_profit": 3634789,
                 "prev_profit": 5625308,
-                "current_qty": 236,
+                "current_qty": 237,
                 "prev_qty": 502
               },
               {
@@ -15892,11 +15908,11 @@
               },
               {
                 "name": "보아르클링워시습식청소기전용세제",
-                "current_rev": 1173469,
+                "current_rev": 1198170,
                 "prev_rev": 0,
-                "current_profit": 707195,
+                "current_profit": 725595,
                 "prev_profit": 0,
-                "current_qty": 74,
+                "current_qty": 75,
                 "prev_qty": 0
               },
               {
@@ -16102,11 +16118,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 4605009665,
+            "current_rev": 4605075506,
             "prev_rev": 4327345333,
-            "current_profit": 1804968035,
+            "current_profit": 1805003656,
             "prev_profit": 1839229675,
-            "current_qty": 118145,
+            "current_qty": 118147,
             "prev_qty": 103695,
             "products": [
               {
@@ -16210,11 +16226,11 @@
               },
               {
                 "name": "보아르아이워시",
-                "current_rev": 336207970,
+                "current_rev": 336249110,
                 "prev_rev": 259740880,
-                "current_profit": 116754424,
+                "current_profit": 116771645,
                 "prev_profit": 93887267,
-                "current_qty": 9746,
+                "current_qty": 9747,
                 "prev_qty": 7431
               },
               {
@@ -16246,11 +16262,11 @@
               },
               {
                 "name": "보아르클링워시습식청소기전용세제",
-                "current_rev": 61285965,
+                "current_rev": 61310666,
                 "prev_rev": 0,
-                "current_profit": 51974262,
+                "current_profit": 51992662,
                 "prev_profit": 0,
-                "current_qty": 1581,
+                "current_qty": 1582,
                 "prev_qty": 0
               },
               {
@@ -16528,11 +16544,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 6742071306,
+            "current_rev": 6742137147,
             "prev_rev": 6466036722,
-            "current_profit": 2701619454,
+            "current_profit": 2701655075,
             "prev_profit": 2797036705,
-            "current_qty": 173924,
+            "current_qty": 173926,
             "prev_qty": 155312,
             "products": [
               {
@@ -16690,20 +16706,20 @@
               },
               {
                 "name": "보아르클링워시습식청소기전용세제",
-                "current_rev": 61285965,
+                "current_rev": 61310666,
                 "prev_rev": 0,
-                "current_profit": 51974262,
+                "current_profit": 51992662,
                 "prev_profit": 0,
-                "current_qty": 1581,
+                "current_qty": 1582,
                 "prev_qty": 0
               },
               {
                 "name": "보아르아이워시",
-                "current_rev": 412578784,
+                "current_rev": 412619924,
                 "prev_rev": 353308132,
-                "current_profit": 145643628,
+                "current_profit": 145660849,
                 "prev_profit": 130409036,
-                "current_qty": 11908,
+                "current_qty": 11909,
                 "prev_qty": 10015
               },
               {
@@ -17193,9 +17209,9 @@
         },
         "9": {
           "생활가전": {
-            "매출": 133782702,
-            "이익": 44788518,
-            "수량": 4685
+            "매출": 133848543,
+            "이익": 44824139,
+            "수량": 4687
           },
           "육아": {
             "매출": 20739383,
@@ -17291,7 +17307,7 @@
             "육아": 159403653
           },
           "9": {
-            "생활": 134397501,
+            "생활": 134463342,
             "육아": 20797143
           }
         }
@@ -17397,8 +17413,8 @@
       "monthly_revenue": 0,
       "ytd_revenue": 0,
       "annual_revenue": 0,
-      "actual_month_revenue": 154522085,
-      "actual_ytd_revenue": 5794534122,
+      "actual_month_revenue": 154587926,
+      "actual_ytd_revenue": 5794599963,
       "achieve_rate_month": 0,
       "achieve_rate_ytd": 0,
       "products": []
