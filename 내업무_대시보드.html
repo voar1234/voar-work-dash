@@ -748,9 +748,26 @@
     height: auto;  /* 이벤트 많으면 자동 늘어남 */
   }
   /* 미니 캘린더 — TODO 페이지용 */
-  .cal-grid.mini-cal .cal-day { min-height: 56px; cursor: pointer; position: relative; }
+  .cal-grid.mini-cal .cal-day { min-height: 72px; cursor: pointer; position: relative; padding-top: 2px; }
   .cal-grid.mini-cal .cal-day:hover { background: #f3f4f6; }
   .cal-grid.mini-cal .cal-day.selected { background: var(--blue-bg); border: 1px solid var(--blue); }
+  /* 미니 캘린더 행사 바 (v2 2026-09-03) */
+  .cal-grid.mini-cal .mini-event-bars {
+    display: flex; flex-direction: column; gap: 2px;
+    margin: 2px 2px 3px; min-height: 0;
+  }
+  .cal-grid.mini-cal .mini-event-bar {
+    height: 12px; line-height: 12px; font-size: 9px; font-weight: 700;
+    color: #fff; padding: 0 4px; border-radius: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    opacity: 0.9;
+  }
+  .cal-grid.mini-cal .mini-event-bar:hover { opacity: 1; transform: translateY(-0.5px); }
+  .cal-grid.mini-cal .mini-event-bar.start { border-top-left-radius: 3px; border-bottom-left-radius: 3px; }
+  .cal-grid.mini-cal .mini-event-bar.end   { border-top-right-radius: 3px; border-bottom-right-radius: 3px; }
+  .cal-grid.mini-cal .mini-event-more {
+    font-size: 9px; color: #6b7280; padding: 0 4px; line-height: 12px;
+  }
   /* 연차 / 반차 표시 (배경) */
   .cal-grid.mini-cal .cal-day.leave-full {
     background: #fee2e2 !important;
@@ -4887,6 +4904,8 @@ function renderTodoMiniCalendar() {
   const todos = loadTodos();
   const leaves = loadLeaves();
   const today = todayIso();
+  // v2 (2026-09-03): 미니 캘린더에 행사 일정 바 표시. _EC_EVENTS_CACHE 는 bootstrapEvents()로 미리 채워짐.
+  const events = (_EC_EVENTS_CACHE || []).filter(e => e.start && e.end);
   for (let i = 0; i < 42; i++) {
     const d = new Date(start); d.setDate(start.getDate() + i);
     const iso = todayIso(d);
@@ -4901,6 +4920,31 @@ function renderTodoMiniCalendar() {
       class: cellCls,
       onclick: () => onMiniCalCellClick(iso),
     });
+    // 행사 바 (셀 최상단, day-num 위)
+    const dayEvents = events.filter(e => iso >= e.start && iso <= e.end);
+    if (dayEvents.length) {
+      const bars = el('div', {class:'mini-event-bars'});
+      const MAX = 3;
+      for (const ev of dayEvents.slice(0, MAX)) {
+        const color = EC_CHANNEL_COLORS[ev.channel] || '#6b7280';
+        const isStart = iso === ev.start;
+        const isEnd   = iso === ev.end;
+        const barCls  = ['mini-event-bar'];
+        if (isStart) barCls.push('start');
+        if (isEnd) barCls.push('end');
+        bars.append(el('div', {
+          class: barCls.join(' '),
+          style: `background:${color};`,
+          title: `[${ev.channel||'기타'}] ${ev.name} · ${ev.start}~${ev.end}`,
+          onclick: (e) => { e.stopPropagation(); if (typeof openEcDetail === 'function') openEcDetail(ev); },
+        }, isStart ? (ev.name.length > 8 ? ev.name.slice(0,8)+'…' : ev.name) : ''));
+      }
+      if (dayEvents.length > MAX) {
+        bars.append(el('div', {class:'mini-event-more', title: dayEvents.slice(MAX).map(e => e.name).join(' · ')},
+          `+${dayEvents.length - MAX}`));
+      }
+      cell.append(bars);
+    }
     cell.append(el('div', {class:`day-num ${dow===0?'sun-num':dow===6?'sat-num':''}`}, String(d.getDate())));
     if (leaveType) {
       cell.append(el('div', {class:`leave-label ${leaveLabelCls(leaveType)}`}, leaveShortLabel(leaveType)));
