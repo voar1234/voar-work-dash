@@ -2359,12 +2359,11 @@ document.getElementById('queue-list').addEventListener('click', e => {
   if (t.dataset.qDel) {
     const q = S.queue.find(x => x.id === t.dataset.qDel);
     if (!q) return;
-    if (!confirm(`"${q.title}"을(를) 발행 대기 소재에서 삭제할까요?`)) return;
+    if (!confirm(`"${q.title}"을(를) 삭제할까요?`)) return;
     releaseSlot(q.id);
-    if (q.ideaId) {
-      const idea = S.ideas.find(x => x.id === q.ideaId);
-      if (idea && idea.status === '제작요청') idea.status = '아이디어';
-    }
+    bury(q.id);                       // 없으면 합치기에서 되살아난다
+    if (q.ideaId) bury(q.ideaId);     // 소재로 되돌리면 목록이 또 늘어난다
+    S.ideas = (S.ideas || []).filter(x => x.id !== q.ideaId);
     S.queue = S.queue.filter(x => x.id !== q.id);
     save(); renderQueue(); renderCal(); renderIdeas(); renderDash();
     return;
