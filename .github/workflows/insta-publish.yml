@@ -1,0 +1,37 @@
+name: 아가노트 예약 발행
+
+# PC 를 꺼도 발행되게 하려고 GitHub 서버에서 돌린다.
+# 공개 저장소라 Actions 사용량은 무료.
+on:
+  schedule:
+    # UTC 기준. 한국시간 = UTC + 9
+    # 발행 시각(보통 20:30 KST = 11:30 UTC) 앞뒤로 촘촘히 확인한다.
+    - cron: '*/15 * * * *'
+  workflow_dispatch:        # 필요하면 손으로도 돌릴 수 있게
+
+concurrency:
+  group: insta-publish      # 겹쳐 돌면 중복 발행 위험이 있다
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 예약 발행 확인
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_GRAPH_VERSION: v21.0
+        run: python _scheduler.py --once
+
+      - name: 로그 남기기
+        if: always()
+        run: |
+          if [ -f _scheduler.log ]; then tail -20 _scheduler.log; fi
