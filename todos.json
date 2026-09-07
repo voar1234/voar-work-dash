@@ -194,18 +194,6 @@
       "autoSource": {
         "type": "매주 금요일 정기"
       }
-    },
-    {
-      "id": "t_g2pdmc2huy",
-      "text": "[자동·D-7] 보아르아가담이유식포트워머 신제품 시장조사·판매가 측정",
-      "done": false,
-      "autoKey": "auto:po:956:260519001",
-      "autoSource": {
-        "품목ID": 956,
-        "type": "생산완료(예정)일 D-7",
-        "발주번호": 260519001,
-        "기준일": "2026-07-24"
-      }
     }
   ],
   "2026-07-24": [
@@ -218,17 +206,6 @@
       "id": "t_hv0h31ocvcc",
       "text": "유팡 메일 회신",
       "done": true
-    },
-    {
-      "id": "t_096g794re4ho",
-      "text": "[자동] 보아르아가담이유식포트워머 카테고리·키워드 조사·공정위 제작",
-      "done": false,
-      "autoKey": "auto:prod:956:260519001",
-      "autoSource": {
-        "품목ID": 956,
-        "type": "생산완료일",
-        "발주번호": 260519001
-      }
     }
   ],
   "2026-07-31": [],
@@ -1062,16 +1039,6 @@
       "id": "t_7hli7xquskd",
       "text": "브검페 정리하기!!!!",
       "done": true
-    },
-    {
-      "id": "t_j24pkavui4j",
-      "text": "[자동·주간] 네이버 오늘끝딜 제안",
-      "done": false,
-      "autoKey": "auto:thursday-ondeal:2026-07-30",
-      "autoSource": {
-        "type": "매주 목요일 정기"
-      },
-      "leaveRerouted": "2026-07-30"
     }
   ],
   "2026-07-13": [
@@ -1123,18 +1090,6 @@
       "id": "t_z4oiblc6ewo",
       "text": "아이품고 서포터즈 진행 여부 메일 회신",
       "done": true
-    },
-    {
-      "id": "t_y0jt66fxyon",
-      "text": "[자동·D-7] 보아르포스S 신제품 시장조사·판매가 측정",
-      "done": false,
-      "autoKey": "auto:po:868:260624003",
-      "autoSource": {
-        "품목ID": 868,
-        "type": "생산완료(예정)일 D-7",
-        "발주번호": 260624003,
-        "기준일": "2026-09-11"
-      }
     }
   ],
   "2026-07-09": [
@@ -1678,6 +1633,31 @@
       "id": "t_z10lm0f4jkc",
       "text": "슈즈쏙, 아이워시 추석프로모션 진행 체크/행사가 제외",
       "done": false
+    },
+    {
+      "id": "t_g2pdmc2huy",
+      "text": "[자동·D-7] 보아르아가담이유식포트워머 신제품 시장조사·판매가 측정",
+      "done": false,
+      "autoKey": "auto:po:956:260519001",
+      "autoSource": {
+        "품목ID": 956,
+        "type": "생산완료(예정)일 D-7",
+        "발주번호": 260519001,
+        "기준일": "2026-07-24"
+      },
+      "rolledFrom": "2026-07-17"
+    },
+    {
+      "id": "t_096g794re4ho",
+      "text": "[자동] 보아르아가담이유식포트워머 카테고리·키워드 조사·공정위 제작",
+      "done": false,
+      "autoKey": "auto:prod:956:260519001",
+      "autoSource": {
+        "품목ID": 956,
+        "type": "생산완료일",
+        "발주번호": 260519001
+      },
+      "rolledFrom": "2026-07-24"
     }
   ],
   "2026-08-05": [
@@ -2225,17 +2205,6 @@
       "text": "크루특가 진행요청",
       "done": true,
       "leaveRerouted": "2026-08-31"
-    },
-    {
-      "id": "t_0c2kq9zqda7i",
-      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
-      "done": false,
-      "urgent": true,
-      "autoKey": "auto:monday-ondeal-deadline:2026-08-31",
-      "autoSource": {
-        "type": "매주 월요일 12시 접수마감"
-      },
-      "leaveRerouted": "2026-08-31"
     }
   ],
   "2026-09-02": [
@@ -2376,6 +2345,49 @@
       "autoKey": "auto:monday-ondeal-deadline:2026-11-02",
       "autoSource": {
         "type": "매주 월요일 12시 접수마감"
+      }
+    }
+  ]
+}보드 제안서 작성 마감일",
+      "done": false
+    }
+  ],
+  "2026-09-08": [
+    {
+      "id": "t_rvpwx25ynur",
+      "text": "아가보틀,컴플릿D 종료/배너삭제",
+      "done": false
+    },
+    {
+      "id": "t_6p5lth0kuyp",
+      "text": "8월 베스트리뷰 선정",
+      "done": false
+    }
+  ],
+  "2026-11-05": [
+    {
+      "id": "t_yoc1sts4gvb",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-11-05",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      }
+    }
+  ],
+  "2026-11-02": [
+    {
+      "id": "t_k3fuh1061xa",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-11-02",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      }
+    }
+  ]
+} "type": "매주 월요일 12시 접수마감"
       }
     }
   ]
