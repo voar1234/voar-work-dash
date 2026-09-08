@@ -73,16 +73,34 @@ def push(d):
         headers=h, method='POST'), timeout=25)
 
 
-def is_due(item, now):
-    """예정 시각이 됐는가. 예정이 없으면 '지금'으로 본다."""
-    date = item.get('scheduledAt')
-    if not date:
-        return True
-    t = item.get('scheduledTime') or '00:00'
+def slot_time(item, slots):
+    """예정 슬롯에서 이 글의 발행 시각을 찾는다. 없으면 None."""
+    for s in (slots or []):
+        if s and s.get('postId') == item.get('id') and s.get('date'):
+            return s.get('date'), (s.get('time') or '00:00')
+    return None
+
+
+def is_due(item, now, slots=()):
+    """예정 시각이 됐는가.
+
+    예정은 슬롯에 적히는데 예전엔 큐의 scheduledAt 만 봤다.
+    그게 비어 있으면 '지금'으로 쳐서 승인하자마자 나갔다.
+    (2026-09-07 15:17 — 20:30 예정이던 2건이 조기 발행)
+
+    이제 슬롯을 먼저 보고, 예정을 어디서도 못 찾으면 올리지 않는다.
+    예정 없는 글은 올리는 쪽보다 두는 쪽이 안전하다.
+    """
+    at = slot_time(item, slots)
+    if not at:
+        date = item.get('scheduledAt')
+        if not date:
+            return False                  # 예정 미상 — 건너뛴다
+        at = (date, item.get('scheduledTime') or '00:00')
     try:
-        when = datetime.strptime(f'{date} {t}', '%Y-%m-%d %H:%M').replace(tzinfo=KST)
+        when = datetime.strptime(f'{at[0]} {at[1]}', '%Y-%m-%d %H:%M').replace(tzinfo=KST)
     except ValueError:
-        return True
+        return False
     return now >= when
 
 
@@ -93,13 +111,23 @@ def already_out(q):
 
 def due_items(d, now):
     auto = d.get('autoPublish') is True
-    out = []
+    slots = d.get('slots') or []
+    out, held = [], []
     for q in (d.get('queue') or []) + (d.get('reels') or []):
         if already_out(q):
             continue                      # 중복 발행 차단
         ok = q.get('status') == 'approved' or (auto and q.get('status') == 'pending')
-        if ok and is_due(q, now):
+        if not ok:
+            continue
+        if is_due(q, now, slots):
             out.append(q)
+        else:
+            held.append(q)
+    if held:
+        for q in held:
+            at = slot_time(q, slots)
+            when = f'{at[0]} {at[1]}' if at else '예정 미배정'
+            log(f'· 대기: {q.get("title")}  → {when}')
     return out
 
 

@@ -48,20 +48,33 @@ NOW = '--now' in sys.argv      # 예정 시각을 무시하고 지금 올린다 
 KST = timezone(timedelta(hours=9))
 
 
-def is_due(item):
+def slot_time(item, slots):
+    """예정 슬롯에서 이 글의 발행 시각을 찾는다. 없으면 None."""
+    for s in (slots or []):
+        if s and s.get('postId') == item.get('id') and s.get('date'):
+            return s.get('date'), (s.get('time') or '00:00')
+    return None
+
+
+def is_due(item, slots=()):
     """예정 시각이 됐는가.
 
-    이걸 안 보고 올리는 바람에 예정이 6시간 남은 글이 먼저 나간 적이 있다.
-    예정이 아예 없으면 지금 올려도 되는 것으로 본다.
+    예정이 6시간 남은 글이 먼저 나간 뒤 이 함수를 넣었는데,
+    큐의 scheduledAt 만 봐서 반쪽이었다. 예정은 슬롯에 적힌다.
+    (2026-09-07 15:17 — 20:30 예정이던 2건이 또 조기 발행)
+
+    슬롯을 먼저 보고, 예정을 어디서도 못 찾으면 올리지 않는다.
     """
-    d = item.get('scheduledAt')
-    if not d:
-        return True
-    t = item.get('scheduledTime') or '00:00'
+    at = slot_time(item, slots)
+    if not at:
+        d = item.get('scheduledAt')
+        if not d:
+            return False                  # 예정 미상 — 건너뛴다
+        at = (d, item.get('scheduledTime') or '00:00')
     try:
-        when = datetime.strptime(f'{d} {t}', '%Y-%m-%d %H:%M').replace(tzinfo=KST)
+        when = datetime.strptime(f'{at[0]} {at[1]}', '%Y-%m-%d %H:%M').replace(tzinfo=KST)
     except ValueError:
-        return True
+        return False
     return datetime.now(KST) >= when
 
 
@@ -193,13 +206,16 @@ def main():
     ready = [q for q in queue
              if not already_out(q)
              and (q.get('status') == 'approved' or (auto and q.get('status') == 'pending'))]
-    targets = ready if NOW else [q for q in ready if is_due(q)]
+    slots = d.get('slots') or []
+    targets = ready if NOW else [q for q in ready if is_due(q, slots)]
     waiting = [q for q in ready if q not in targets]
 
     if waiting:
         print('예정 시각 전이라 건너뜁니다:')
         for q in waiting:
-            print(f'   - {q.get("title")}  → {q.get("scheduledAt")} {q.get("scheduledTime", "")}')
+            at = slot_time(q, slots)
+            print(f'   - {q.get("title")}  → '
+                  f'{at[0] + " " + at[1] if at else "예정 미배정 (슬롯에 넣어주세요)"}')
         print('   (지금 바로 올리려면 --now)')
         print()
 
