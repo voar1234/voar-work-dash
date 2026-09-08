@@ -1594,16 +1594,37 @@ function repairSlots() {
   return fixed;
 }
 
+function nextDay(d) {
+  const t = new Date(d + 'T00:00:00');
+  t.setDate(t.getDate() + 1);
+  const p = n => String(n).padStart(2, '0');
+  return t.getFullYear() + '-' + p(t.getMonth() + 1) + '-' + p(t.getDate());
+}
+
+/* 승인된 글에 발행일을 잡아준다.
+
+   하루에 한 건이 원칙이다.
+   예전엔 '비어 있는 슬롯'만 찾아서, 같은 날짜에 슬롯이 둘 이상 있으면
+   승인하는 족족 같은 날로 몰렸다. 이제 무언가 잡힌 날짜는 통째로 건너뛴다. */
 function assignSlot(postId) {
   if (!S.slots || !S.slots.length) S.slots = genSlots();
-  if (S.slots.some(s => s.postId === postId)) return null;   // 이미 배정됨
+  if (S.slots.some(s => s && s.postId === postId)) return null;   // 이미 배정됨
   const today = todayStr();
+
+  const busy = new Set(S.slots.filter(s => s && s.postId).map(s => s.date));
   const free = S.slots
-    .filter(s => !s.postId && s.date >= today)
+    .filter(s => s && !s.postId && s.date >= today && !busy.has(s.date))
     .sort(bySlot)[0];
-  if (!free) return null;
-  free.postId = postId;
-  return free;
+  if (free) { free.postId = postId; return free; }
+
+  // 남은 자리가 없으면 마지막 날 다음날에 하나 만든다.
+  // 여기서 null 을 돌려주면 '빈 슬롯이 없습니다' 알림만 뜨고 승인이 헛돈다.
+  let last = today;
+  for (const s of S.slots) if (s && s.date && s.date > last) last = s.date;
+  const slot = { date: nextDay(last), time: (S.cfg && S.cfg.time) || '20:30', postId };
+  S.slots.push(slot);
+  S.slots.sort(bySlot);
+  return slot;
 }
 /* 승인된 게시물의 발행일을 원하는 날짜로 옮긴다.
    슬롯 목록에 그 날짜가 없으면 새로 만들어 끼워넣는다.
