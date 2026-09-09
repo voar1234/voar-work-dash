@@ -6920,12 +6920,39 @@ setTimeout(fetchProposalNotifications, 5000);
 setInterval(fetchProposalNotifications, 30000);
 
 // ═════════════════════════════════════════════════════════
-// 💬 리뷰분석 — dash.voar.cloud 프록시 (v1 2026-09-08)
+// 💬 리뷰분석 — dash.voar.cloud 프록시 (v2 2026-09-09)
 //   · server.py의 /api/voar-cloud/reviews/* 프록시로 fetch
-//   · UI 로직은 dash.voar.cloud 원본 그대로 이식
+//   · v2: 담당 제품(DATA.products) 필터 + ⭐ 베스트리뷰 서브탭 신설
 // ═════════════════════════════════════════════════════════
 const RV_API_BASE = '/api/voar-cloud/reviews';
-let _rvLoaded = { search:false, issues:false };
+let _rvLoaded = { search:false, issues:false, best:false };
+
+// ── 담당 제품 매칭 토큰 (DATA.products 품목명에서 추출)
+//    "보아르" 제거 → (전체 · 첫한글부분 · 첫한글+영숫자) 후보 여러 개 → 스토어 상품명(공백 제거)에서 부분 매칭
+let _rvMyTokens = null;
+function rvMyProductTokens() {
+  if (_rvMyTokens) return _rvMyTokens;
+  const set = new Set();
+  for (const p of (DATA?.products || [])) {
+    const raw = (p.품목명 || '').replace(/\s/g, '');
+    if (!raw) continue;
+    const core = raw.replace(/^보아르/, '');
+    if (!core) continue;
+    if (core.length >= 2) set.add(core);                                    // 전체
+    const m1 = core.match(/^[가-힣]+/);         if (m1 && m1[0].length >= 2) set.add(m1[0]);
+    const m2 = core.match(/^[가-힣]+[A-Za-z0-9]+/); if (m2 && m2[0].length >= 2) set.add(m2[0]);
+  }
+  _rvMyTokens = set;
+  return set;
+}
+function rvIsMyProduct(storeName) {
+  const key = (storeName || '').replace(/\s/g, '');
+  if (!key) return false;
+  for (const t of rvMyProductTokens()) { if (key.includes(t)) return true; }
+  return false;
+}
+function rvFilterMyProducts(products) { return (products || []).filter(p => rvIsMyProduct(p.name)); }
+function rvFilterMyIssues(issues)    { return (issues   || []).filter(r => rvIsMyProduct(r.productName)); }
 
 function rvStars(score) { const s = Math.max(0, Math.min(5, Math.round(score || 0))); return '★★★★★'.slice(0, s) + '☆☆☆☆☆'.slice(0, 5 - s); }
 
@@ -6992,11 +7019,15 @@ async function rvLoadSearch() {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const d = await r.json();
     if (!d.ok) throw new Error(d.error || '실패');
-    if (!d.products.length) {
-      el.innerHTML = `<div style="padding:30px;text-align:center;color:#94a3b8;">검색 결과 없음</div>`;
+    // v2: 담당 제품만 필터
+    const mine = rvFilterMyProducts(d.products);
+    if (!mine.length) {
+      const totalMsg = d.products.length ? `<br><span style="font-size:11px;color:#94a3b8">전체 ${d.products.length}개 중 담당 제품 매칭 0건</span>` : '';
+      el.innerHTML = `<div style="padding:30px;text-align:center;color:#94a3b8;">검색 결과 없음${totalMsg}</div>`;
       return;
     }
-    el.innerHTML = d.products.map(rvProductCardHtml).join('');
+    el.innerHTML = `<div style="font-size:12px;color:#94a3b8;margin-bottom:10px;">담당 제품 ${mine.length}건 (전체 ${d.products.length}건 중)</div>` +
+                   mine.map(rvProductCardHtml).join('');
   } catch (e) {
     el.innerHTML = `<div style="padding:20px;color:#ef4444;">불러오기 실패: ${escapeHtml(e.message)}<br><span style="font-size:11px;color:#94a3b8">외부 모드에선 사내 server.py가 필요함</span></div>`;
   }
@@ -7012,12 +7043,93 @@ async function rvLoadIssues() {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const d = await r.json();
     if (!d.ok) throw new Error(d.error || '실패');
-    if (!d.issues.length) {
-      el.innerHTML = `<div style="padding:30px;text-align:center;color:#94a3b8;">🎉 해당 기간 ${maxScore}점 이하 리뷰 없음</div>`;
+    // v2: 담당 제품만 필터
+    const mine = rvFilterMyIssues(d.issues);
+    if (!mine.length) {
+      el.innerHTML = `<div style="padding:30px;text-align:center;color:#94a3b8;">🎉 담당 제품 중 ${maxScore}점 이하 리뷰 없음 (전체 ${d.count}건 확인)</div>`;
       return;
     }
-    el.innerHTML = `<div style="font-size:13px;color:#b91c1c;font-weight:700;margin-bottom:10px;">총 ${d.count}건의 저평점 리뷰</div>` +
-      d.issues.map(r2 => `<div class="rv-pcard rv-low"><div class="rv-phead"><div><div class="rv-pname" style="font-size:13px;">${escapeHtml(r2.productName || '')}</div></div><a href="${r2.storeUrl || '#'}" target="_blank" rel="noopener" style="font-size:11px;color:#2563eb;">스토어 ↗</a></div>${rvReviewItemHtml(r2)}</div>`).join('');
+    el.innerHTML = `<div style="font-size:13px;color:#b91c1c;font-weight:700;margin-bottom:10px;">담당 제품 저평점 ${mine.length}건 (전체 ${d.count}건 중)</div>` +
+      mine.map(r2 => `<div class="rv-pcard rv-low"><div class="rv-phead"><div><div class="rv-pname" style="font-size:13px;">${escapeHtml(r2.productName || '')}</div></div><a href="${r2.storeUrl || '#'}" target="_blank" rel="noopener" style="font-size:11px;color:#2563eb;">스토어 ↗</a></div>${rvReviewItemHtml(r2)}</div>`).join('');
+  } catch (e) {
+    el.innerHTML = `<div style="padding:20px;color:#ef4444;">불러오기 실패: ${escapeHtml(e.message)}</div>`;
+  }
+}
+
+// ⭐ 베스트리뷰 (v2 2026-09-09)
+//   조건: 별점 4~5 · 글 300자↑ · 사진 3장↑ · 사진 필수 · 조회월 1일~오늘(현재월) or 월말(과거월)
+//   방식: search?days=N (오늘부터 조회월 시작일까지) fetch → 클라이언트 필터
+async function rvLoadBest() {
+  const el = document.getElementById('rvBestResult');
+  const monthInput = document.getElementById('rvBestMonth').value;  // "YYYY-MM"
+  if (!monthInput) { el.innerHTML = '<div style="padding:20px;color:#94a3b8;">조회 월을 선택하세요</div>'; return; }
+  const [yy, mm] = monthInput.split('-').map(Number);
+  const monthStart = new Date(yy, mm - 1, 1);
+  const monthEndCalendar = new Date(yy, mm, 0);  // 그 달 마지막 날
+  const today = new Date(); today.setHours(0,0,0,0);
+  const monthEnd = today < monthEndCalendar ? today : monthEndCalendar;
+  if (monthStart > today) {
+    el.innerHTML = '<div style="padding:20px;color:#94a3b8;">미래 월은 조회 불가</div>'; return;
+  }
+  const daysFromToday = Math.ceil((today - monthStart) / 86400000) + 1;
+  const startIso = monthStart.toISOString().slice(0,10);
+  const endIso   = monthEnd.toISOString().slice(0,10);
+
+  el.innerHTML = `<div style="padding:20px;color:#94a3b8;">${startIso} ~ ${endIso} 리뷰 불러오는 중… (기간 클수록 오래 걸림)</div>`;
+  try {
+    const r = await fetch(`${RV_API_BASE}/search?q=&days=${daysFromToday}`);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.error || '실패');
+
+    // 담당 제품 필터 → 각 상품의 리뷰를 조건에 맞게 골라냄
+    const mineProducts = rvFilterMyProducts(d.products);
+    const winners = [];  // {product, review}
+    for (const p of mineProducts) {
+      for (const rv of (p.reviews || [])) {
+        // 별점 4~5
+        if (!(rv.score >= 4)) continue;
+        // 작성일 조회월 이내
+        const dateStr = (rv.createDate || '').slice(0,10);
+        if (!dateStr || dateStr < startIso || dateStr > endIso) continue;
+        // 글 300자 이상
+        if (((rv.content || '').trim()).length < 300) continue;
+        // 사진 3장 이상 (photo만 카운트, video 제외)
+        const photos = (rv.attaches || []).filter(a => a.type !== 'video');
+        if (photos.length < 3) continue;
+        winners.push({ product: p, review: rv, photoCount: photos.length });
+      }
+    }
+    // 정렬: 사진 많은 순 → 별점 높은 순 → 최신 순
+    winners.sort((a,b) => (b.photoCount - a.photoCount) || (b.review.score - a.review.score) || ((b.review.createDate||'').localeCompare(a.review.createDate||'')));
+
+    if (!winners.length) {
+      el.innerHTML = `<div style="padding:30px;text-align:center;color:#94a3b8;">
+        ${startIso} ~ ${endIso} 담당 제품 베스트리뷰 후보 없음<br>
+        <span style="font-size:11px;">담당 상품 ${mineProducts.length}개 · 전체 상품 ${d.products.length}개 스캔</span>
+      </div>`;
+      return;
+    }
+
+    // 상품별 그룹핑 (한 상품에 여러 후보 있으면 카드 하나에 다 표시)
+    const byProduct = new Map();
+    for (const w of winners) {
+      const key = w.product.channelProductNo || w.product.originProductNo || w.product.name;
+      if (!byProduct.has(key)) byProduct.set(key, { product: w.product, reviews: [] });
+      byProduct.get(key).reviews.push(w.review);
+    }
+
+    el.innerHTML = `<div style="font-size:13px;color:#0f172a;font-weight:700;margin-bottom:12px;">
+        ⭐ 총 ${winners.length}건 후보 · ${byProduct.size}개 상품 · <span style="color:#64748b;font-weight:400">${startIso} ~ ${endIso}</span>
+      </div>` +
+      [...byProduct.values()].map(g => {
+        const p = g.product;
+        const head = `<div class="rv-phead"><div>
+          <div class="rv-pname">${escapeHtml(p.name || '')}</div>
+          <div class="rv-pmeta"><span style="color:#0f172a;font-weight:700">이 상품 후보 ${g.reviews.length}건</span></div>
+        </div><a href="${p.storeUrl}" target="_blank" rel="noopener" style="font-size:11px;color:#2563eb;white-space:nowrap;">스토어 ↗</a></div>`;
+        return `<div class="rv-pcard">${head}${g.reviews.map(rvReviewItemHtml).join('')}</div>`;
+      }).join('');
   } catch (e) {
     el.innerHTML = `<div style="padding:20px;color:#ef4444;">불러오기 실패: ${escapeHtml(e.message)}</div>`;
   }
@@ -7041,6 +7153,16 @@ function rvSwitchTab(sub) {
   document.querySelectorAll('#page-review-analysis [data-rv-panel]').forEach(p => p.style.display = p.dataset.rvPanel === sub ? '' : 'none');
   if (sub === 'search' && !_rvLoaded.search) { _rvLoaded.search = true; rvLoadSearch(); }
   if (sub === 'issues' && !_rvLoaded.issues) { _rvLoaded.issues = true; rvLoadIssues(); }
+  if (sub === 'best' && !_rvLoaded.best) {
+    _rvLoaded.best = true;
+    // 조회월 기본값 = 이번달
+    const bm = document.getElementById('rvBestMonth');
+    if (bm && !bm.value) {
+      const now = new Date();
+      bm.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+    }
+    rvLoadBest();
+  }
 }
 
 function rvOnEnter() {
@@ -7053,6 +7175,7 @@ function rvOnEnter() {
     document.getElementById('rvDays').addEventListener('change', rvLoadSearch);
     document.getElementById('rvIssueDays').addEventListener('change', rvLoadIssues);
     document.getElementById('rvIssueScore').addEventListener('change', rvLoadIssues);
+    document.getElementById('rvBestMonth').addEventListener('change', rvLoadBest);
     document.querySelectorAll('#page-review-analysis .rv-subtab').forEach(b => {
       b.addEventListener('click', () => rvSwitchTab(b.dataset.rvSub));
     });
