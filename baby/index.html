@@ -1166,6 +1166,25 @@ function mergeList(mine, theirs) {
   return out;
 }
 
+/* 슬롯에는 id 가 없다.
+   mergeList 는 id 로 짝을 맞추기 때문에 슬롯은 늘 원격이 이겼고,
+   방금 배정한 postId 가 그때마다 지워졌다. 그 탓에 승인할 때마다
+   같은 날이 '빈 날'로 보여 네 편이 9/9 하루에 몰렸다.
+
+   칸 목록만 날짜+시각으로 합치고, 누가 그 자리에 서는지는
+   repairSlots 가 큐를 보고 다시 채운다. */
+function mergeSlots(mine, theirs) {
+  const key = s => (s && s.date ? s.date : '') + ' ' + ((s && s.time) || '');
+  const map = new Map();
+  for (const s of (theirs || [])) if (s && s.date) map.set(key(s), s);
+  for (const s of (mine || [])) {
+    if (!s || !s.date) continue;
+    const k = key(s), t = map.get(k);
+    map.set(k, (!t || (s.postId && !t.postId)) ? s : t);
+  }
+  return [...map.values()].sort(bySlot);
+}
+
 function mergeRemote(rd) {
   let touched = 0;
   if (rd.graveyard) {                       // 무덤은 합집합 — 되살아나면 안 된다
@@ -1174,7 +1193,7 @@ function mergeRemote(rd) {
   for (const k of LISTS) {
     if (!(k in rd) && !(k in S)) continue;
     const before = JSON.stringify(S[k] || []);
-    S[k] = mergeList(S[k], rd[k]);
+    S[k] = (k === 'slots') ? mergeSlots(S[k], rd[k]) : mergeList(S[k], rd[k]);
     if (JSON.stringify(S[k]) !== before) touched++;
   }
   for (const k of Object.keys(rd)) {
@@ -1587,9 +1606,18 @@ function repairSlots() {
   for (const q of all) {
     if (q.status !== 'approved') continue;
     if (S.slots.some(sl => sl.postId === q.id)) continue;
-    const slot = q.scheduledAt ? claimSlot(q.id, q.scheduledAt, q.scheduledTime)
-                               : assignSlot(q.id);
-    if (slot) { q.scheduledAt = slot.date; q.scheduledTime = slot.time; fixed++; }
+    // 적혀 있는 예정일이 이미 남의 자리라면 그대로 쓰면 안 된다.
+    // 그냥 claimSlot 을 부르면 같은 날짜 슬롯이 하나 더 생겨 겹친다.
+    const taken = bookedDates(q.id);
+    const slot = (q.scheduledAt && !taken.has(q.scheduledAt))
+      ? claimSlot(q.id, q.scheduledAt, q.scheduledTime)
+      : assignSlot(q.id);
+    if (slot) {
+      q.scheduledAt = slot.date;
+      q.scheduledTime = slot.time;
+      touch(q);
+      fixed++;
+    }
   }
   return fixed;
 }
@@ -1606,12 +1634,29 @@ function nextDay(d) {
    하루에 한 건이 원칙이다.
    예전엔 '비어 있는 슬롯'만 찾아서, 같은 날짜에 슬롯이 둘 이상 있으면
    승인하는 족족 같은 날로 몰렸다. 이제 무언가 잡힌 날짜는 통째로 건너뛴다. */
+/* 이미 발행일이 잡힌 날짜들.
+
+   슬롯의 postId 만 보면 안 된다. 동기화 과정에서 지워지는 일이 있어서,
+   그걸 근거로 삼으면 빈 날로 착각하고 같은 날에 또 배정한다.
+   큐에 적힌 예정일을 함께 봐야 한다. */
+function bookedDates(exceptId) {
+  const busy = new Set();
+  for (const q of [...(S.queue || []), ...(S.reels || [])]) {
+    if (!q || q.id === exceptId || !q.scheduledAt) continue;
+    if (q.status === 'approved' || isFresh(q)) busy.add(q.scheduledAt);
+  }
+  for (const s of (S.slots || [])) {
+    if (s && s.date && s.postId && s.postId !== exceptId) busy.add(s.date);
+  }
+  return busy;
+}
+
 function assignSlot(postId) {
   if (!S.slots || !S.slots.length) S.slots = genSlots();
   if (S.slots.some(s => s && s.postId === postId)) return null;   // 이미 배정됨
   const today = todayStr();
 
-  const busy = new Set(S.slots.filter(s => s && s.postId).map(s => s.date));
+  const busy = bookedDates(postId);
   const free = S.slots
     .filter(s => s && !s.postId && s.date >= today && !busy.has(s.date))
     .sort(bySlot)[0];
