@@ -125,8 +125,13 @@ def due_items(d, now):
             held.append(q)
     if held:
         for q in held:
+            # 슬롯에 없어도 큐에 예정이 적혀 있을 수 있다.
+            # 그걸 안 보고 '미배정'이라고 찍으면 멀쩡히 대기 중인 글을
+            # 예정이 없는 것처럼 오해하게 된다.
             at = slot_time(q, slots)
-            when = f'{at[0]} {at[1]}' if at else '예정 미배정'
+            if not at and q.get('scheduledAt'):
+                at = (q['scheduledAt'], q.get('scheduledTime') or '00:00')
+            when = f'{at[0]} {at[1]}' if at else '예정 미배정 (슬롯에 넣어주세요)'
             log(f'· 대기: {q.get("title")}  → {when}')
     return out
 
