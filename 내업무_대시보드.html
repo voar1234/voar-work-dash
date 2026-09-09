@@ -1962,6 +1962,7 @@
         <div class="rv-subtabs">
           <button class="rv-subtab active" data-rv-sub="search" type="button">🔍 리뷰 검색</button>
           <button class="rv-subtab" data-rv-sub="issues" type="button">🚨 이슈 (3점 이하)</button>
+          <button class="rv-subtab" data-rv-sub="best" type="button">⭐ 베스트리뷰</button>
         </div>
 
         <!-- 검색 -->
@@ -1990,6 +1991,18 @@
             </label>
           </div>
           <div id="rvIssueResult"></div>
+        </div>
+
+        <!-- 베스트리뷰 (v2 2026-09-09) -->
+        <div data-rv-panel="best" style="display:none;">
+          <div class="rv-issuebar" style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
+            <span style="font-size:13px;font-weight:700;color:#0f172a;">⭐ 이달의 베스트리뷰 후보</span>
+            <label style="font-size:12px;color:#64748b;">조회 월
+              <input id="rvBestMonth" type="month" style="padding:6px 8px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;">
+            </label>
+            <span style="font-size:11px;color:#94a3b8;">조건: 별점 4~5 · 글 300자↑ · 사진 3장↑ · 사진 필수</span>
+          </div>
+          <div id="rvBestResult"></div>
         </div>
 
         <div id="rvLightbox" onclick="this.style.display='none';this.innerHTML='';"></div>
