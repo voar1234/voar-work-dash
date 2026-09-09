@@ -1039,16 +1039,6 @@
       "id": "t_7hli7xquskd",
       "text": "브검페 정리하기!!!!",
       "done": true
-    },
-    {
-      "id": "t_w9stthcclm",
-      "text": "[자동·주간] 네이버 오늘끝딜 제안",
-      "done": false,
-      "autoKey": "auto:thursday-ondeal:2026-07-30",
-      "autoSource": {
-        "type": "매주 목요일 정기"
-      },
-      "leaveRerouted": "2026-07-30"
     }
   ],
   "2026-07-13": [
@@ -1100,18 +1090,6 @@
       "id": "t_z4oiblc6ewo",
       "text": "아이품고 서포터즈 진행 여부 메일 회신",
       "done": true
-    },
-    {
-      "id": "t_auhmyx5ba4",
-      "text": "[자동·D-7] 보아르포스S 신제품 시장조사·판매가 측정",
-      "done": false,
-      "autoKey": "auto:po:868:260624003",
-      "autoSource": {
-        "품목ID": 868,
-        "type": "생산완료(예정)일 D-7",
-        "발주번호": 260624003,
-        "기준일": "2026-09-11"
-      }
     }
   ],
   "2026-07-09": [
@@ -1571,6 +1549,30 @@
       "done": true
     },
     {
+    "id": "t_yyu9gdu03i",
+      "text": "보아르아가미니휴대용젖병소독기 상품등록/광고등록(브검페 소재등록)",
+      "done": true,
+      "rolledFrom": "2026-08-20"
+    },
+    {
+      "id": "t_2fu63lofy6u",
+      "text": "아가미니 상품등록, 광고등록 마물;ㅣ",
+      "done": true,
+      "rolledFrom": "2026-08-20"
+    },
+    {
+      "id": "t_5dzfkks2wqs",
+      "text": "네이버 B2B기획전 행사가 셋팅",
+      "done": true
+    }
+  ],
+  "2026-07-28": [
+    {
+      "id": "t_i99bmy8a00k",
+      "text": "상시 브검페 등록하기",
+      "done": true
+    },
+    {
       "id": "t_sz4iq82kf6",
       "text": "오집 프로모션 제안서 전달",
       "done": true
@@ -1837,17 +1839,7 @@
       "id": "t_gdmg5v4c25o",
       "text": "에어로센 오늘끝딜 오픈! 노출확인/배너삽입",
       "done": true
-    },
-    {
-      "id": "t_mn6s7wuy1ga",
-      "text": "[자동·주간] 네이버 오늘끝딜 제안",
-      "done": true,
-      "autoKey": "auto:thursday-ondeal:2026-08-20",
-      "autoSource": {
-        "type": "매주 목요일 정기"
-      }
-    }
-  ],
+    ],
   "2026-08-25": [
     {
       "id": "t_bj9d5sijbfv",
@@ -2305,17 +2297,6 @@
       "text": "크루특가 진행요청",
       "done": true,
       "leaveRerouted": "2026-08-31"
-    },
-    {
-      "id": "t_twlzopa5nhr",
-      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
-      "done": false,
-      "urgent": true,
-      "autoKey": "auto:monday-ondeal-deadline:2026-08-31",
-      "autoSource": {
-        "type": "매주 월요일 12시 접수마감"
-      },
-      "leaveRerouted": "2026-08-31"
     }
   ],
   "2026-09-02": [
@@ -2439,6 +2420,32 @@
       "id": "t_iu98r5m70up",
       "text": "브랜드커넥트 등록",
       "done": true
+    }
+  ],
+  "2026-11-05": [
+    {
+      "id": "t_yoc1sts4gvb",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-11-05",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      }
+    }
+  ],
+  "2026-11-02": [
+    {
+      "id": "t_k3fuh1061xa",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-11-02",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      }
+    }
+  ]
+} "done": true
     }
   ],
   "2026-11-05": [
