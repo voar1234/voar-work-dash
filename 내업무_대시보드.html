@@ -7072,8 +7072,10 @@ async function rvLoadBest() {
     el.innerHTML = '<div style="padding:20px;color:#94a3b8;">미래 월은 조회 불가</div>'; return;
   }
   const daysFromToday = Math.ceil((today - monthStart) / 86400000) + 1;
-  const startIso = monthStart.toISOString().slice(0,10);
-  const endIso   = monthEnd.toISOString().slice(0,10);
+  // v3 fix: toISOString은 UTC라 KST에서 하루 밀림 → 로컬 YMD 직접 포맷
+  const ymd = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  const startIso = ymd(monthStart);
+  const endIso   = ymd(monthEnd);
 
   el.innerHTML = `<div style="padding:20px;color:#94a3b8;">${startIso} ~ ${endIso} 리뷰 불러오는 중… (기간 클수록 오래 걸림)</div>`;
   try {
