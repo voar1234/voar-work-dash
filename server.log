@@ -16,3 +16,217 @@
 [10:11:55] 127.0.0.1 - "POST /api/todos HTTP/1.1" 400 -
 [10:12:08] 127.0.0.1 - code 400, message Invalid JSON
 [10:12:08] 127.0.0.1 - "POST /api/todos HTTP/1.1" 400 -
+[10:12:20] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:12:50] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:12:55] 127.0.0.1 - "POST /api/todos HTTP/1.1" 200 -
+  [todos] saved: 378 items across 115 dates
+[10:13:20] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:13:50] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:14:51] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:15:52] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:16:53] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:17:54] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:18:55] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:19:20] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:19:50] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:20:51] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:21:52] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:22:53] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:23:54] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:24:46] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:24:49] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:24:53] 127.0.0.1 - "GET /%EB%82%B4%EC%97%85%EB%AC%B4_%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C.html HTTP/1.1" 304 -
+[10:24:54] 127.0.0.1 - "GET /dashboard_data.json?ts=1789003493872 HTTP/1.1" 200 -
+[10:24:54] 127.0.0.1 - "GET /api/todos?ts=1789003494099 HTTP/1.1" 200 -
+[10:24:54] 127.0.0.1 - "POST /api/todos HTTP/1.1" 200 -
+  [todos] saved: 384 items across 115 dates
+[10:24:54] 127.0.0.1 - "GET /api/leaves?ts=1789003494440 HTTP/1.1" 200 -
+[10:24:54] 127.0.0.1 - "GET /api/notes?ts=1789003494507 HTTP/1.1" 200 -
+[10:24:54] 127.0.0.1 - code 404, message File not found
+[10:24:54] 127.0.0.1 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -
+[10:24:56] 127.0.0.1 - "POST /api/reviews HTTP/1.1" 200 -
+  [reviews] saved: 40건
+[10:24:56] 127.0.0.1 - "GET /api/incoming?ts=1789003496212 HTTP/1.1" 200 -
+[10:24:56] 127.0.0.1 - "GET /api/events?ts=1789003496478 HTTP/1.1" 200 -
+[10:24:56] 127.0.0.1 - "GET /api/event-notes?ts=1789003496520 HTTP/1.1" 200 -
+[10:24:56] 127.0.0.1 - "POST /api/todos HTTP/1.1" 200 -
+  [todos] saved: 380 items across 115 dates
+  [todos] ATOMIC WRITE FAILED: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json.tmp_20260910_102457' -> 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json'
+  [todos] POST error: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json.tmp_20260910_102457' -> 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json'
+[10:24:57] 127.0.0.1 - code 500, message Server error: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json.tmp_20260910_102457' -> 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json'
+[10:24:57] 127.0.0.1 - "POST /api/todos HTTP/1.1" 500 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 58029)
+Traceback (most recent call last):
+  [todos] ATOMIC WRITE FAILED: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json.tmp_20260910_102457' -> 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json'
+  [todos] ATOMIC WRITE FAILED: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json.tmp_20260910_102457' -> 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json'
+  [todos] POST error: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json.tmp_20260910_102457' -> 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json'
+[10:24:57] 127.0.0.1 - code 500, message Server error: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json.tmp_20260910_102457' -> 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json'
+[10:24:57] 127.0.0.1 - "POST /api/todos HTTP/1.1" 500 -
+----------------------------------------
+  File "C:\Users\OA\claude-test\온라인영업\대시보드\server.py", line 1160, in handle_post_todos
+    os.replace(tmp_path, TODOS_PATH)
+Exception occurred during processing of request from ('127.0.0.1', 58030)
+PermissionError: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json.tmp_20260910_102457' -> 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json'
+  [todos] POST error: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json.tmp_20260910_102457' -> 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json'
+[10:24:57] 127.0.0.1 - code 500, message Server error: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json.tmp_20260910_102457' -> 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  [todos] ATOMIC WRITE FAILED: [WinError 2] 지정된 파일을 찾을 수 없습니다: 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json.tmp_20260910_102457' -> 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json'
+  [todos] POST error: [WinError 2] 지정된 파일을 찾을 수 없습니다: 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json.tmp_20260910_102457' -> 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json'
+[10:24:57] 127.0.0.1 - code 500, message Server error: [WinError 2] 지정된 파일을 찾을 수 없습니다: 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json.tmp_20260910_102457' -> 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json'
+  File "C:\Users\OA\claude-test\온라인영업\대시보드\server.py", line 387, in __init__
+    super().__init__(*args, directory=DASH_DIR, **kwargs)
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+[10:24:57] 127.0.0.1 - "POST /api/todos HTTP/1.1" 500 -
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+[10:24:57] 127.0.0.1 - "POST /api/todos HTTP/1.1" 500 -
+----------------------------------------
+----------------------------------------
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+Exception occurred during processing of request from ('127.0.0.1', 58032)
+Exception occurred during processing of request from ('127.0.0.1', 58031)
+Traceback (most recent call last):
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\OA\claude-test\온라인영업\대시보드\server.py", line 1160, in handle_post_todos
+    os.replace(tmp_path, TODOS_PATH)
+  File "C:\Users\OA\claude-test\온라인영업\대시보드\server.py", line 406, in do_POST
+    self.handle_post_todos()
+PermissionError: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json.tmp_20260910_102457' -> 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json'
+  File "C:\Users\OA\claude-test\온라인영업\대시보드\server.py", line 1192, in handle_post_todos
+    self.send_error(500, f"Server error: {e}")
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 467, in send_error
+    self.send_response(code, message)
+Traceback (most recent call last):
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 502, in send_response
+    self.send_response_only(code, message)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 517, in send_response_only
+    (self.protocol_version, code, message)).encode(
+                                            ^^^^^^^
+  File "C:\Users\OA\claude-test\온라인영업\대시보드\server.py", line 1160, in handle_post_todos
+    os.replace(tmp_path, TODOS_PATH)
+Traceback (most recent call last):
+  File "C:\Users\OA\claude-test\온라인영업\대시보드\server.py", line 1160, in handle_post_todos
+    os.replace(tmp_path, TODOS_PATH)
+FileNotFoundError: [WinError 2] 지정된 파일을 찾을 수 없습니다: 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json.tmp_20260910_102457' -> 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json'
+
+During handling of the above exception, another exception occurred:
+
+UnicodeEncodeError: 'latin-1' codec can't encode characters in position 41-42: ordinal not in range(256)
+----------------------------------------
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+Traceback (most recent call last):
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\OA\claude-test\온라인영업\대시보드\server.py", line 387, in __init__
+    super().__init__(*args, directory=DASH_DIR, **kwargs)
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\OA\claude-test\온라인영업\대시보드\server.py", line 387, in __init__
+    super().__init__(*args, directory=DASH_DIR, **kwargs)
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\OA\claude-test\온라인영업\대시보드\server.py", line 406, in do_POST
+    self.handle_post_todos()
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\OA\claude-test\온라인영업\대시보드\server.py", line 1192, in handle_post_todos
+    self.send_error(500, f"Server error: {e}")
+  File "C:\Users\OA\claude-test\온라인영업\대시보드\server.py", line 406, in do_POST
+    self.handle_post_todos()
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 467, in send_error
+    self.send_response(code, message)
+  File "C:\Users\OA\claude-test\온라인영업\대시보드\server.py", line 1192, in handle_post_todos
+    self.send_error(500, f"Server error: {e}")
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 502, in send_response
+    self.send_response_only(code, message)
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 467, in send_error
+    self.send_response(code, message)
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 517, in send_response_only
+    (self.protocol_version, code, message)).encode(
+                                            ^^^^^^^
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 502, in send_response
+    self.send_response_only(code, message)
+UnicodeEncodeError: 'latin-1' codec can't encode characters in position 41-42: ordinal not in range(256)
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 517, in send_response_only
+    (self.protocol_version, code, message)).encode(
+                                            ^^^^^^^
+----------------------------------------
+UnicodeEncodeError: 'latin-1' codec can't encode characters in position 40-42: ordinal not in range(256)
+----------------------------------------
+PermissionError: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json.tmp_20260910_102457' -> 'C:\\Users\\OA\\claude-test\\온라인영업\\대시보드\\todos.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\OA\claude-test\온라인영업\대시보드\server.py", line 387, in __init__
+    super().__init__(*args, directory=DASH_DIR, **kwargs)
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\OA\claude-test\온라인영업\대시보드\server.py", line 406, in do_POST
+    self.handle_post_todos()
+  File "C:\Users\OA\claude-test\온라인영업\대시보드\server.py", line 1192, in handle_post_todos
+    self.send_error(500, f"Server error: {e}")
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 467, in send_error
+    self.send_response(code, message)
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 502, in send_response
+    self.send_response_only(code, message)
+  File "C:\Users\OA\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 517, in send_response_only
+    (self.protocol_version, code, message)).encode(
+                                            ^^^^^^^
+UnicodeEncodeError: 'latin-1' codec can't encode characters in position 41-42: ordinal not in range(256)
+----------------------------------------
+[10:24:58] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:25:24] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:25:29] 127.0.0.1 - "POST /api/todos HTTP/1.1" 200 -
+  [todos] saved: 378 items across 115 dates
+[10:25:32] 127.0.0.1 - "POST /api/todos HTTP/1.1" 200 -
+  [todos] saved: 378 items across 115 dates
+[10:25:33] 127.0.0.1 - "POST /api/todos HTTP/1.1" 200 -
+  [todos] saved: 377 items across 115 dates
+[10:25:54] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:26:23] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:26:54] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:27:23] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:27:54] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:28:23] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
+[10:28:54] 127.0.0.1 - "GET /api/event-proposals/pending-popup?proposer=%EA%B9%80%EB%AF%BC%EC%B1%84 HTTP/1.1" 200 -
