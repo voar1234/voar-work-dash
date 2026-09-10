@@ -1039,16 +1039,6 @@
       "id": "t_7hli7xquskd",
       "text": "브검페 정리하기!!!!",
       "done": true
-    },
-    {
-      "id": "t_elovh8r8d4e",
-      "text": "[자동·주간] 네이버 오늘끝딜 제안",
-      "done": false,
-      "autoKey": "auto:thursday-ondeal:2026-07-30",
-      "autoSource": {
-        "type": "매주 목요일 정기"
-      },
-      "leaveRerouted": "2026-07-30"
     }
   ],
   "2026-07-13": [
@@ -1100,18 +1090,6 @@
       "id": "t_z4oiblc6ewo",
       "text": "아이품고 서포터즈 진행 여부 메일 회신",
       "done": true
-    },
-    {
-      "id": "t_cm1o7nmuku",
-      "text": "[자동·D-7] 보아르포스S 신제품 시장조사·판매가 측정",
-      "done": false,
-      "autoKey": "auto:po:868:260624003",
-      "autoSource": {
-        "품목ID": 868,
-        "type": "생산완료(예정)일 D-7",
-        "발주번호": 260624003,
-        "기준일": "2026-09-11"
-      }
     }
   ],
   "2026-07-09": [
@@ -2306,17 +2284,6 @@
       "text": "크루특가 진행요청",
       "done": true,
       "leaveRerouted": "2026-08-31"
-    },
-    {
-      "id": "t_izdqsxw0a4n",
-      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
-      "done": false,
-      "urgent": true,
-      "autoKey": "auto:monday-ondeal-deadline:2026-08-31",
-      "autoSource": {
-        "type": "매주 월요일 12시 접수마감"
-      },
-      "leaveRerouted": "2026-08-31"
     }
   ],
   "2026-09-02": [
@@ -2460,6 +2427,50 @@
       "done": false,
       "urgent": true,
       "autoKey": "auto:monday-ondeal-deadline:2026-11-02",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      }
+    }
+  ]
+}e": false
+    }
+  ],
+  "2026-09-08": [
+    {
+      "id": "t_rvpwx25ynur",
+      "text": "아가보틀,컴플릿D 종료/배너삭제",
+      "done": true
+    },
+    {
+      "id": "t_jhev5fjn7j",
+      "text": "스티머인젝터 당일배송 설정",
+      "done": true
+    },
+    {
+      "id": "t_iu98r5m70up",
+      "text": "브랜드커넥트 등록",
+      "done": true
+    }
+  ],
+  "2026-11-05": [
+    {
+      "id": "t_yoc1sts4gvb",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-11-05",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      }
+    }
+  ],
+  "2026-11-02": [
+    {
+      "id": "t_k3fuh1061xa",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urg,
+      "autoSource": {
+  : "auto:monday-ondeal-deadline:2026-11-02",
       "autoSource": {
         "type": "매주 월요일 12시 접수마감"
       }
