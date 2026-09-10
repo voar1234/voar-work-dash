@@ -874,21 +874,27 @@ const AGE_MIGRATE = { '0~36개월 공통': '전체 공통' };
 
 /* ───────── 콘텐츠 축 (0~36개월 기준) ───────── */
 const PILLARS = [
-  { id: 'prep',  name: '🤰 출산준비',  goal: 15, color: '#ec4899',
+  { id: 'prep',  name: '🤰 출산준비',  goal: 10, color: '#ec4899',
     desc: '출산가방 · 신생아 준비물 · 조리원 · 산후조리 · 배냇짐' },
-  { id: 'sleep', name: '😴 재우기',   goal: 25, color: '#8b5cf6',
+  { id: 'sleep', name: '😴 재우기',   goal: 20, color: '#8b5cf6',
     desc: '수면교육 · 통잠 · 백색소음 · 월령별 수면시간' },
-  { id: 'feed',  name: '🍼 먹이기',   goal: 20, color: '#3b82f6',
+  { id: 'feed',  name: '🍼 먹이기',   goal: 15, color: '#3b82f6',
     desc: '분유 온도 · 수유텀 · 젖병 위생 · 이유식' },
-  { id: 'bath',  name: '🛁 씻기기',   goal: 10, color: '#06b6d4',
+  { id: 'bath',  name: '🛁 씻기기',   goal: 5,  color: '#06b6d4',
     desc: '목욕 온도 · 아토피 · 물놀이 안전' },
   // 씻기기와 붙여두면 헷갈린다. '씻기는 행위'가 아니라 '관리하는 것'이 여기다.
   { id: 'care',  name: '🧼 위생',     goal: 10, color: '#10b981',
     desc: '배꼽 소독 · 손발톱 · 젖병 소독 · 구강 · 기저귀 발진' },
-  { id: 'out',   name: '🚗 외출',     goal: 10, color: '#f59e0b',
+  { id: 'out',   name: '🚗 외출',     goal: 5,  color: '#f59e0b',
     desc: '외출템 · 카시트 · 유모차 · 계절 대응' },
   { id: 'health',name: '🩺 아플 때',  goal: 10, color: '#ef4444',
     desc: '열 · 체온 · 응급 · 예방접종' },
+  { id: 'safety',name: '🛡️ 안전',    goal: 5,  color: '#f97316',
+    desc: '낙상 · 삼킴 · 콘센트 · 가구 고정 · 응급처치' },
+  { id: 'dev',   name: '🌱 발달',     goal: 10, color: '#d946ef',
+    desc: '뒤집기 · 걷기 · 말 트임 · 분리불안 · 훈육' },
+  { id: 'life',  name: '📋 생활·제도', goal: 10, color: '#64748b',
+    desc: '어린이집 · 지원금 · 여권 · 보험 · 건강검진' },
 ];
 
 /* ───────── ERP 라인업 스냅샷 (2026-08-03) ───────── */
