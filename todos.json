@@ -995,7 +995,17 @@
       "done": true
     }
   ],
-  "2026-07-30": [],
+  "2026-07-30": [
+    {
+      "id": "t_uhaukat0jc",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-07-30",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      }
+    }
+  ],
   "2026-07-29": [
     {
       "id": "t_1fgeonen0y7",
@@ -1039,16 +1049,6 @@
       "id": "t_7hli7xquskd",
       "text": "브검페 정리하기!!!!",
       "done": true
-    },
-    {
-      "id": "t_rkxe0u46o4q",
-      "text": "[자동·주간] 네이버 오늘끝딜 제안",
-      "done": false,
-      "autoKey": "auto:thursday-ondeal:2026-07-30",
-      "autoSource": {
-        "type": "매주 목요일 정기"
-      },
-      "leaveRerouted": "2026-07-30"
     }
   ],
   "2026-07-13": [
@@ -1102,7 +1102,7 @@
       "done": true
     },
     {
-      "id": "t_3frdcbswvs9",
+      "id": "t_ats0xhhg3yo",
       "text": "[자동·D-7] 보아르포스S 신제품 시장조사·판매가 측정",
       "done": false,
       "autoKey": "auto:po:868:260624003",
@@ -1377,6 +1377,24 @@
       "id": "t_glio03wfy2i",
       "text": "오집제안서 작성 전달",
       "done": false
+    },
+    {
+      "id": "t_l2zony5enin",
+      "text": "컴플릿 셋트상품 컨펌체크/배너제작/적용",
+      "done": false,
+      "rolledFrom": "2026-09-09"
+    },
+    {
+      "id": "t_096g794re4ho",
+      "text": "[자동] 보아르아가담이유식포트워머 카테고리·키워드 조사·공정위 제작",
+      "done": false,
+      "autoKey": "auto:prod:956:260519001",
+      "autoSource": {
+        "품목ID": 956,
+        "type": "생산완료일",
+        "발주번호": 260519001
+      },
+      "rolledFrom": "2026-07-24"
     }
   ],
   "2026-07-27": [
@@ -2036,7 +2054,18 @@
       "done": true
     }
   ],
-  "2026-08-31": [],
+  "2026-08-31": [
+    {
+      "id": "t_3hu9hln3vyk",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-08-31",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      }
+    }
+  ],
   "2026-09-10": [
     {
       "id": "t_hgfn70rirx6",
@@ -2056,24 +2085,6 @@
       "id": "t_21j4mh2mvs1",
       "text": "네이버 통합프로모션 컨펌",
       "done": true
-    },
-    {
-      "id": "t_l2zony5enin",
-      "text": "컴플릿 셋트상품 컨펌체크/배너제작/적용",
-      "done": false,
-      "rolledFrom": "2026-09-09"
-    },
-    {
-      "id": "t_096g794re4ho",
-      "text": "[자동] 보아르아가담이유식포트워머 카테고리·키워드 조사·공정위 제작",
-      "done": false,
-      "autoKey": "auto:prod:956:260519001",
-      "autoSource": {
-        "품목ID": 956,
-        "type": "생산완료일",
-        "발주번호": 260519001
-      },
-      "rolledFrom": "2026-07-24"
     },
     {
       "id": "t_xz554mhnew",
@@ -2141,8 +2152,9 @@
       "done": false
     },
     {
-      "id": "t_15kqlhwf62qj",
-      "text": "11번가 판매예치금 충전",
+      "id": "t_1"autoSource": {
+        "type": "매주 목요일 정기"
+  ,
       "done": false
     }
   ],
@@ -2301,17 +2313,6 @@
       "text": "크루특가 진행요청",
       "done": true,
       "leaveRerouted": "2026-08-31"
-    },
-    {
-      "id": "t_30ln4nsbjos",
-      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
-      "done": false,
-      "urgent": true,
-      "autoKey": "auto:monday-ondeal-deadline:2026-08-31",
-      "autoSource": {
-        "type": "매주 월요일 12시 접수마감"
-      },
-      "leaveRerouted": "2026-08-31"
     }
   ],
   "2026-09-02": [
@@ -2455,6 +2456,8 @@
       "done": false,
       "urgent": true,
       "autoKey": "auto:monday-ondeal-deadline:2026-11-02",
+      "autoSource": {
+        "type": "매주 월요일 12시 접�,
       "autoSource": {
         "type": "매주 월요일 12시 접수마감"
       }
