@@ -551,6 +551,7 @@
       <button class="nav-item" data-tab="reels"><span class="nav-emoji">🎬</span>릴스<span class="nav-badge soft" id="badge-reels">0</span></button>
       <button class="nav-item" data-tab="comp"><span class="nav-emoji">🔍</span>경쟁사</button>
       <button class="nav-item" data-tab="prod"><span class="nav-emoji">📦</span>제품<span class="nav-badge soft">17</span></button>
+      <button class="nav-item hidden" data-tab="acl" id="nav-acl"><span class="nav-emoji">🔐</span>접근 관리<span class="nav-badge soft" id="badge-acl">0</span></button>
     </nav>
     <div class="side-note">
       <b>1단계 원칙</b><br>
@@ -1024,6 +1025,45 @@
         </tr></thead>
         <tbody id="prod-body"></tbody>
       </table>
+    </div>
+  </section>
+
+  <!-- ═══ 접근 관리 (관리자 전용) ═══ -->
+  <section id="tab-acl" class="hidden">
+    <div class="page-head">
+      <h1>🔐 접근 관리</h1>
+      <p>여기에 적힌 회사 이메일만 스튜디오에 들어올 수 있습니다.
+         목록에 없으면 로그인을 해도 아무것도 보이지 않습니다.</p>
+    </div>
+
+    <div class="card mb14">
+      <div class="card-head"><h2>➕ 접근 승인</h2></div>
+      <div class="card-body">
+        <div class="row" style="gap:8px;flex-wrap:wrap">
+          <input id="acl-email" type="email" placeholder="이름@oa-world.com"
+                 style="flex:2;min-width:220px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit">
+          <input id="acl-name" type="text" placeholder="이름 (선택)"
+                 style="flex:1;min-width:120px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit">
+          <select id="acl-role" style="padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit">
+            <option value="viewer">열람</option>
+            <option value="admin">관리자</option>
+          </select>
+          <button class="btn primary" id="acl-add">승인 추가</button>
+        </div>
+        <div class="fs12 soft mt8" id="acl-msg">
+          추가하면 그분이 <b>비밀번호 111111</b> 로 처음 들어온 뒤, 바로 본인 비밀번호로 바꾸게 됩니다.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>👥 승인된 사람</h2>
+        <button class="btn sm" id="acl-reload">새로고침</button>
+      </div>
+      <div class="card-body">
+        <div id="acl-list" class="fs13 soft">불러오는 중…</div>
+      </div>
     </div>
   </section>
 
@@ -1511,7 +1551,7 @@ function fmtWon(n) {
 function uid() { return 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 
 /* ───────── 탭 전환 ───────── */
-const TABS = ['dash','cal','idea','pub','reels','comp','prod'];
+const TABS = ['dash','cal','idea','pub','reels','comp','prod','acl'];
 document.getElementById('menu').addEventListener('click', (e) => {
   const btn = e.target.closest('.nav-item');
   if (!btn) return;
@@ -1519,6 +1559,113 @@ document.getElementById('menu').addEventListener('click', (e) => {
   document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b === btn));
   TABS.forEach(t => document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab));
   window.scrollTo(0, 0);
+});
+
+/* ───────── 접근 관리 ─────────
+   승인 목록은 Supabase 의 allowed_users 표에 있다.
+   대시보드 데이터(baby_studio)와 달리 이 표는 로그인한 사람만,
+   그것도 관리자만 전체를 볼 수 있게 정책이 걸려 있다. */
+const ACL_URL = SUPABASE_URL + '/rest/v1/allowed_users';
+let ACL_ME = null;                       // 내 권한 (admin 이면 메뉴가 보인다)
+
+function aclHead(extra) {
+  return Object.assign({ apikey: SUPABASE_KEY, Authorization: SB_HEAD.Authorization,
+                         'Content-Type': 'application/json' }, extra || {});
+}
+
+async function aclWhoAmI() {
+  const sess = window.__VOAR_SESSION;
+  if (!sess || !sess.email) return null;            // 로컬 작업 중 — 메뉴 숨김
+  try {
+    const r = await fetch(ACL_URL + '?select=email,role,name&email=eq.'
+                          + encodeURIComponent(sess.email.toLowerCase()),
+                          { headers: aclHead() });
+    if (!r.ok) return null;
+    const rows = await r.json();
+    return rows && rows[0] ? rows[0] : null;
+  } catch (_) { return null; }
+}
+
+async function aclInit() {
+  ACL_ME = await aclWhoAmI();
+  const show = !!(ACL_ME && ACL_ME.role === 'admin');
+  document.getElementById('nav-acl').classList.toggle('hidden', !show);
+  if (show) renderAcl();
+}
+
+async function renderAcl() {
+  const box = document.getElementById('acl-list');
+  if (!box) return;
+  let rows = [];
+  try {
+    const r = await fetch(ACL_URL + '?select=email,role,name,added_at&order=added_at.asc',
+                          { headers: aclHead() });
+    if (!r.ok) throw new Error(r.status);
+    rows = await r.json();
+  } catch (e) {
+    box.innerHTML = '<div class="soft">목록을 불러오지 못했습니다. 새로고침을 눌러보세요.</div>';
+    return;
+  }
+  document.getElementById('badge-acl').textContent = rows.length;
+  const me = (window.__VOAR_SESSION || {}).email || '';
+  box.innerHTML = `
+    <table class="tbl">
+      <thead><tr><th>이메일</th><th>이름</th><th>권한</th><th>승인일</th><th></th></tr></thead>
+      <tbody>${rows.map(r => {
+        const mine = r.email.toLowerCase() === me.toLowerCase();
+        return `<tr>
+          <td class="mono">${r.email}${mine ? ' <span class="soft fs11">(나)</span>' : ''}</td>
+          <td>${r.name || '—'}</td>
+          <td>${r.role === 'admin' ? '<b>관리자</b>' : '열람'}</td>
+          <td class="soft fs12">${(r.added_at || '').slice(0, 10)}</td>
+          <td>${mine ? '' : `<button class="btn sm" data-acl-del="${r.email}">삭제</button>`}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>`;
+}
+
+async function aclAdd() {
+  const em = document.getElementById('acl-email').value.trim().toLowerCase();
+  const nm = document.getElementById('acl-name').value.trim();
+  const ro = document.getElementById('acl-role').value;
+  const msg = document.getElementById('acl-msg');
+  if (!em || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) {
+    msg.textContent = '이메일 형식을 확인해주세요.'; return;
+  }
+  msg.textContent = '추가하는 중…';
+  try {
+    const r = await fetch(ACL_URL + '?on_conflict=email', {
+      method: 'POST',
+      headers: aclHead({ Prefer: 'resolution=merge-duplicates,return=minimal' }),
+      body: JSON.stringify([{ email: em, name: nm || null, role: ro }]),
+    });
+    if (!r.ok) throw new Error(await r.text());
+    document.getElementById('acl-email').value = '';
+    document.getElementById('acl-name').value = '';
+    msg.innerHTML = `<b>${em}</b> 승인했습니다. 비밀번호 <b>111111</b> 로 들어오시면 됩니다.`;
+    renderAcl();
+  } catch (e) {
+    msg.textContent = '추가하지 못했습니다. 관리자 권한인지 확인해주세요.';
+  }
+}
+
+async function aclDel(email) {
+  if (!confirm(email + ' 의 접근을 막습니다.\n\n다음 접속부터 들어올 수 없습니다.')) return;
+  try {
+    const r = await fetch(ACL_URL + '?email=eq.' + encodeURIComponent(email),
+      { method: 'DELETE', headers: aclHead({ Prefer: 'return=minimal' }) });
+    if (!r.ok) throw new Error(r.status);
+    renderAcl();
+  } catch (e) {
+    alert('삭제하지 못했습니다.');
+  }
+}
+
+document.addEventListener('click', e => {
+  const t = e.target;
+  if (t.id === 'acl-add')    { aclAdd(); return; }
+  if (t.id === 'acl-reload') { renderAcl(); return; }
+  if (t.dataset && t.dataset.aclDel) { aclDel(t.dataset.aclDel); return; }
 });
 
 /* ───────── 대시보드 ───────── */
@@ -2823,6 +2970,14 @@ renderAll();
 // 부팅 시엔 save() 하지 않음 — updatedAt에 현재 시각이 찍히면
 // 빈 상태가 원격보다 "최신"으로 판정돼 진짜 데이터를 덮어씀.
 boot();
+
+// 로그인 화면이 끝나야 세션이 생기므로, 조금 기다렸다가 권한을 확인한다.
+// 관리자가 아니면 「접근 관리」 메뉴는 계속 숨은 채로 둔다.
+(function waitSession(n) {
+  if (window.__VOAR_SESSION) { aclInit(); return; }
+  if (n > 60) return;                       // 로컬 작업 등 — 세션 없이 그냥 씀
+  setTimeout(() => waitSession(n + 1), 500);
+})(0);
 </script>
 </body>
 </html>
