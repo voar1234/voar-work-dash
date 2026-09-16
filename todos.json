@@ -1039,6 +1039,16 @@
       "id": "t_7hli7xquskd",
       "text": "브검페 정리하기!!!!",
       "done": true
+    },
+    {
+      "id": "t_zigacfn374",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-07-30",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      },
+      "leaveRerouted": "2026-07-30"
     }
   ],
   "2026-07-13": [
@@ -1090,6 +1100,17 @@
       "id": "t_z4oiblc6ewo",
       "text": "아이품고 서포터즈 진행 여부 메일 회신",
       "done": true
+    },
+    {
+      "id": "t_rbpuu4tig6q",
+      "text": "[자동] 보아르포스S 카테고리·키워드 조사·공정위 제작",
+      "done": false,
+      "autoKey": "auto:prod:868:260624003",
+      "autoSource": {
+        "품목ID": 868,
+        "type": "생산완료일",
+        "발주번호": 260624003
+      }
     }
   ],
   "2026-07-09": [
@@ -2251,6 +2272,17 @@
       "text": "크루특가 진행요청",
       "done": true,
       "leaveRerouted": "2026-08-31"
+    },
+    {
+      "id": "t_xf69le5c0fn",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-08-31",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      },
+      "leaveRerouted": "2026-08-31"
     }
   ],
   "2026-09-02": [
@@ -2430,7 +2462,7 @@
     {
       "id": "t_kbjjljs0pye",
       "text": "아가미니 이벤트배너 삽입",
-      "done": false,
+      "done": true,
       "rolledFrom": "2026-09-14"
     },
     {
@@ -2444,6 +2476,29 @@
       "text": "네이버 넾다세일 대시보드 제안서 작성 마감일",
       "done": false,
       "rolledFrom": "2026-09-15"
+    }
+  ],
+  "2026-11-12": [
+    {
+      "id": "t_ssqn3p2mrzo",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-11-12",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      }
+    }
+  ],
+  "2026-11-09": [
+    {
+      "id": "t_00norwwjqny4",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-11-09",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      }
     }
   ]
 }
