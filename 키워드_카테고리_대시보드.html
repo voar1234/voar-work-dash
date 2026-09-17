@@ -622,7 +622,9 @@
   const TOKEN_KEY = 'voar_keyword_dash_remote_token_v1';
   const TOKEN_TTL_DAYS = 30;
   const host = location.hostname;
-  const IS_REMOTE = host !== 'localhost' && host !== '127.0.0.1' && host !== '';
+  // v6 fix (2026-09-17): onrender.com iframe에서도 사내 모드로 인식 (부모 창이 인증됨)
+  const IS_REMOTE = host !== 'localhost' && host !== '127.0.0.1' && host !== ''
+                  && !host.endsWith('.onrender.com');
   window.IS_REMOTE_MODE = IS_REMOTE;
   window.SUPABASE_URL = 'https://vgzodlljefanuipohevy.supabase.co';
   window.SUPABASE_KEY = 'sb_publishable_Xj1aWpDLyfaAPxkn1q-ErA_94MEBT9V';
@@ -1555,16 +1557,30 @@ function renderGroups(keywords, q, showProduct) {
             </tr>
           </thead>
           <tbody>
-            ${items.map(k => `
+            ${items.map(k => {
+              const isUnknown = k.match === 'unknown' || (k.category || '').includes('사전 미등록');
+              const kw = encodeURIComponent(k.keyword);
+              const checkLinks = isUnknown ? `
+                <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;">
+                  <a href="https://search.shopping.naver.com/search/all?query=${kw}" target="_blank" rel="noopener"
+                     style="font-size:11px;color:#03c75a;text-decoration:none;padding:2px 6px;border:1px solid #03c75a;border-radius:4px;">
+                     🔍 네이버쇼핑
+                  </a>
+                  <a href="https://itemscout.io/search/product?keyword=${kw}" target="_blank" rel="noopener"
+                     style="font-size:11px;color:#4a7eff;text-decoration:none;padding:2px 6px;border:1px solid #4a7eff;border-radius:4px;">
+                     🔗 아이템스카우트
+                  </a>
+                </div>` : "";
+              return `
               <tr>
                 ${showProduct ? `<td><span class="prod-tag">${escapeHTML(k._product)}</span></td>` : ""}
-                <td class="keyword">${highlight(k.keyword, q)}</td>
+                <td class="keyword">${highlight(k.keyword, q)}${checkLinks}</td>
                 <td class="volume">${formatVolume(getMobileVolume(k.keyword) ?? k.mobile_volume)}</td>
                 <td class="category">${highlight(k.category, q)}</td>
                 <td><span class="badge ${k.match}">${badgeLabel(k.match)}</span></td>
                 <td class="note">${highlight(k.note || "", q)}</td>
-              </tr>
-            `).join("")}
+              </tr>`;
+            }).join("")}
           </tbody>
         </table>
       </div>
