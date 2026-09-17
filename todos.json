@@ -936,15 +936,14 @@
       "id": "t_0wypjbi97jh",
       "text": "브검페등록",
       "done": true
-    }
-  ],
-  "2026-07-02": [
+    },
     {
-      "id": "t_qdv5zngugl",
-      "text": "오늘의집 7월 광고상품 상품명 점검하기(재셋팅, 기존꺼 삭제 필요)",
-      "done": true,
-      "rolledFrom": "2026-07-01"
-"품목ID": 868,
+      "id": "t_f2k2lvb0j4k",
+      "text": "[자동·D-7] 보아르포스S 신제품 시장조사·판매가 측정",
+      "done": false,
+      "autoKey": "auto:po:868:260624003",
+      "autoSource": {
+        "품목ID": 868,
         "type": "생산완료(예정)일 D-7",
         "발주번호": 260624003,
         "기준일": "2026-09-04"
@@ -1008,17 +1007,7 @@
       "done": true
     }
   ],
-  "2026-07-30": [
-    {
-      "id": "t_k2sajox1ldg",
-      "text": "[자동·주간] 네이버 오늘끝딜 제안",
-      "done": false,
-      "autoKey": "auto:thursday-ondeal:2026-07-30",
-      "autoSource": {
-        "type": "매주 목요일 정기"
-      }
-    }
-  ],
+  "2026-07-30": [],
   "2026-07-29": [
     {
       "id": "t_1fgeonen0y7",
@@ -1062,6 +1051,16 @@
       "id": "t_7hli7xquskd",
       "text": "브검페 정리하기!!!!",
       "done": true
+    },
+    {
+      "id": "t_k2sajox1ldg",
+      "text": "[자동·주간] 네이버 오늘끝딜 제안",
+      "done": false,
+      "autoKey": "auto:thursday-ondeal:2026-07-30",
+      "autoSource": {
+        "type": "매주 목요일 정기"
+      },
+      "leaveRerouted": "2026-07-30"
     }
   ],
   "2026-07-13": [
@@ -1245,8 +1244,7 @@
       "id": "t_ub50b0xnx4d",
       "text": "엘레어 오늘끝딜 행사 셋팅",
       "done": true,
-,
-   "rolledFrom": "2026-07-17"
+      "rolledFrom": "2026-07-17"
     },
     {
       "id": "t_9uvdzaahxbi",
@@ -2048,18 +2046,7 @@
       "done": true
     }
   ],
-  "2026-08-31": [
-    {
-      "id": "t_bny0unrz4dk",
-      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
-      "done": false,
-      "urgent": true,
-      "autoKey": "auto:monday-ondeal-deadline:2026-08-31",
-      "autoSource": {
-        "type": "매주 월요일 12시 접수마감"
-      }
-    }
-  ],
+  "2026-08-31": [],
   "2026-09-10": [
     {
       "id": "t_hgfn70rirx6",
@@ -2114,18 +2101,6 @@
       "done": false
     },
     {
-      "id": "t_rbpuu4tig6q",
-      "text": "[자동] 보아르포스S 카테고리·키워드 조사·공정위 제작",
-      "done": false,
-      "autoKey": "auto:prod:868:260624003",
-      "autoSource": {
-        "품목ID": 868,
-        "type": "생산완료일",
-        "발주번호": 260624003
-      },
-      "rolledFrom": "2026-09-04"
-    },
-    {
       "id": "t_l2zony5enin",
       "text": "컴플릿 셋트상품 컨펌체크/배너제작/적용",
       "done": false,
@@ -2134,7 +2109,7 @@
     {
       "id": "t_096g794re4ho",
       "text": "[자동] 보아르아가담이유식포트워머 카테고리·키워드 조사·공정위 제작",
-      "done": false,
+      "done": true,
       "autoKey": "auto:prod:956:260519001",
       "autoSource": {
         "품목ID": 956,
@@ -2332,6 +2307,17 @@
       "text": "크루특가 진행요청",
       "done": true,
       "leaveRerouted": "2026-08-31"
+    },
+    {
+      "id": "t_bny0unrz4dk",
+      "text": "🚨 [자동·주간] 네이버 오늘끝딜 접수마감! (월요일 12시)",
+      "done": false,
+      "urgent": true,
+      "autoKey": "auto:monday-ondeal-deadline:2026-08-31",
+      "autoSource": {
+        "type": "매주 월요일 12시 접수마감"
+      },
+      "leaveRerouted": "2026-08-31"
     }
   ],
   "2026-09-02": [
@@ -2518,10 +2504,6 @@
       "autoKey": "auto:monday-ondeal-deadline:2026-11-09",
       "autoSource": {
         "type": "매주 월요일 12시 접수마감"
-      }
-    }
-  ]
-} "type": "매주 월요일 12시 접수마감"
       }
     }
   ]
