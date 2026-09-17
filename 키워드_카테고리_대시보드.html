@@ -1566,9 +1566,10 @@ function renderGroups(keywords, q, showProduct) {
                      style="font-size:11px;color:#03c75a;text-decoration:none;padding:2px 6px;border:1px solid #03c75a;border-radius:4px;">
                      🔍 네이버쇼핑
                   </a>
-                  <a href="https://itemscout.io/search/product?keyword=${kw}" target="_blank" rel="noopener"
-                     style="font-size:11px;color:#4a7eff;text-decoration:none;padding:2px 6px;border:1px solid #4a7eff;border-radius:4px;">
-                     🔗 아이템스카우트
+                  <a href="#" onclick="event.preventDefault(); navigator.clipboard.writeText('${k.keyword.replace(/'/g,'&#39;')}'); window.open('https://itemscout.io/keyword-analysis','_blank');"
+                     style="font-size:11px;color:#4a7eff;text-decoration:none;padding:2px 6px;border:1px solid #4a7eff;border-radius:4px;cursor:pointer;"
+                     title="키워드가 복사됨. 새 탭 검색창에 Ctrl+V로 붙여넣기">
+                     🔗 아이템스카우트 (복사+열기)
                   </a>
                 </div>` : "";
               return `
