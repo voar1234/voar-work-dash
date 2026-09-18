@@ -44,11 +44,90 @@ def pose(name, h, flip=False):
 # 받은 14장으로는 "분유 든 노티" 같은 걸 만들 수 없었다.
 # 원본을 참조로 넣고 새 동작을 만들어 파일로 남긴다.
 # 한 번 만든 포즈는 그 파일을 쓰므로 같은 그림에 두 번 돈이 나가지 않는다.
+#
+# 변형 방지 (담당자 조건: "노티에 변형만 없다면 괜찮다")
+#   만들 때마다 원본과 수치로 비교해서, 어긋나면 참조를 늘려 다시 뽑는다.
+#   세 번 다 어긋나면 원본 포즈로 대신하고, 다음부터는 다시 만들지 않는다.
+#   → 변형된 노티가 게시물에 올라가는 일은 없다.
+import colorsys
+import shutil
+
 DASH = os.path.dirname(SRC)
 GEN = os.environ.get('NOTI_GEN') or os.path.join(DASH, '_noti_made')
+REJECT = os.path.join(GEN, '_reject')          # 걸러진 것 — 나중에 판정 기준을 손볼 때 본다
+
+# 원본 4종과 모델 비교(2026-09-18)로 잡은 기준.
+#   원본: 노랑 0.41~0.79, 새싹 0.018~0.027, 가로/세로 0.67~0.82
+#   걸러야 했던 것: 새싹이 잘린 image-1(0.006), 다리가 잘린 1-mini(여백 0)
+CHECK = dict(margin=0.003, sprout=0.012, body=0.35, aspect=(0.45, 1.05))
 
 
-def made(name, prompt, base='hello', h=380, flip=False):
+def _solid_box(im, thr=40):
+    """반투명 점은 빼고 캐릭터가 실제로 있는 영역만 잡는다.
+
+    생성본은 캔버스 가장자리까지 거의 안 보이는 점이 깔려 있어서
+    getbbox() 를 그대로 쓰면 캔버스를 통째로 잡는다. 그러면 여백째로
+    축소돼 카드에서 노티가 실제보다 작게 들어간다.
+    """
+    return im.getchannel('A').point(lambda a: 255 if a > thr else 0).getbbox()
+
+
+def inspect(path):
+    """원본 노티와 같은 캐릭터로 보이는지 수치로 본다. (통과 여부, 이유, 수치)"""
+    im = Image.open(path).convert('RGBA')
+    W, H = im.size
+    box = _solid_box(im)
+    if not box:
+        return False, '빈 그림', {}
+    x0, y0, x1, y1 = box
+    m = dict(margin=min(x0, y0, W - x1, H - y1) / max(W, H),
+             aspect=(x1 - x0) / max(1, (y1 - y0)))
+    small = im.crop(box)
+    small = small.resize((200, max(1, int(200 * small.height / small.width))), Image.NEAREST)
+    sw, sh = small.size
+    sp = small.load()
+    opaque = body = sprout = 0
+    for y in range(sh):
+        for x in range(sw):
+            r, g, b, a = sp[x, y]
+            if a < 200:
+                continue
+            opaque += 1
+            hh, ss, vv = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
+            if 0.07 <= hh <= 0.14 and ss >= 0.45 and vv >= 0.75:
+                body += 1                      # 몸통 노랑
+            if y < sh * 0.16 and vv < 0.5 and ss < 0.25:
+                sprout += 1                    # 머리 위 새싹
+    m['body'] = body / max(1, opaque)
+    m['sprout'] = sprout / max(1, opaque)
+
+    if m['margin'] < CHECK['margin']:
+        return False, '가장자리에 닿음 (어딘가 잘림)', m
+    if m['sprout'] < CHECK['sprout']:
+        return False, '머리 위 새싹이 없거나 잘림', m
+    if m['body'] < CHECK['body']:
+        return False, '몸통 색이 원본과 다름', m
+    lo, hi = CHECK['aspect']
+    if not lo <= m['aspect'] <= hi:
+        return False, '몸 비율이 원본과 다름', m
+    return True, '통과', m
+
+
+def _load(path, h, flip):
+    im = Image.open(path).convert('RGBA')
+    box = _solid_box(im)
+    if box:
+        im = im.crop(box)
+    # 잘라낸 안쪽에 남은 희미한 점도 지운다 (카드 위에서 뿌옇게 보이지 않게)
+    a = im.getchannel('A').point(lambda v: 0 if v < 16 else v)
+    im.putalpha(a)
+    if flip:
+        im = im.transpose(Image.FLIP_LEFT_RIGHT)
+    s = h / im.height
+    return im.resize((max(1, int(im.width * s)), h), Image.LANCZOS)
+
+
+def made(name, prompt, base='hello', h=380, flip=False, log=print):
     """주문제작 노티. name 으로 캐시를 찾고, 없으면 만들어 저장한다.
 
     name   저장 이름 (bottle_hug, carseat_sit …)
@@ -56,20 +135,41 @@ def made(name, prompt, base='hello', h=380, flip=False):
     base   참조할 원본 포즈 (hello, curious, worry, sleepy, love …)
     """
     path = os.path.join(GEN, name + '.png')
-    if not os.path.exists(path):
-        os.makedirs(GEN, exist_ok=True)
-        if DASH not in sys.path:
-            sys.path.insert(0, DASH)
-        import _gpt_img
-        _gpt_img.noti(base, prompt, out_path=path)
-    im = Image.open(path).convert('RGBA')
-    box = im.getbbox()
-    if box:
-        im = im.crop(box)               # 투명 여백 제거 — 원본과 같은 기준으로
-    if flip:
-        im = im.transpose(Image.FLIP_LEFT_RIGHT)
-    s = h / im.height
-    return im.resize((max(1, int(im.width * s)), h), Image.LANCZOS)
+    fail = os.path.join(GEN, name + '.fail')
+    if os.path.exists(path):
+        return _load(path, h, flip)
+    if os.path.exists(fail):                   # 전에 세 번 다 어긋났던 포즈 — 다시 돈 쓰지 않는다
+        return pose(base, h, flip)
+
+    os.makedirs(GEN, exist_ok=True)
+    if DASH not in sys.path:
+        sys.path.insert(0, DASH)
+    import _gpt_img
+
+    # 어긋날수록 보여주는 원본을 늘린다 (정면 → +측면 → +3/4)
+    extra = [[],
+             [os.path.join(SRC, 'side.png')],
+             [os.path.join(SRC, 'side.png'), os.path.join(SRC, 'q34r.png')]]
+    for i, refs in enumerate(extra, 1):
+        refs = [r for r in refs if os.path.exists(r) and not r.endswith(base + '.png')]
+        tmp = os.path.join(GEN, f'{name}.try{i}.png')
+        try:
+            _gpt_img.noti(base, prompt, out_path=tmp, refs=refs)
+        except SystemExit as e:
+            log(f'  노티 {name} {i}차 생성 실패: {e}')
+            continue
+        ok, why, m = inspect(tmp)
+        if ok:
+            os.replace(tmp, path)
+            log(f'  노티 {name} — {i}차에 통과')
+            return _load(path, h, flip)
+        os.makedirs(REJECT, exist_ok=True)
+        shutil.move(tmp, os.path.join(REJECT, f'{name}.try{i}.png'))
+        log(f'  노티 {name} {i}차 걸러짐 — {why}')
+
+    open(fail, 'w', encoding='utf-8').write(prompt)
+    log(f'  노티 {name} — 세 번 다 어긋나 원본({base})으로 대신합니다')
+    return pose(base, h, flip)
 
 
 # ─────────── 클레이 질감 ───────────
