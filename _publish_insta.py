@@ -25,11 +25,19 @@ def _load_cfg():
     """
     tok = os.environ.get('IG_ACCESS_TOKEN')
     if tok:
+        # 러너(GitHub Actions)에서 오는 길. 시크릿이 만료되면 여기서부터
+        # 무너지는데 로그엔 exit 1 만 남아 원인을 알 수 없었다.
+        # 토큰 자체는 찍지 않고 끝 6자리만 남긴다.
+        uid = os.environ.get('IG_USER_ID', '')
+        print('인증: 시크릿 사용 (토큰 ...%s · 계정 %s)' % (tok[-6:], uid or '미설정'))
+        if not uid:
+            raise SystemExit('IG_USER_ID 시크릿이 비어 있습니다.')
         return {
             'access_token': tok,
-            'ig_user_id': os.environ.get('IG_USER_ID', ''),
+            'ig_user_id': uid,
             'graph_version': os.environ.get('IG_GRAPH_VERSION', 'v21.0'),
         }
+    print('인증: 로컬 설정 파일 사용')
     p = os.path.join(HERE, 'baby', 'data', 'insta_config.json')
     return json.load(open(p, encoding='utf-8'))
 

@@ -16,9 +16,16 @@ def _load_cfg():
     """GitHub Actions 에서는 Secrets(환경변수), 로컬에서는 파일."""
     tok = os.environ.get('IG_ACCESS_TOKEN')
     if tok:
-        return {'access_token': tok,
-                'ig_user_id': os.environ.get('IG_USER_ID', ''),
+        # 러너(GitHub Actions)에서 오는 길. 여기서 실패하면 대개 시크릿이
+        # 만료됐거나 잘못 들어간 것인데, 예전엔 exit 1 만 남아 로그를 봐도
+        # 원인을 알 수 없었다. 토큰 자체는 찍지 않는다.
+        uid = os.environ.get('IG_USER_ID', '')
+        print('인증: 시크릿 사용 (토큰 ...%s · 계정 %s)' % (tok[-6:], uid or '미설정'))
+        if not uid:
+            raise SystemExit('IG_USER_ID 시크릿이 비어 있습니다.')
+        return {'access_token': tok, 'ig_user_id': uid,
                 'graph_version': os.environ.get('IG_GRAPH_VERSION', 'v21.0')}
+    print('인증: 로컬 설정 파일 사용')
     return json.load(open(os.path.join(HERE, 'baby', 'data', 'insta_config.json'),
                           encoding='utf-8'))
 
