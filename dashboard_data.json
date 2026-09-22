@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-09-23T00:56:41",
+    "extracted_at": "2026-09-23T01:04:53",
     "product_count": 52,
     "data_unit": "상품(SKU) 단위"
   },
@@ -9064,8 +9064,8 @@
         "발주중수량": 1000
       },
       "매출_통계": {
-        "매출_7일합": 258,
-        "매출_28일합": 588,
+        "매출_7일합": 259,
+        "매출_28일합": 589,
         "일평균_7일": 37,
         "일평균_28일": 21,
         "소진_잔여일수": 9,
@@ -15875,23 +15875,23 @@
   "sales": {
     "today_date": "2026-09-23",
     "kpi": {
-      "today_revenue": 241494,
-      "today_profit": 116672,
-      "today_qty": 3,
+      "today_revenue": 261194,
+      "today_profit": 126996,
+      "today_qty": 4,
       "today_orders": 1,
       "yesterday_revenue": 26952162,
-      "week_revenue": 182025836,
+      "week_revenue": 182045536,
       "last_week_revenue": 169313372,
-      "month_revenue": 659739990,
+      "month_revenue": 659759690,
       "last_month_revenue": 545870923
     },
     "channels_today": [
       {
         "매출처명": "스마트스토어",
         "매출처ID": 465,
-        "수량": 3,
-        "매출": 241494,
-        "이익": 116672,
+        "수량": 4,
+        "매출": 261194,
+        "이익": 126996,
         "비중": 100.0
       }
     ],
@@ -15925,6 +15925,22 @@
             "수량": 1,
             "매출": 81925,
             "이익": 32111
+          }
+        ]
+      },
+      {
+        "제품ID": 241,
+        "제품명": "보아르워시스핀C",
+        "카테고리명": "무선청소기",
+        "수량": 1,
+        "매출": 19700,
+        "이익": 10324,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 19700,
+            "이익": 10324
           }
         ]
       },
@@ -15983,7 +15999,7 @@
         670705018,
         735304398,
         739874635,
-        659739990,
+        659759690,
         0,
         0,
         0
@@ -16027,7 +16043,7 @@
         17371,
         21009,
         19896,
-        19068,
+        19069,
         0,
         0,
         0
@@ -16041,8 +16057,8 @@
       },
       {
         "카테고리": "무선청소기",
-        "매출": 891421007,
-        "수량": 17899
+        "매출": 891440707,
+        "수량": 17900
       },
       {
         "카테고리": "건조기",
@@ -16742,11 +16758,11 @@
           },
           {
             "name": "생활가전",
-            "current_rev": 659848192,
+            "current_rev": 659867892,
             "prev_rev": 510271827,
-            "current_profit": 244570085,
+            "current_profit": 244580409,
             "prev_profit": 222531451,
-            "current_qty": 18837,
+            "current_qty": 18838,
             "prev_qty": 11651,
             "products": [
               {
@@ -16931,11 +16947,11 @@
               },
               {
                 "name": "보아르워시스핀C",
-                "current_rev": 11677012,
+                "current_rev": 11696712,
                 "prev_rev": 8168858,
-                "current_profit": 4907540,
+                "current_profit": 4917864,
                 "prev_profit": 3634850,
-                "current_qty": 722,
+                "current_qty": 723,
                 "prev_qty": 486
               },
               {
@@ -17177,11 +17193,11 @@
           },
           {
             "name": "생활가전",
-            "current_rev": 121153112,
+            "current_rev": 121172812,
             "prev_rev": 128177000,
-            "current_profit": 44071954,
+            "current_profit": 44082278,
             "prev_profit": 53977815,
-            "current_qty": 3286,
+            "current_qty": 3287,
             "prev_qty": 2864,
             "products": [
               {
@@ -17293,6 +17309,15 @@
                 "prev_qty": 61
               },
               {
+                "name": "보아르워시스핀C",
+                "current_rev": 4128420,
+                "prev_rev": 1476676,
+                "current_profit": 1700036,
+                "prev_profit": 668359,
+                "current_qty": 259,
+                "prev_qty": 87
+              },
+              {
                 "name": "보아르트래블스티머",
                 "current_rev": 675601,
                 "prev_rev": 3326398,
@@ -17300,15 +17325,6 @@
                 "prev_profit": 1479883,
                 "current_qty": 31,
                 "prev_qty": 163
-              },
-              {
-                "name": "보아르워시스핀C",
-                "current_rev": 4108720,
-                "prev_rev": 1476676,
-                "current_profit": 1689712,
-                "prev_profit": 668359,
-                "current_qty": 258,
-                "prev_qty": 87
               },
               {
                 "name": "보아르워터클링무선습식청소기",
@@ -17603,11 +17619,11 @@
           },
           {
             "name": "생활가전",
-            "current_rev": 4944191372,
+            "current_rev": 4944211072,
             "prev_rev": 4635122983,
-            "current_profit": 1933854869,
+            "current_profit": 1933865193,
             "prev_profit": 1969794310,
-            "current_qty": 126851,
+            "current_qty": 126852,
             "prev_qty": 110939,
             "products": [
               {
@@ -17702,11 +17718,11 @@
               },
               {
                 "name": "보아르워시스핀C",
-                "current_rev": 63650587,
+                "current_rev": 63670287,
                 "prev_rev": 149570803,
-                "current_profit": 29058786,
+                "current_profit": 29069110,
                 "prev_profit": 59263950,
-                "current_qty": 3724,
+                "current_qty": 3725,
                 "prev_qty": 10007
               },
               {
@@ -18038,11 +18054,11 @@
           },
           {
             "name": "생활가전",
-            "current_rev": 6775775909,
+            "current_rev": 6775795609,
             "prev_rev": 6386543574,
-            "current_profit": 2700347935,
+            "current_profit": 2700358259,
             "prev_profit": 2760715118,
-            "current_qty": 175332,
+            "current_qty": 175333,
             "prev_qty": 153207,
             "products": [
               {
@@ -18137,11 +18153,11 @@
               },
               {
                 "name": "보아르워시스핀C",
-                "current_rev": 113872685,
+                "current_rev": 113892385,
                 "prev_rev": 240797917,
-                "current_profit": 44504671,
+                "current_profit": 44514995,
                 "prev_profit": 90971193,
-                "current_qty": 7457,
+                "current_qty": 7458,
                 "prev_qty": 16781
               },
               {
@@ -18593,9 +18609,9 @@
         },
         "9": {
           "생활가전": {
-            "매출": 499495139,
-            "이익": 184283020,
-            "수량": 14221
+            "매출": 499514839,
+            "이익": 184293344,
+            "수량": 14222
           },
           "육아": {
             "매출": 160244851,
@@ -18691,7 +18707,7 @@
             "육아": 158038380
           },
           "9": {
-            "생활": 505221691,
+            "생활": 505241391,
             "육아": 160714916
           }
         }
@@ -18801,8 +18817,8 @@
       "monthly_revenue": 0,
       "ytd_revenue": 0,
       "annual_revenue": 0,
-      "actual_month_revenue": 659739990,
-      "actual_ytd_revenue": 6271792185,
+      "actual_month_revenue": 659759690,
+      "actual_ytd_revenue": 6271811885,
       "achieve_rate_month": 0,
       "achieve_rate_ytd": 0,
       "products": []
