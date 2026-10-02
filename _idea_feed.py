@@ -19,6 +19,14 @@
 import io, json, os, random, re, sys, urllib.request, uuid
 from datetime import datetime, timezone, timedelta
 
+# 작업 스케줄러는 pythonw 로 돌리는데, pythonw 는 stdout 이 아예 없다.
+# 그 상태에서 print 한 줄이면 바로 죽어서, 작업이 매번 '결과 1' 로 실패했다.
+# (2026-10-02 확인 — 소재 보충이 2주 동안 한 번도 안 돌았다)
+if sys.stdout is None or getattr(sys.stdout, 'buffer', None) is None:
+    sys.stdout = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '_task.log'),
+                      'a', encoding='utf-8', buffering=1)
+    sys.stderr = sys.stdout
+
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 SB = 'https://vgzodlljefanuipohevy.supabase.co/rest/v1/baby_studio'
