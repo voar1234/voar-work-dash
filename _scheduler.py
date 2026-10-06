@@ -150,11 +150,19 @@ def autoschedule(d, now):
     hhmm = (d.get('cfg') or {}).get('time') or '20:30'
     items = (d.get('queue') or []) + (d.get('reels') or [])
     used = {q.get('scheduledAt') for q in items if q.get('scheduledAt')}
-    ready = [q for q in items
-             if q.get('status') == 'pending'
-             and not q.get('scheduledAt')
-             and (q.get('images') or q.get('videoUrl'))
-             and (q.get('build') or {}).get('state') == 'done']
+
+    def ready_one(q, need):
+        return (q.get('status') == 'pending'
+                and not q.get('scheduledAt')
+                and q.get(need)
+                and (q.get('build') or {}).get('state') == 'done')
+
+    # 게시물은 이미지가, 릴스는 '영상'이 있어야 한다.
+    # 예전엔 둘 중 아무거나 있으면 통과시켰더니, 영상 없이 컷 이미지만 있던
+    # 릴스가 발행 일정에 잡혔다. 그대로 나갔으면 릴스가 아니라
+    # 캐러셀로 올라갔을 것이다 (2026-10-06 직전에 발견해서 뺐다).
+    ready = ([q for q in (d.get('queue') or []) if ready_one(q, 'images')]
+             + [q for q in (d.get('reels') or []) if ready_one(q, 'videoUrl')])
     ready.sort(key=lambda q: q.get('updated') or '')
     if not ready:
         return 0
