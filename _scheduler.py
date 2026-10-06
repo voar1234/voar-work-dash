@@ -136,9 +136,55 @@ def due_items(d, now):
     return out
 
 
+def autoschedule(d, now):
+    """자동 발행이 켜져 있으면 카드가 다 된 글에 발행일을 매긴다.
+
+    승인을 빼면 예정일을 붙여줄 사람이 없다. 하루 한 편씩,
+    이미 찬 날짜는 건너뛰고 뒤로 민다.
+
+    카드가 없거나 제작이 안 끝난 글은 건드리지 않는다 —
+    빈 글이 그대로 나가면 안 된다.
+    """
+    if d.get('autoPublish') is not True:
+        return 0
+    hhmm = (d.get('cfg') or {}).get('time') or '20:30'
+    items = (d.get('queue') or []) + (d.get('reels') or [])
+    used = {q.get('scheduledAt') for q in items if q.get('scheduledAt')}
+    ready = [q for q in items
+             if q.get('status') == 'pending'
+             and not q.get('scheduledAt')
+             and (q.get('images') or q.get('videoUrl'))
+             and (q.get('build') or {}).get('state') == 'done']
+    ready.sort(key=lambda q: q.get('updated') or '')
+    if not ready:
+        return 0
+
+    day = now.date()
+    today = now.date().isoformat()
+    n = 0
+    for q in ready:
+        while True:
+            ds = day.isoformat()
+            # 오늘은 발행 시각이 아직 안 지났을 때만 쓴다
+            if ds in used or (ds == today and f'{now:%H:%M}' >= hhmm):
+                day += timedelta(days=1)
+                continue
+            break
+        q['scheduledAt'] = day.isoformat()
+        q['scheduledTime'] = hhmm
+        q['updated'] = now_utc()
+        used.add(day.isoformat())
+        log(f'· 예정 배정: {q.get("title")} → {day} {hhmm}')
+        day += timedelta(days=1)
+        n += 1
+    return n
+
+
 def run_once():
     d = pull()
     now = datetime.now(KST)
+    if autoschedule(d, now):
+        push(d)                       # 날짜를 먼저 저장해둔다
     targets = due_items(d, now)
     if not targets:
         return 0
