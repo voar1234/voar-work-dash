@@ -1437,6 +1437,11 @@ function mergeRemote(rd) {
   }
   for (const k of Object.keys(rd)) {
     if (LISTS.includes(k) || k === 'updatedAt') continue;
+    // 자동 발행 스위치는 서버가 정본이다.
+    // 예전엔 '내 쪽이 비었을 때만' 받아서, 브라우저에 남아 있던 꺼짐 상태가
+    // 서버의 켜짐을 덮어썼다 (2026-10-07 — 그래서 발행이 멈출 뻔했다).
+    // 화면에서 끄면 그 즉시 서버에 저장되므로 이렇게 둬도 안전하다.
+    if (k === 'autoPublish') { S[k] = rd[k]; touched++; continue; }
     if (S[k] === undefined) { S[k] = rd[k]; touched++; }
   }
   return touched;
