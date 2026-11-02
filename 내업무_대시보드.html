@@ -1111,7 +1111,12 @@
   .emc-discount b { font-size: 15px; }
   /* v6 2026-09-08: 외부 모드에선 리뷰분석 탭 숨김 (사내 server.py 프록시 필요) */
   body.remote-mode .nav-item[data-page="review-analysis"] { display: none; }
+  /* v31 (2026-11-02): 외부 호스팅에선 구매확정 현황 탭 숨김 (수정은 사내 PC에서만) */
+  body.remote-mode .nav-item[data-page="purchase-verify"] { display: none; }
 </style>
+<!-- v31 (2026-11-02): 구매확정 현황 탭 CSV/XLSX 파싱용 라이브러리 (로컬 대시보드에서만 사용) -->
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
 </head>
 <body>
 
@@ -1306,6 +1311,7 @@
           <button class="nav-item" data-page="monitoring"><span class="nav-emoji">📡</span> 모니터링</button>
           <button class="nav-item" data-page="review-analysis"><span class="nav-emoji">💬</span> 리뷰분석</button>
           <button class="nav-item" data-page="reviews"><span class="nav-emoji">💝</span> 리뷰이벤트</button>
+          <button class="nav-item" data-page="purchase-verify"><span class="nav-emoji">🧾</span> 구매확정 현황</button>
           <button class="nav-item" data-page="keyword-research"><span class="nav-emoji">🎯</span> 키워드조사</button>
         </div>
       </div>
@@ -1420,6 +1426,119 @@
           </tr></thead><tbody></tbody></table>
         </div>
         <div class="todo-empty" id="rv-empty" hidden>아직 등록된 고객이 없습니다. "+ 새 고객 추가" 버튼으로 시작하세요.</div>
+      </div>
+    </section>
+
+    <!-- ─── Page: 구매확정 현황 (네이버 폼 CSV + 스마트스토어 CSV 크로스체크 → Supabase 공유) ─── -->
+    <section class="page" id="page-purchase-verify">
+      <!-- 1) CSV 업로드 영역 -->
+      <div class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>
+            <h2 style="margin:0;font-size:16px;font-weight:600">🧾 구매확정 현황</h2>
+            <div class="pc-info-label" style="margin-top:4px">
+              네이버 폼 CSV + 스마트스토어 주문 CSV 업로드 → 자동 크로스체크 → Supabase 저장 ·
+              <a href="https://form.naver.com/result/DAYyiG3Zipb" target="_blank" rel="noopener" style="color:#2563eb">폼 결과 열기 ↗</a> ·
+              <a id="pv-share-link" href="#" target="_blank" rel="noopener" style="color:#059669">🔗 공유 링크 복사</a>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span id="pv-sync-status" style="font-size:11px;color:#9ca3af"></span>
+            <button class="btn" id="pv-reload-btn" title="Supabase에서 다시 불러오기">🔄 새로고침</button>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <label class="pv-upload-box" id="pv-form-box" style="border:2px dashed #d1d5db;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#fafafa">
+            <div style="font-size:13px;font-weight:600;color:#374151">① 네이버 폼 응답 CSV/XLSX</div>
+            <div style="font-size:11px;color:#9ca3af;margin-top:2px">주문번호, 네이버 아이디, 영수증 URL</div>
+            <div class="status" id="pv-form-status" style="font-size:12px;color:#6b7280;margin-top:6px;font-weight:600">파일을 끌어다 놓거나 클릭</div>
+            <input type="file" id="pv-form-file" accept=".csv,.xlsx,.xls" hidden>
+          </label>
+          <label class="pv-upload-box" id="pv-store-box" style="border:2px dashed #d1d5db;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#fafafa">
+            <div style="font-size:13px;font-weight:600;color:#374151">② 스마트스토어 주문 CSV/XLSX</div>
+            <div style="font-size:11px;color:#9ca3af;margin-top:2px">주문번호, 최종상품금액, 상품주문상태</div>
+            <div class="status" id="pv-store-status" style="font-size:12px;color:#6b7280;margin-top:6px;font-weight:600">파일을 끌어다 놓거나 클릭</div>
+            <input type="file" id="pv-store-file" accept=".csv,.xlsx,.xls" hidden>
+          </label>
+        </div>
+
+        <details style="margin-top:10px;font-size:12px;color:#6b7280">
+          <summary style="cursor:pointer;padding:4px 0">⚙️ 컬럼 매핑 (자동 감지 — 필요 시 수동 선택)</summary>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px">
+            <div>
+              <div style="font-weight:600;margin-bottom:4px;color:#374151">네이버 폼</div>
+              <div style="display:grid;grid-template-columns:100px 1fr;gap:6px 10px;padding:10px;background:#f9fafb;border-radius:4px">
+                <div>접수일시:</div><select id="pv-map-form-timestamp" style="padding:3px 6px;border:1px solid #d1d5db;border-radius:4px;font-size:12px"></select>
+                <div>네이버 아이디:</div><select id="pv-map-form-naverId" style="padding:3px 6px;border:1px solid #d1d5db;border-radius:4px;font-size:12px"></select>
+                <div>주문번호:</div><select id="pv-map-form-orderNo" style="padding:3px 6px;border:1px solid #d1d5db;border-radius:4px;font-size:12px"></select>
+                <div>영수증:</div><select id="pv-map-form-receipt" style="padding:3px 6px;border:1px solid #d1d5db;border-radius:4px;font-size:12px"></select>
+              </div>
+            </div>
+            <div>
+              <div style="font-weight:600;margin-bottom:4px;color:#374151">스마트스토어</div>
+              <div style="display:grid;grid-template-columns:100px 1fr;gap:6px 10px;padding:10px;background:#f9fafb;border-radius:4px">
+                <div>주문번호:</div><select id="pv-map-store-orderNo" style="padding:3px 6px;border:1px solid #d1d5db;border-radius:4px;font-size:12px"></select>
+                <div>결제금액:</div><select id="pv-map-store-amount" style="padding:3px 6px;border:1px solid #d1d5db;border-radius:4px;font-size:12px"></select>
+                <div>주문상태:</div><select id="pv-map-store-status" style="padding:3px 6px;border:1px solid #d1d5db;border-radius:4px;font-size:12px"></select>
+                <div>구매확정일:</div><select id="pv-map-store-confirmDate" style="padding:3px 6px;border:1px solid #d1d5db;border-radius:4px;font-size:12px"></select>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end;align-items:center">
+          <span id="pv-row-info" style="margin-right:auto;color:#6b7280;font-size:12px"></span>
+          <button class="btn" id="pv-reset-btn" style="color:#dc2626;border-color:#fca5a5">🗑 전체 초기화</button>
+          <button class="btn primary" id="pv-process-btn" disabled>▶ 크로스체크 + Supabase 저장</button>
+        </div>
+      </div>
+
+      <!-- 2) KPI + 범례 -->
+      <div class="panel">
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-label">전체 접수</div><div class="kpi-value" id="pv-kpi-total">0</div></div>
+          <div class="kpi-card"><div class="kpi-label">매칭 OK</div><div class="kpi-value" id="pv-kpi-matched" style="color:#059669">0</div></div>
+          <div class="kpi-card"><div class="kpi-label">매칭 실패 🔴</div><div class="kpi-value" id="pv-kpi-unmatched" style="color:#dc2626">0</div></div>
+          <div class="kpi-card"><div class="kpi-label">구매확정</div><div class="kpi-value" id="pv-kpi-confirmed">0</div></div>
+          <div class="kpi-card"><div class="kpi-label">반품/교환 🟡</div><div class="kpi-value" id="pv-kpi-refund" style="color:#d97706">0</div></div>
+          <div class="kpi-card"><div class="kpi-label">누적 결제금액</div><div class="kpi-value" id="pv-kpi-amount" style="color:#7c3aed">0원</div></div>
+        </div>
+        <div style="display:flex;gap:14px;font-size:12px;color:#6b7280;margin-top:10px;flex-wrap:wrap">
+          <span>🔴 <span style="background:#fee2e2;color:#991b1b;padding:1px 8px;border-radius:4px;font-weight:600">주문번호 불일치</span> 스마트스토어에 없는 주문번호</span>
+          <span>🟡 <span style="background:#fef3c7;color:#92400e;padding:1px 8px;border-radius:4px;font-weight:600">구매확정금액 상이</span> 반품/교환 발생</span>
+        </div>
+      </div>
+
+      <!-- 3) 필터 + 테이블 -->
+      <div class="panel">
+        <div style="display:flex;gap:8px;margin-bottom:10px;font-size:12px;flex-wrap:wrap;align-items:center">
+          <span class="pv-filter-chip active" data-filter="all" style="padding:4px 10px;border:1px solid #111827;background:#111827;color:white;border-radius:16px;cursor:pointer">전체</span>
+          <span class="pv-filter-chip" data-filter="matched" style="padding:4px 10px;border:1px solid #d1d5db;background:white;color:#6b7280;border-radius:16px;cursor:pointer">매칭 OK</span>
+          <span class="pv-filter-chip" data-filter="unmatched" style="padding:4px 10px;border:1px solid #d1d5db;background:white;color:#6b7280;border-radius:16px;cursor:pointer">🔴 매칭 실패</span>
+          <span class="pv-filter-chip" data-filter="confirmed" style="padding:4px 10px;border:1px solid #d1d5db;background:white;color:#6b7280;border-radius:16px;cursor:pointer">구매확정</span>
+          <span class="pv-filter-chip" data-filter="pending" style="padding:4px 10px;border:1px solid #d1d5db;background:white;color:#6b7280;border-radius:16px;cursor:pointer">미확정</span>
+          <span class="pv-filter-chip" data-filter="refund" style="padding:4px 10px;border:1px solid #d1d5db;background:white;color:#6b7280;border-radius:16px;cursor:pointer">🟡 반품/교환</span>
+          <input type="text" id="pv-search" placeholder="아이디/주문번호 검색" style="margin-left:auto;padding:5px 10px;border:1px solid #d1d5db;border-radius:4px;font-size:12px;width:200px">
+          <button class="btn" id="pv-export-btn">📥 CSV</button>
+        </div>
+        <div style="overflow-x:auto;max-height:600px">
+          <table class="data-table" id="table-pv">
+            <thead><tr>
+              <th>접수일시</th>
+              <th>네이버 아이디</th>
+              <th>주문번호</th>
+              <th>영수증</th>
+              <th>결제금액</th>
+              <th>구매확정</th>
+              <th>구매확정금액</th>
+              <th>비고</th>
+            </tr></thead>
+            <tbody id="pv-tbody">
+              <tr><td colspan="8" style="text-align:center;color:#9ca3af;padding:40px">CSV 2개 업로드 후 "▶ 크로스체크 + Supabase 저장" 버튼을 눌러주세요.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
@@ -2279,6 +2398,7 @@ function switchPage(name) {
     alerts:           '🚨 긴급알림',
     notes:            '📝 메모장',
     reviews:          '💝 리뷰이벤트',
+    'purchase-verify':'🧾 구매확정 현황',
     products:         '📦 제품현황',
     sales:            '📈 판매현황',
     margin:           '💰 마진계산기',
@@ -2301,6 +2421,7 @@ function switchPage(name) {
   });
   if (name === 'notes') renderNotes();
   if (name === 'reviews') renderReviews();
+  if (name === 'purchase-verify') { pvOnEnter(); }
   if (name === 'alerts') { renderAlerts(); markAllAlertsSeen(); }
   if (name === 'products') renderProducts();
   if (name === 'sales') renderSales();
@@ -4093,6 +4214,391 @@ async function postReviewsToServer(arr) {
       body: JSON.stringify(arr),
     });
   } catch (e) { console.warn('[reviews] save failed:', e); }
+}
+
+// ───── 구매확정 현황 (purchase_verify) — Supabase 공유 ─────
+const PV_SHARE_URL = 'https://voar1234.github.io/voar-cs-review/purchase_verify.html';
+const PV_STATE = {
+  formRows:null, storeRows:null, formCols:[], storeCols:[],
+  mapping:{ form:{timestamp:'',naverId:'',orderNo:'',receipt:''}, store:{orderNo:'',amount:'',status:'',confirmDate:''} },
+  results:[], filter:'all', search:'',
+  bootstrapped:false,
+};
+const PV_STORAGE_KEY = 'voar_purchase_verify_local_v1';
+const PV_AUTO_MAP = {
+  form: {
+    timestamp:['응답일시','접수일시','제출시각','timestamp','date','일시'],
+    naverId:  ['네이버아이디','네이버id','아이디','naverid','id'],
+    orderNo:  ['주문번호','네이버주문번호','스마트스토어주문번호','orderno','ordernumber','주문'],
+    receipt:  ['영수증','구매영수증','첨부','receipt','사진','인증'],
+  },
+  store: {
+    orderNo:    ['주문번호','상품주문번호','orderno','ordernumber'],
+    amount:     ['최종상품금액','결제금액','총결제금액','상품가격','총주문금액','amount','price','결제'],
+    status:     ['상품주문상태','주문상태','상태','처리상태','status'],
+    confirmDate:['구매확정일','확정일','confirmdate'],
+  },
+};
+const PV_SUPABASE_COLS = ['id','timestamp','naver_id','order_no','order_no_clean','receipt','amount','confirmed','confirmed_amount','note','status','updated_at'];
+
+async function pvSupabaseFetch() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/purchase_verify?select=*`, {
+      headers:{ apikey:SUPABASE_KEY, Authorization:`Bearer ${SUPABASE_KEY}` },
+    });
+    if (!res.ok) throw new Error('HTTP '+res.status);
+    return await res.json();
+  } catch (e) { console.warn('[pv] fetch failed:', e); return null; }
+}
+async function pvSupabaseUpsert(arr) {
+  if (!Array.isArray(arr) || !arr.length) return;
+  const cleaned = arr.map(r => Object.fromEntries(PV_SUPABASE_COLS.map(k => [k, r[k] ?? null])));
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/purchase_verify?on_conflict=id`, {
+      method:'POST',
+      headers:{ apikey:SUPABASE_KEY, Authorization:`Bearer ${SUPABASE_KEY}`, 'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify(cleaned),
+    });
+    if (!res.ok) throw new Error('HTTP '+res.status+' '+(await res.text()));
+    pvSetSyncStatus(`✓ Supabase 저장: ${arr.length}건 · ${new Date().toLocaleTimeString('ko-KR')}`, 'ok');
+  } catch (e) { console.warn('[pv] upsert failed:', e); pvSetSyncStatus('⚠ Supabase 저장 실패: '+e.message, 'err'); }
+}
+async function pvSupabaseClear() {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/purchase_verify?id=neq.__none__`, {
+      method:'DELETE',
+      headers:{ apikey:SUPABASE_KEY, Authorization:`Bearer ${SUPABASE_KEY}` },
+    });
+  } catch (e) { console.warn('[pv] clear failed:', e); }
+}
+
+function pvSetSyncStatus(msg, kind='info') {
+  const el = document.getElementById('pv-sync-status');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.color = kind==='ok'?'#059669':kind==='err'?'#dc2626':'#9ca3af';
+}
+
+function pvNormKey(s) { return String(s||'').toLowerCase().replace(/[\s_\-()[\]{}·]/g,''); }
+function pvAutoMap(cols, rules) {
+  const result = {};
+  for (const [field, keywords] of Object.entries(rules)) {
+    let best = '';
+    for (const col of cols) {
+      const n = pvNormKey(col);
+      for (const kw of keywords) { if (n.includes(pvNormKey(kw))) { best = col; break; } }
+      if (best) break;
+    }
+    result[field] = best;
+  }
+  return result;
+}
+function pvCleanOrderNo(s) { return String(s||'').replace(/[\s\-]/g,'').trim(); }
+function pvEscape(s) { return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function pvFmtMoney(n) { if (n === null || n === undefined || n === '') return '-'; const v = parseInt(String(n).replace(/[^0-9-]/g,'')) || 0; return v.toLocaleString('ko-KR') + '원'; }
+
+function pvParseFile(file) {
+  return new Promise((resolve, reject) => {
+    const ext = file.name.split('.').pop().toLowerCase();
+    const reader = new FileReader();
+    if (ext === 'csv') {
+      reader.onload = (e) => {
+        if (typeof Papa === 'undefined') { reject(new Error('PapaParse 로딩 안됨')); return; }
+        Papa.parse(e.target.result, {
+          header:true, skipEmptyLines:true,
+          transformHeader:(h)=>String(h||'').trim(),
+          complete:(res)=>resolve({ rows:res.data, cols:res.meta.fields||[] }),
+          error:reject,
+        });
+      };
+      reader.onerror = reject;
+      reader.readAsText(file, 'UTF-8');
+    } else if (ext === 'xlsx' || ext === 'xls') {
+      reader.onload = (e) => {
+        try {
+          if (typeof XLSX === 'undefined') { reject(new Error('SheetJS 로딩 안됨')); return; }
+          const wb = XLSX.read(new Uint8Array(e.target.result), { type:'array' });
+          const sheet = wb.Sheets[wb.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json(sheet, { defval:'', raw:false });
+          const cols = rows.length ? Object.keys(rows[0]) : [];
+          resolve({ rows, cols });
+        } catch (err) { reject(err); }
+      };
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(file);
+    } else {
+      reject(new Error('지원하지 않는 파일 형식: '+ext));
+    }
+  });
+}
+
+async function pvHandleUpload(kind, file) {
+  if (!file) return;
+  try {
+    const { rows, cols } = await pvParseFile(file);
+    if (!rows.length) { pvSetSyncStatus('⚠ 파일에 데이터 없음', 'err'); return; }
+    if (kind === 'form') {
+      PV_STATE.formRows = rows; PV_STATE.formCols = cols;
+      PV_STATE.mapping.form = { ...PV_STATE.mapping.form, ...pvAutoMap(cols, PV_AUTO_MAP.form) };
+      const el = document.getElementById('pv-form-status');
+      if (el) el.textContent = `${rows.length}행 로드됨 (${cols.length}열)`;
+      document.getElementById('pv-form-box')?.setAttribute('style', 'border:2px solid #059669;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#ecfdf5');
+    } else {
+      PV_STATE.storeRows = rows; PV_STATE.storeCols = cols;
+      PV_STATE.mapping.store = { ...PV_STATE.mapping.store, ...pvAutoMap(cols, PV_AUTO_MAP.store) };
+      const el = document.getElementById('pv-store-status');
+      if (el) el.textContent = `${rows.length}행 로드됨 (${cols.length}열)`;
+      document.getElementById('pv-store-box')?.setAttribute('style', 'border:2px solid #059669;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#ecfdf5');
+    }
+    pvSaveLocal();
+    pvRenderMappingUI();
+    pvUpdateUploadStatus();
+    pvSetSyncStatus(`✓ ${file.name} 로드 완료`, 'ok');
+  } catch (err) {
+    console.error(err);
+    pvSetSyncStatus('파일 읽기 실패: '+err.message, 'err');
+  }
+}
+
+function pvUpdateUploadStatus() {
+  const ready = PV_STATE.formRows && PV_STATE.storeRows;
+  const btn = document.getElementById('pv-process-btn');
+  if (btn) btn.disabled = !ready;
+  const info = [];
+  if (PV_STATE.formRows) info.push(`폼 ${PV_STATE.formRows.length}행`);
+  if (PV_STATE.storeRows) info.push(`스토어 ${PV_STATE.storeRows.length}행`);
+  const el = document.getElementById('pv-row-info');
+  if (el) el.textContent = info.join(' · ');
+}
+
+function pvRenderMappingUI() {
+  const formOpts = ['', ...PV_STATE.formCols].map(c => `<option value="${pvEscape(c)}">${pvEscape(c||'(선택)')}</option>`).join('');
+  const storeOpts = ['', ...PV_STATE.storeCols].map(c => `<option value="${pvEscape(c)}">${pvEscape(c||'(선택)')}</option>`).join('');
+  for (const field of ['timestamp','naverId','orderNo','receipt']) {
+    const sel = document.getElementById('pv-map-form-' + field);
+    if (!sel) continue;
+    sel.innerHTML = formOpts;
+    sel.value = PV_STATE.mapping.form[field] || '';
+    sel.onchange = () => { PV_STATE.mapping.form[field] = sel.value; pvSaveLocal(); };
+  }
+  for (const field of ['orderNo','amount','status','confirmDate']) {
+    const sel = document.getElementById('pv-map-store-' + field);
+    if (!sel) continue;
+    sel.innerHTML = storeOpts;
+    sel.value = PV_STATE.mapping.store[field] || '';
+    sel.onchange = () => { PV_STATE.mapping.store[field] = sel.value; pvSaveLocal(); };
+  }
+}
+
+async function pvProcessData() {
+  if (!PV_STATE.formRows || !PV_STATE.storeRows) { pvSetSyncStatus('⚠ 두 파일 모두 업로드하세요', 'err'); return; }
+  const mF = PV_STATE.mapping.form;
+  const mS = PV_STATE.mapping.store;
+  if (!mF.orderNo || !mS.orderNo) { pvSetSyncStatus('⚠ 양쪽 주문번호 컬럼 매핑 필요', 'err'); return; }
+
+  const storeMap = new Map();
+  for (const row of PV_STATE.storeRows) {
+    const key = pvCleanOrderNo(row[mS.orderNo]);
+    if (!key) continue;
+    if (storeMap.has(key)) storeMap.get(key).push(row);
+    else storeMap.set(key, [row]);
+  }
+
+  const results = PV_STATE.formRows.map((f, idx) => {
+    const orderNoRaw = f[mF.orderNo] || '';
+    const orderNoClean = pvCleanOrderNo(orderNoRaw);
+    const matchedList = orderNoClean ? storeMap.get(orderNoClean) : null;
+    const timestamp = String(f[mF.timestamp] || '').trim();
+    const naverId = String(f[mF.naverId] || '').trim();
+    const receipt = String(f[mF.receipt] || '').trim();
+    const id = `${pvNormKey(naverId)}_${orderNoClean || 'noorder_'+idx}`;
+
+    if (!matchedList) {
+      return { id, timestamp, naver_id:naverId, order_no:orderNoRaw, order_no_clean:orderNoClean, receipt, amount:null, confirmed:'-', confirmed_amount:null, note:'스마트스토어에 없음', status:'unmatched', updated_at:new Date().toISOString() };
+    }
+    let totalAmount = 0, hasConfirmed = false, hasRefund = false, statusList = [];
+    for (const sr of matchedList) {
+      const amtStr = String(sr[mS.amount] || '0').replace(/[^0-9\-]/g,'');
+      totalAmount += parseInt(amtStr) || 0;
+      const st = String(sr[mS.status] || '').trim();
+      statusList.push(st);
+      if (st.includes('반품') || st.includes('교환') || st.includes('취소')) hasRefund = true;
+      if (st.includes('구매확정') || (mS.confirmDate && sr[mS.confirmDate])) hasConfirmed = true;
+    }
+    const uniqStatus = [...new Set(statusList.filter(Boolean))].join(', ');
+    const base = { id, timestamp, naver_id:naverId, order_no:orderNoRaw, order_no_clean:orderNoClean, receipt, amount:totalAmount, updated_at:new Date().toISOString() };
+    if (hasRefund) return { ...base, confirmed:'반품/교환', confirmed_amount:0, note:`구매확정금액 상이 (${uniqStatus})`, status:'refund' };
+    if (hasConfirmed) return { ...base, confirmed:'구매확정', confirmed_amount:totalAmount, note:uniqStatus, status:'confirmed' };
+    return { ...base, confirmed:'미확정', confirmed_amount:null, note:uniqStatus, status:'pending' };
+  });
+
+  PV_STATE.results = results;
+  pvSaveLocal();
+  pvRender();
+  pvSetSyncStatus(`크로스체크 완료 (${results.length}건) · Supabase 전송 중...`, 'info');
+  await pvSupabaseUpsert(results);
+}
+
+function pvRender() {
+  const rs = PV_STATE.results;
+  const matched = rs.filter(r => r.status !== 'unmatched');
+  const confirmed = rs.filter(r => r.status === 'confirmed');
+  const unmatched = rs.filter(r => r.status === 'unmatched');
+  const refund = rs.filter(r => r.status === 'refund');
+  const totalAmount = matched.reduce((s,r)=> s + (r.amount||0), 0);
+  const set = (id,v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('pv-kpi-total', rs.length);
+  set('pv-kpi-matched', matched.length);
+  set('pv-kpi-unmatched', unmatched.length);
+  set('pv-kpi-confirmed', confirmed.length);
+  set('pv-kpi-refund', refund.length);
+  set('pv-kpi-amount', totalAmount.toLocaleString('ko-KR')+'원');
+
+  let shown = rs;
+  if (PV_STATE.filter === 'matched')    shown = matched;
+  if (PV_STATE.filter === 'unmatched')  shown = unmatched;
+  if (PV_STATE.filter === 'confirmed')  shown = confirmed;
+  if (PV_STATE.filter === 'pending')    shown = rs.filter(r=>r.status==='pending');
+  if (PV_STATE.filter === 'refund')     shown = refund;
+  if (PV_STATE.search) {
+    const q = PV_STATE.search.toLowerCase();
+    shown = shown.filter(r => String(r.naver_id).toLowerCase().includes(q) || String(r.order_no).toLowerCase().includes(q));
+  }
+  const tbody = document.getElementById('pv-tbody');
+  if (!tbody) return;
+  if (!shown.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#9ca3af;padding:40px">표시할 데이터가 없습니다.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = shown.map(r => {
+    const rowStyle = r.status==='unmatched'?'background:#fef2f2':r.status==='refund'?'background:#fffbeb':'';
+    const orderStyle = r.status==='unmatched'?'color:#dc2626;font-weight:700':'';
+    const noteStyle = r.status==='refund'?'color:#d97706;font-weight:700':'color:#6b7280';
+    const receiptCell = r.receipt
+      ? (String(r.receipt).match(/^https?:\/\//) ? `<a href="${pvEscape(r.receipt)}" target="_blank" style="color:#2563eb">📷 보기</a>` : `<span style="color:#9ca3af;font-size:11px">${pvEscape(String(r.receipt).slice(0,30))}</span>`)
+      : '<span style="color:#d1d5db;font-size:11px">(없음)</span>';
+    const confBadge = r.confirmed==='구매확정' ? '<span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">구매확정</span>'
+                    : r.confirmed==='반품/교환' ? '<span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">반품/교환</span>'
+                    : r.confirmed==='미확정' ? '<span style="background:#e5e7eb;color:#374151;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">미확정</span>'
+                    : '<span style="color:#9ca3af">-</span>';
+    return `<tr style="${rowStyle}">
+      <td style="font-size:12px;color:#6b7280;white-space:nowrap">${pvEscape(r.timestamp)}</td>
+      <td style="font-weight:600">${pvEscape(r.naver_id)}</td>
+      <td style="font-family:Consolas,monospace;font-size:12px;${orderStyle}">${pvEscape(r.order_no)}</td>
+      <td>${receiptCell}</td>
+      <td style="text-align:right">${r.amount!==null?pvFmtMoney(r.amount):'<span style="color:#9ca3af">-</span>'}</td>
+      <td>${confBadge}</td>
+      <td style="text-align:right">${r.confirmed_amount!==null?pvFmtMoney(r.confirmed_amount):'<span style="color:#9ca3af">-</span>'}</td>
+      <td style="font-size:11px;${noteStyle}">${pvEscape(r.note)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function pvExportCsv() {
+  if (!PV_STATE.results.length) { pvSetSyncStatus('⚠ 내보낼 데이터가 없음', 'err'); return; }
+  const headers = ['접수일시','네이버아이디','주문번호','영수증','결제금액','구매확정여부','구매확정금액','비고','상태'];
+  const rows = PV_STATE.results.map(r => [r.timestamp, r.naver_id, r.order_no, r.receipt, r.amount??'', r.confirmed, r.confirmed_amount??'', r.note, r.status]);
+  const csv = [headers, ...rows].map(row => row.map(c => { const v = String(c??''); return /[",\n]/.test(v) ? `"${v.replace(/"/g,'""')}"` : v; }).join(',')).join('\n');
+  const blob = new Blob(['﻿'+csv], { type:'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `구매확정_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function pvSaveLocal() {
+  try {
+    localStorage.setItem(PV_STORAGE_KEY, JSON.stringify({
+      formRows:PV_STATE.formRows, storeRows:PV_STATE.storeRows,
+      formCols:PV_STATE.formCols, storeCols:PV_STATE.storeCols,
+      mapping:PV_STATE.mapping,
+    }));
+  } catch (e) { console.warn('[pv] saveLocal fail', e); }
+}
+function pvLoadLocal() {
+  try {
+    const raw = localStorage.getItem(PV_STORAGE_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.formRows) { PV_STATE.formRows=d.formRows; PV_STATE.formCols=d.formCols||[]; const el=document.getElementById('pv-form-status'); if (el) el.textContent=`${d.formRows.length}행 (저장됨)`; document.getElementById('pv-form-box')?.setAttribute('style','border:2px solid #059669;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#ecfdf5'); }
+    if (d.storeRows) { PV_STATE.storeRows=d.storeRows; PV_STATE.storeCols=d.storeCols||[]; const el=document.getElementById('pv-store-status'); if (el) el.textContent=`${d.storeRows.length}행 (저장됨)`; document.getElementById('pv-store-box')?.setAttribute('style','border:2px solid #059669;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#ecfdf5'); }
+    if (d.mapping) PV_STATE.mapping = d.mapping;
+  } catch (e) { console.warn('[pv] loadLocal fail', e); }
+}
+
+async function pvResetAll() {
+  if (!confirm('로컬 CSV + Supabase 데이터를 모두 지웁니다. 공유 페이지에서도 사라집니다. 계속할까요?')) return;
+  localStorage.removeItem(PV_STORAGE_KEY);
+  await pvSupabaseClear();
+  Object.assign(PV_STATE, {
+    formRows:null, storeRows:null, formCols:[], storeCols:[],
+    mapping:{ form:{timestamp:'',naverId:'',orderNo:'',receipt:''}, store:{orderNo:'',amount:'',status:'',confirmDate:''} },
+    results:[], filter:'all', search:'',
+  });
+  const resetBox = (id,text) => { const el=document.getElementById(id); if (el) el.textContent=text; };
+  resetBox('pv-form-status','파일을 끌어다 놓거나 클릭');
+  resetBox('pv-store-status','파일을 끌어다 놓거나 클릭');
+  document.getElementById('pv-form-box')?.setAttribute('style','border:2px dashed #d1d5db;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#fafafa');
+  document.getElementById('pv-store-box')?.setAttribute('style','border:2px dashed #d1d5db;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#fafafa');
+  const ff=document.getElementById('pv-form-file'); if (ff) ff.value='';
+  const sf=document.getElementById('pv-store-file'); if (sf) sf.value='';
+  pvRenderMappingUI();
+  pvUpdateUploadStatus();
+  pvRender();
+  pvSetSyncStatus('초기화 완료', 'ok');
+}
+
+function pvSetupDropZone(boxId, inputId, kind) {
+  const box = document.getElementById(boxId);
+  const input = document.getElementById(inputId);
+  if (!box || !input) return;
+  input.addEventListener('change', e => pvHandleUpload(kind, e.target.files[0]));
+  box.addEventListener('dragover', e => { e.preventDefault(); box.style.borderColor = '#2563eb'; });
+  box.addEventListener('dragleave', e => { e.preventDefault(); if (!(kind==='form'?PV_STATE.formRows:PV_STATE.storeRows)) box.style.borderColor = '#d1d5db'; });
+  box.addEventListener('drop', e => {
+    e.preventDefault();
+    if (e.dataTransfer.files.length) pvHandleUpload(kind, e.dataTransfer.files[0]);
+  });
+}
+
+async function pvBootstrapFromSupabase() {
+  const cloud = await pvSupabaseFetch();
+  if (Array.isArray(cloud) && cloud.length) {
+    PV_STATE.results = cloud;
+    pvRender();
+    pvSetSyncStatus(`✓ Supabase에서 ${cloud.length}건 로드됨`, 'ok');
+  }
+}
+
+async function pvOnEnter() {
+  if (PV_STATE.bootstrapped) return;
+  PV_STATE.bootstrapped = true;
+  pvSetupDropZone('pv-form-box', 'pv-form-file', 'form');
+  pvSetupDropZone('pv-store-box', 'pv-store-file', 'store');
+  document.getElementById('pv-process-btn')?.addEventListener('click', pvProcessData);
+  document.getElementById('pv-reset-btn')?.addEventListener('click', pvResetAll);
+  document.getElementById('pv-export-btn')?.addEventListener('click', pvExportCsv);
+  document.getElementById('pv-reload-btn')?.addEventListener('click', pvBootstrapFromSupabase);
+  document.getElementById('pv-search')?.addEventListener('input', e => { PV_STATE.search = e.target.value; pvRender(); });
+  document.querySelectorAll('.pv-filter-chip').forEach(c => c.addEventListener('click', () => {
+    document.querySelectorAll('.pv-filter-chip').forEach(x => { x.classList.remove('active'); x.style.cssText = 'padding:4px 10px;border:1px solid #d1d5db;background:white;color:#6b7280;border-radius:16px;cursor:pointer'; });
+    c.classList.add('active');
+    c.style.cssText = 'padding:4px 10px;border:1px solid #111827;background:#111827;color:white;border-radius:16px;cursor:pointer';
+    PV_STATE.filter = c.dataset.filter;
+    pvRender();
+  }));
+  const shareLink = document.getElementById('pv-share-link');
+  if (shareLink) {
+    shareLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigator.clipboard?.writeText(PV_SHARE_URL).then(() => pvSetSyncStatus('✓ 공유 링크 복사됨: '+PV_SHARE_URL, 'ok'));
+    });
+  }
+  pvLoadLocal();
+  pvRenderMappingUI();
+  pvUpdateUploadStatus();
+  await pvBootstrapFromSupabase();
 }
 
 function rvAddDays(iso, days) {
