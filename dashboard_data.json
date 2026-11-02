@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-11-03T05:58:59",
+    "extracted_at": "2026-11-03T06:07:13",
     "product_count": 28,
     "data_unit": "상품(SKU) 단위"
   },
@@ -7248,13 +7248,13 @@
         "입고중": 2020
       },
       "매출_통계": {
-        "매출_7일합": 160,
-        "매출_28일합": 554,
+        "매출_7일합": 161,
+        "매출_28일합": 555,
         "일평균_7일": 23,
         "일평균_28일": 20,
         "소진_잔여일수": 25,
         "소진_예상일": "2026-11-28",
-        "재고발주_권장일": "2026-12-25"
+        "재고발주_권장일": "2026-12-24"
       },
       "구성제품": [
         {
@@ -8163,27 +8163,43 @@
   "sales": {
     "today_date": "2026-11-03",
     "kpi": {
-      "today_revenue": 77035,
-      "today_profit": 40073,
-      "today_qty": 3,
+      "today_revenue": 123387,
+      "today_profit": 61612,
+      "today_qty": 4,
       "today_orders": 1,
       "yesterday_revenue": 18009629,
-      "week_revenue": 92368567,
+      "week_revenue": 92414919,
       "last_week_revenue": 127337948,
-      "month_revenue": 24788264,
+      "month_revenue": 24834616,
       "last_month_revenue": 39518420
     },
     "channels_today": [
       {
         "매출처명": "스마트스토어",
         "매출처ID": 465,
-        "수량": 3,
-        "매출": 77035,
-        "이익": 40073,
+        "수량": 4,
+        "매출": 123387,
+        "이익": 61612,
         "비중": 100.0
       }
     ],
     "products_today": [
+      {
+        "제품ID": 97,
+        "제품명": "보아르아가맘마보틀워머",
+        "카테고리명": "보틀워머",
+        "수량": 1,
+        "매출": 46352,
+        "이익": 21539,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 46352,
+            "이익": 21539
+          }
+        ]
+      },
       {
         "제품ID": 1700,
         "제품명": "보아르슈즈쏙-화이트",
@@ -8273,7 +8289,7 @@
         406452416,
         490758480,
         466629195,
-        24788264,
+        24834616,
         0
       ]
     },
@@ -8317,7 +8333,7 @@
         12893,
         15847,
         17134,
-        691,
+        692,
         0
       ]
     },
@@ -8349,8 +8365,8 @@
       },
       {
         "카테고리": "보틀워머",
-        "매출": 334253568,
-        "수량": 9321
+        "매출": 334299920,
+        "수량": 9322
       },
       {
         "카테고리": "스프링카",
@@ -8668,11 +8684,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 135479831,
+            "current_rev": 135526183,
             "prev_rev": 101347136,
-            "current_profit": 53515999,
+            "current_profit": 53537538,
             "prev_profit": 47376077,
-            "current_qty": 4117,
+            "current_qty": 4118,
             "prev_qty": 2800,
             "products": [
               {
@@ -8704,11 +8720,11 @@
               },
               {
                 "name": "보아르아가맘마보틀워머",
-                "current_rev": 21293602,
+                "current_rev": 21339954,
                 "prev_rev": 26734355,
-                "current_profit": 7274257,
+                "current_profit": 7295796,
                 "prev_profit": 10927837,
-                "current_qty": 565,
+                "current_qty": 566,
                 "prev_qty": 665
               },
               {
@@ -8923,11 +8939,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 36405944,
+            "current_rev": 36452296,
             "prev_rev": 21565338,
-            "current_profit": 13630512,
+            "current_profit": 13652051,
             "prev_profit": 10359049,
-            "current_qty": 865,
+            "current_qty": 866,
             "prev_qty": 629,
             "products": [
               {
@@ -8986,11 +9002,11 @@
               },
               {
                 "name": "보아르아가맘마보틀워머",
-                "current_rev": 5867499,
+                "current_rev": 5913851,
                 "prev_rev": 6765252,
-                "current_profit": 1897419,
+                "current_profit": 1918958,
                 "prev_profit": 2940704,
-                "current_qty": 160,
+                "current_qty": 161,
                 "prev_qty": 162
               },
               {
@@ -9178,11 +9194,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 1335967209,
+            "current_rev": 1336013561,
             "prev_rev": 993652983,
-            "current_profit": 547839779,
+            "current_profit": 547861318,
             "prev_profit": 437843489,
-            "current_qty": 39021,
+            "current_qty": 39022,
             "prev_qty": 29372,
             "products": [
               {
@@ -9223,11 +9239,11 @@
               },
               {
                 "name": "보아르아가맘마보틀워머",
-                "current_rev": 259972687,
+                "current_rev": 260019039,
                 "prev_rev": 309791857,
-                "current_profit": 97152645,
+                "current_profit": 97174184,
                 "prev_profit": 124106758,
-                "current_qty": 6651,
+                "current_qty": 6652,
                 "prev_qty": 7773
               },
               {
@@ -9433,11 +9449,11 @@
           },
           {
             "name": "육아",
-            "current_rev": 1533934075,
+            "current_rev": 1533980427,
             "prev_rev": 1177933113,
-            "current_profit": 633765554,
+            "current_profit": 633787093,
             "prev_profit": 525385107,
-            "current_qty": 44579,
+            "current_qty": 44580,
             "prev_qty": 34449,
             "products": [
               {
@@ -9478,11 +9494,11 @@
               },
               {
                 "name": "보아르아가맘마보틀워머",
-                "current_rev": 319577594,
+                "current_rev": 319623946,
                 "prev_rev": 369129432,
-                "current_profit": 121441235,
+                "current_profit": 121462774,
                 "prev_profit": 150453351,
-                "current_qty": 8132,
+                "current_qty": 8133,
                 "prev_qty": 9185
               },
               {
@@ -9823,9 +9839,9 @@
         },
         "11": {
           "육아": {
-            "매출": 8292720,
-            "이익": 3287373,
-            "수량": 192
+            "매출": 8339072,
+            "이익": 3308912,
+            "수량": 193
           },
           "생활가전": {
             "매출": 16495544,
@@ -9930,7 +9946,7 @@
           },
           "11": {
             "생활": 33813668,
-            "육아": 8390015
+            "육아": 8436367
           }
         }
       },
@@ -10046,8 +10062,8 @@
       "monthly_revenue": 1195326800,
       "ytd_revenue": 12950628800,
       "annual_revenue": 14232470600,
-      "actual_month_revenue": 24788264,
-      "actual_ytd_revenue": 3845188372,
+      "actual_month_revenue": 24834616,
+      "actual_ytd_revenue": 3845234724,
       "achieve_rate_month": 2.1,
       "achieve_rate_ytd": 29.7,
       "products": [
@@ -10111,11 +10127,11 @@
             555,
             465,
             690,
-            15,
+            16,
             0
           ],
           "annual_actual_2025": 9196,
-          "annual_actual_2026": 6651,
+          "annual_actual_2026": 6652,
           "channel_monthly": {
             "2025": {
               "스마트스토어": [
@@ -10929,7 +10945,7 @@
                 185,
                 115,
                 159,
-                10,
+                11,
                 0
               ],
               "빌리지베이비": [
