@@ -4297,7 +4297,9 @@ function pvCleanOrderNo(s) { return String(s||'').replace(/[\s\-]/g,'').trim(); 
 function pvEscape(s) { return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function pvFmtMoney(n) { if (n === null || n === undefined || n === '') return '-'; const v = parseInt(String(n).replace(/[^0-9-]/g,'')) || 0; return v.toLocaleString('ko-KR') + '원'; }
 
-function pvParseFile(file) {
+const PV_STORE_PWD_KEY = 'voar_smartstore_xlsx_password_v1';
+
+function pvParseFile(file, password = '') {
   return new Promise((resolve, reject) => {
     const ext = file.name.split('.').pop().toLowerCase();
     const reader = new FileReader();
@@ -4317,7 +4319,9 @@ function pvParseFile(file) {
       reader.onload = (e) => {
         try {
           if (typeof XLSX === 'undefined') { reject(new Error('SheetJS 로딩 안됨')); return; }
-          const wb = XLSX.read(new Uint8Array(e.target.result), { type:'array' });
+          const opts = { type:'array' };
+          if (password) opts.password = password;
+          const wb = XLSX.read(new Uint8Array(e.target.result), opts);
           const sheet = wb.Sheets[wb.SheetNames[0]];
           const rows = XLSX.utils.sheet_to_json(sheet, { defval:'', raw:false });
           const cols = rows.length ? Object.keys(rows[0]) : [];
@@ -4334,30 +4338,51 @@ function pvParseFile(file) {
 
 async function pvHandleUpload(kind, file) {
   if (!file) return;
+  let password = kind === 'store' ? (localStorage.getItem(PV_STORE_PWD_KEY) || '') : '';
+  let parsed = null;
   try {
-    const { rows, cols } = await pvParseFile(file);
-    if (!rows.length) { pvSetSyncStatus('⚠ 파일에 데이터 없음', 'err'); return; }
-    if (kind === 'form') {
-      PV_STATE.formRows = rows; PV_STATE.formCols = cols;
-      PV_STATE.mapping.form = { ...PV_STATE.mapping.form, ...pvAutoMap(cols, PV_AUTO_MAP.form) };
-      const el = document.getElementById('pv-form-status');
-      if (el) el.textContent = `${rows.length}행 로드됨 (${cols.length}열)`;
-      document.getElementById('pv-form-box')?.setAttribute('style', 'border:2px solid #059669;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#ecfdf5');
-    } else {
-      PV_STATE.storeRows = rows; PV_STATE.storeCols = cols;
-      PV_STATE.mapping.store = { ...PV_STATE.mapping.store, ...pvAutoMap(cols, PV_AUTO_MAP.store) };
-      const el = document.getElementById('pv-store-status');
-      if (el) el.textContent = `${rows.length}행 로드됨 (${cols.length}열)`;
-      document.getElementById('pv-store-box')?.setAttribute('style', 'border:2px solid #059669;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#ecfdf5');
-    }
-    pvSaveLocal();
-    pvRenderMappingUI();
-    pvUpdateUploadStatus();
-    pvSetSyncStatus(`✓ ${file.name} 로드 완료`, 'ok');
+    parsed = await pvParseFile(file, password);
   } catch (err) {
-    console.error(err);
-    pvSetSyncStatus('파일 읽기 실패: '+err.message, 'err');
+    const msg = String(err?.message || err);
+    const isPwdErr = /password/i.test(msg);
+    if (isPwdErr && kind === 'store') {
+      if (password) localStorage.removeItem(PV_STORE_PWD_KEY);
+      const pwd = prompt('🔒 스마트스토어 엑셀 비밀번호를 입력하세요\n(한번만 입력하면 이 브라우저에 저장되어 다음부턴 자동 사용):', '');
+      if (!pwd) { pvSetSyncStatus('비밀번호 입력 취소됨', 'err'); return; }
+      try {
+        parsed = await pvParseFile(file, pwd);
+        localStorage.setItem(PV_STORE_PWD_KEY, pwd);
+        pvSetSyncStatus('✓ 비밀번호 저장 완료 — 다음부턴 자동 사용', 'ok');
+      } catch (err2) {
+        console.error(err2);
+        pvSetSyncStatus('⚠ 비밀번호 틀림 또는 지원하지 않는 암호화: '+err2.message, 'err');
+        return;
+      }
+    } else {
+      console.error(err);
+      pvSetSyncStatus('파일 읽기 실패: '+msg, 'err');
+      return;
+    }
   }
+  const { rows, cols } = parsed;
+  if (!rows.length) { pvSetSyncStatus('⚠ 파일에 데이터 없음', 'err'); return; }
+  if (kind === 'form') {
+    PV_STATE.formRows = rows; PV_STATE.formCols = cols;
+    PV_STATE.mapping.form = { ...PV_STATE.mapping.form, ...pvAutoMap(cols, PV_AUTO_MAP.form) };
+    const el = document.getElementById('pv-form-status');
+    if (el) el.textContent = `${rows.length}행 로드됨 (${cols.length}열)`;
+    document.getElementById('pv-form-box')?.setAttribute('style', 'border:2px solid #059669;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#ecfdf5');
+  } else {
+    PV_STATE.storeRows = rows; PV_STATE.storeCols = cols;
+    PV_STATE.mapping.store = { ...PV_STATE.mapping.store, ...pvAutoMap(cols, PV_AUTO_MAP.store) };
+    const el = document.getElementById('pv-store-status');
+    if (el) el.textContent = `${rows.length}행 로드됨 (${cols.length}열)`;
+    document.getElementById('pv-store-box')?.setAttribute('style', 'border:2px solid #059669;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#ecfdf5');
+  }
+  pvSaveLocal();
+  pvRenderMappingUI();
+  pvUpdateUploadStatus();
+  pvSetSyncStatus(`✓ ${file.name} 로드 완료 (${rows.length}행)`, 'ok');
 }
 
 function pvUpdateUploadStatus() {
