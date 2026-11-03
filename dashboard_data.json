@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-11-04T06:29:31",
+    "extracted_at": "2026-11-04T06:40:11",
     "product_count": 28,
     "data_unit": "상품(SKU) 단위"
   },
@@ -3133,8 +3133,8 @@
         "입고중": 0
       },
       "매출_통계": {
-        "매출_7일합": 776,
-        "매출_28일합": 2411,
+        "매출_7일합": 777,
+        "매출_28일합": 2412,
         "일평균_7일": 111,
         "일평균_28일": 86,
         "소진_잔여일수": 27,
@@ -6216,8 +6216,8 @@
         "입고중": 0
       },
       "매출_통계": {
-        "매출_7일합": 601,
-        "매출_28일합": 1836,
+        "매출_7일합": 602,
+        "매출_28일합": 1837,
         "일평균_7일": 86,
         "일평균_28일": 66,
         "소진_잔여일수": 46,
@@ -8139,23 +8139,23 @@
   "sales": {
     "today_date": "2026-11-04",
     "kpi": {
-      "today_revenue": 100227,
-      "today_profit": 51314,
-      "today_qty": 3,
+      "today_revenue": 170311,
+      "today_profit": 83630,
+      "today_qty": 5,
       "today_orders": 1,
       "yesterday_revenue": 21271126,
-      "week_revenue": 97647665,
+      "week_revenue": 97717749,
       "last_week_revenue": 122131606,
-      "month_revenue": 46904923,
+      "month_revenue": 46975007,
       "last_month_revenue": 44098134
     },
     "channels_today": [
       {
         "매출처명": "스마트스토어",
         "매출처ID": 465,
-        "수량": 3,
-        "매출": 100227,
-        "이익": 51314,
+        "수량": 5,
+        "매출": 170311,
+        "이익": 83630,
         "비중": 100.0
       }
     ],
@@ -8173,6 +8173,38 @@
             "수량": 1,
             "매출": 45354,
             "이익": 20541
+          }
+        ]
+      },
+      {
+        "제품ID": 198,
+        "제품명": "보아르아이워시",
+        "카테고리명": "초음파세척기",
+        "수량": 1,
+        "매출": 39599,
+        "이익": 17430,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 39599,
+            "이익": 17430
+          }
+        ]
+      },
+      {
+        "제품ID": 1700,
+        "제품명": "보아르슈즈쏙-화이트",
+        "카테고리명": "건조기",
+        "수량": 1,
+        "매출": 30485,
+        "이익": 14886,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 1,
+            "매출": 30485,
+            "이익": 14886
           }
         ]
       },
@@ -8249,7 +8281,7 @@
         406452416,
         490727370,
         467177641,
-        46904923,
+        46975007,
         0
       ]
     },
@@ -8293,15 +8325,15 @@
         12893,
         15847,
         17161,
-        1464,
+        1466,
         0
       ]
     },
     "category_compare": [
       {
         "카테고리": "건조기",
-        "매출": 764679393,
-        "수량": 23913
+        "매출": 764709878,
+        "수량": 23914
       },
       {
         "카테고리": "다리미",
@@ -8315,8 +8347,8 @@
       },
       {
         "카테고리": "초음파세척기",
-        "매출": 455282420,
-        "수량": 13295
+        "매출": 455322019,
+        "수량": 13296
       },
       {
         "카테고리": "살균기",
@@ -8582,11 +8614,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 325489721,
+            "current_rev": 325559805,
             "prev_rev": 194926852,
-            "current_profit": 118491688,
+            "current_profit": 118524004,
             "prev_profit": 83522936,
-            "current_qty": 12751,
+            "current_qty": 12753,
             "prev_qty": 6779,
             "products": [
               {
@@ -8600,20 +8632,20 @@
               },
               {
                 "name": "보아르아이워시",
-                "current_rev": 61325065,
+                "current_rev": 61364664,
                 "prev_rev": 13050213,
-                "current_profit": 17648866,
+                "current_profit": 17666296,
                 "prev_profit": 5276094,
-                "current_qty": 1871,
+                "current_qty": 1872,
                 "prev_qty": 353
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 62799474,
+                "current_rev": 62829959,
                 "prev_rev": 36923259,
-                "current_profit": 24710698,
+                "current_profit": 24725584,
                 "prev_profit": 17488706,
-                "current_qty": 2440,
+                "current_qty": 2441,
                 "prev_qty": 1345
               },
               {
@@ -8837,29 +8869,29 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 56105381,
+            "current_rev": 56175465,
             "prev_rev": 46774079,
-            "current_profit": 20752898,
+            "current_profit": 20785214,
             "prev_profit": 19537749,
-            "current_qty": 1913,
+            "current_qty": 1915,
             "prev_qty": 1501,
             "products": [
               {
                 "name": "보아르아이워시",
-                "current_rev": 19313153,
+                "current_rev": 19352752,
                 "prev_rev": 2890474,
-                "current_profit": 5989584,
+                "current_profit": 6007014,
                 "prev_profit": 1194703,
-                "current_qty": 601,
+                "current_qty": 602,
                 "prev_qty": 77
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 19579276,
+                "current_rev": 19609761,
                 "prev_rev": 6540059,
-                "current_profit": 7474452,
+                "current_profit": 7489338,
                 "prev_profit": 3341968,
-                "current_qty": 776,
+                "current_qty": 777,
                 "prev_qty": 221
               },
               {
@@ -9092,11 +9124,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 2520603719,
+            "current_rev": 2520673803,
             "prev_rev": 1866451774,
-            "current_profit": 941469267,
+            "current_profit": 941501583,
             "prev_profit": 796535860,
-            "current_qty": 84239,
+            "current_qty": 84241,
             "prev_qty": 60663,
             "products": [
               {
@@ -9110,11 +9142,11 @@
               },
               {
                 "name": "보아르아이워시",
-                "current_rev": 455282420,
+                "current_rev": 455322019,
                 "prev_rev": 300578084,
-                "current_profit": 152016593,
+                "current_profit": 152034023,
                 "prev_profit": 109375998,
-                "current_qty": 13295,
+                "current_qty": 13296,
                 "prev_qty": 8590
               },
               {
@@ -9146,11 +9178,11 @@
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 536108014,
+                "current_rev": 536138499,
                 "prev_rev": 478726630,
-                "current_profit": 229084482,
+                "current_profit": 229099368,
                 "prev_profit": 211471768,
-                "current_qty": 20404,
+                "current_qty": 20405,
                 "prev_qty": 18093
               },
               {
@@ -9347,11 +9379,11 @@
         "categories": [
           {
             "name": "생활가전",
-            "current_rev": 2887958406,
+            "current_rev": 2888028490,
             "prev_rev": 2151476289,
-            "current_profit": 1095202783,
+            "current_profit": 1095235099,
             "prev_profit": 936958288,
-            "current_qty": 97256,
+            "current_qty": 97258,
             "prev_qty": 69311,
             "products": [
               {
@@ -9374,11 +9406,11 @@
               },
               {
                 "name": "보아르아이워시",
-                "current_rev": 485919925,
+                "current_rev": 485959524,
                 "prev_rev": 343828279,
-                "current_profit": 163956549,
+                "current_profit": 163973979,
                 "prev_profit": 125997692,
-                "current_qty": 14142,
+                "current_qty": 14143,
                 "prev_qty": 9794
               },
               {
@@ -9419,11 +9451,11 @@
               },
               {
                 "name": "보아르슈즈쏙",
-                "current_rev": 592937323,
+                "current_rev": 592967808,
                 "prev_rev": 558845469,
-                "current_profit": 255206176,
+                "current_profit": 255221062,
                 "prev_profit": 256842832,
-                "current_qty": 22522,
+                "current_qty": 22523,
                 "prev_qty": 20888
               },
               {
@@ -9870,9 +9902,9 @@
             "수량": 600
           },
           "생활가전": {
-            "매출": 27855209,
-            "이익": 9633012,
-            "수량": 864
+            "매출": 27925293,
+            "이익": 9665328,
+            "수량": 866
           }
         }
       }
@@ -9971,7 +10003,7 @@
             "육아": 146091758
           },
           "11": {
-            "생활": 55084395,
+            "생활": 55154479,
             "육아": 19087841
           }
         }
@@ -10088,8 +10120,8 @@
       "monthly_revenue": 1195326800,
       "ytd_revenue": 12950628800,
       "annual_revenue": 14232470600,
-      "actual_month_revenue": 46904923,
-      "actual_ytd_revenue": 3867822367,
+      "actual_month_revenue": 46975007,
+      "actual_ytd_revenue": 3867892451,
       "achieve_rate_month": 3.9,
       "achieve_rate_ytd": 29.9,
       "products": [
@@ -30633,11 +30665,11 @@
             2236,
             1606,
             2832,
-            134,
+            135,
             0
           ],
           "annual_actual_2025": 20156,
-          "annual_actual_2026": 20404,
+          "annual_actual_2026": 20405,
           "channel_monthly": {
             "2025": {
               "스마트스토어": [
@@ -32095,7 +32127,7 @@
                 753,
                 299,
                 346,
-                47,
+                48,
                 0
               ],
               "토스쇼핑(비바리퍼블리카)": [
@@ -33493,11 +33525,11 @@
             2188,
             1554,
             1581,
-            524,
+            525,
             0
           ],
           "annual_actual_2025": 9428,
-          "annual_actual_2026": 13295,
+          "annual_actual_2026": 13296,
           "channel_monthly": {
             "2025": {
               "스마트스토어": [
@@ -34465,7 +34497,7 @@
                 641,
                 516,
                 343,
-                38,
+                39,
                 0
               ],
               "카카오(선물하기)": [
