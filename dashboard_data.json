@@ -7,7 +7,7 @@
       "생활가전",
       "육아"
     ],
-    "extracted_at": "2026-11-05T00:30:46",
+    "extracted_at": "2026-11-05T00:41:55",
     "product_count": 28,
     "data_unit": "상품(SKU) 단위"
   },
@@ -6212,8 +6212,8 @@
         "입고중": 0
       },
       "매출_통계": {
-        "매출_7일합": 599,
-        "매출_28일합": 1620,
+        "매출_7일합": 600,
+        "매출_28일합": 1621,
         "일평균_7일": 86,
         "일평균_28일": 58,
         "소진_잔여일수": 52,
@@ -8126,23 +8126,23 @@
   "sales": {
     "today_date": "2026-11-05",
     "kpi": {
-      "today_revenue": 39598,
-      "today_profit": 17429,
-      "today_qty": 1,
+      "today_revenue": 79195,
+      "today_profit": 34857,
+      "today_qty": 2,
       "today_orders": 1,
       "yesterday_revenue": 7192314,
-      "week_revenue": 79430720,
+      "week_revenue": 79470317,
       "last_week_revenue": 135463674,
-      "month_revenue": 55071857,
+      "month_revenue": 55111454,
       "last_month_revenue": 48907955
     },
     "channels_today": [
       {
         "매출처명": "스마트스토어",
         "매출처ID": 465,
-        "수량": 1,
-        "매출": 39598,
-        "이익": 17429,
+        "수량": 4,
+        "매출": 133556,
+        "이익": 64488,
         "비중": 100.0
       }
     ],
@@ -8151,15 +8151,31 @@
         "제품ID": 198,
         "제품명": "보아르아이워시",
         "카테고리명": "초음파세척기",
-        "수량": 1,
-        "매출": 39598,
-        "이익": 17429,
+        "수량": 2,
+        "매출": 79195,
+        "이익": 34857,
         "판매처내역": [
           {
             "매출처명": "스마트스토어",
-            "수량": 1,
-            "매출": 39598,
-            "이익": 17429
+            "수량": 2,
+            "매출": 79195,
+            "이익": 34857
+          }
+        ]
+      },
+      {
+        "제품ID": 412,
+        "제품명": "보아르아가맘마쪽쪽이살균기",
+        "카테고리명": "살균기",
+        "수량": 2,
+        "매출": 54361,
+        "이익": 29631,
+        "판매처내역": [
+          {
+            "매출처명": "스마트스토어",
+            "수량": 2,
+            "매출": 54361,
+            "이익": 29631
           }
         ]
       }
@@ -8204,7 +8220,7 @@
         406452416,
         490723120,
         467383846,
-        55071857,
+        55165815,
         0
       ]
     },
@@ -8248,7 +8264,7 @@
         12893,
         15847,
         17168,
-        1691,
+        1694,
         0
       ]
     },
@@ -8270,13 +8286,13 @@
       },
       {
         "카테고리": "초음파세척기",
-        "매출": 456295069,
-        "수량": 13321
+        "매출": 456334666,
+        "수량": 13322
       },
       {
         "카테고리": "살균기",
-        "매출": 430335389,
-        "수량": 17736
+        "매출": 430389750,
+        "수량": 17738
       },
       {
         "카테고리": "보틀워머",
@@ -8482,20 +8498,20 @@
         "categories": [
           {
             "name": "육아",
-            "current_rev": 145131933,
+            "current_rev": 145186294,
             "prev_rev": 107578767,
-            "current_profit": 57205384,
+            "current_profit": 57235015,
             "prev_profit": 50312968,
-            "current_qty": 4489,
+            "current_qty": 4491,
             "prev_qty": 2920,
             "products": [
               {
                 "name": "보아르아가맘마쪽쪽이살균기",
-                "current_rev": 42364945,
+                "current_rev": 42419306,
                 "prev_rev": 20974070,
-                "current_profit": 19120214,
+                "current_profit": 19149845,
                 "prev_profit": 10865540,
-                "current_qty": 1839,
+                "current_qty": 1841,
                 "prev_qty": 872
               },
               {
@@ -8601,11 +8617,11 @@
           },
           {
             "name": "생활가전",
-            "current_rev": 328415815,
+            "current_rev": 328455412,
             "prev_rev": 196943707,
-            "current_profit": 119690098,
+            "current_profit": 119707526,
             "prev_profit": 84392335,
-            "current_qty": 12837,
+            "current_qty": 12838,
             "prev_qty": 6832,
             "products": [
               {
@@ -8619,11 +8635,11 @@
               },
               {
                 "name": "보아르아이워시",
-                "current_rev": 61792079,
+                "current_rev": 61831676,
                 "prev_rev": 13315762,
-                "current_profit": 17874352,
+                "current_profit": 17891780,
                 "prev_profit": 5409505,
-                "current_qty": 1883,
+                "current_qty": 1884,
                 "prev_qty": 359
               },
               {
@@ -8737,20 +8753,20 @@
         "categories": [
           {
             "name": "육아",
-            "current_rev": 34916526,
+            "current_rev": 34970887,
             "prev_rev": 24356269,
-            "current_profit": 13783046,
+            "current_profit": 13812677,
             "prev_profit": 11497607,
-            "current_qty": 984,
+            "current_qty": 986,
             "prev_qty": 651,
             "products": [
               {
                 "name": "보아르아가맘마쪽쪽이살균기",
-                "current_rev": 8404923,
+                "current_rev": 8459284,
                 "prev_rev": 4344270,
-                "current_profit": 3866968,
+                "current_profit": 3896599,
                 "prev_profit": 2334183,
-                "current_qty": 367,
+                "current_qty": 369,
                 "prev_qty": 171
               },
               {
@@ -8856,20 +8872,20 @@
           },
           {
             "name": "생활가전",
-            "current_rev": 44514194,
+            "current_rev": 44553791,
             "prev_rev": 44233700,
-            "current_profit": 16683257,
+            "current_profit": 16700685,
             "prev_profit": 18326928,
-            "current_qty": 1405,
+            "current_qty": 1406,
             "prev_qty": 1403,
             "products": [
               {
                 "name": "보아르아이워시",
-                "current_rev": 19255540,
+                "current_rev": 19295137,
                 "prev_rev": 3381059,
-                "current_profit": 5976309,
+                "current_profit": 5993737,
                 "prev_profit": 1421012,
-                "current_qty": 599,
+                "current_qty": 600,
                 "prev_qty": 89
               },
               {
@@ -8992,20 +9008,20 @@
         "categories": [
           {
             "name": "육아",
-            "current_rev": 1349627450,
+            "current_rev": 1349681811,
             "prev_rev": 1000953443,
-            "current_profit": 553611690,
+            "current_profit": 553641321,
             "prev_profit": 441295414,
-            "current_qty": 39493,
+            "current_qty": 39495,
             "prev_qty": 29526,
             "products": [
               {
                 "name": "보아르아가맘마쪽쪽이살균기",
-                "current_rev": 402752210,
+                "current_rev": 402806571,
                 "prev_rev": 265890329,
-                "current_profit": 186466080,
+                "current_profit": 186495711,
                 "prev_profit": 137781663,
-                "current_qty": 17451,
+                "current_qty": 17453,
                 "prev_qty": 11189
               },
               {
@@ -9111,11 +9127,11 @@
           },
           {
             "name": "생활가전",
-            "current_rev": 2526563806,
+            "current_rev": 2526603403,
             "prev_rev": 1870269706,
-            "current_profit": 943943846,
+            "current_profit": 943961274,
             "prev_profit": 798238567,
-            "current_qty": 84412,
+            "current_qty": 84413,
             "prev_qty": 60773,
             "products": [
               {
@@ -9129,11 +9145,11 @@
               },
               {
                 "name": "보아르아이워시",
-                "current_rev": 456295069,
+                "current_rev": 456334666,
                 "prev_rev": 301110715,
-                "current_profit": 152452848,
+                "current_profit": 152470276,
                 "prev_profit": 109622330,
-                "current_qty": 13321,
+                "current_qty": 13322,
                 "prev_qty": 8603
               },
               {
@@ -9247,20 +9263,20 @@
         "categories": [
           {
             "name": "육아",
-            "current_rev": 1540324370,
+            "current_rev": 1540378731,
             "prev_rev": 1178856072,
-            "current_profit": 636325809,
+            "current_profit": 636355440,
             "prev_profit": 525671007,
-            "current_qty": 44819,
+            "current_qty": 44821,
             "prev_qty": 34508,
             "products": [
               {
                 "name": "보아르아가맘마쪽쪽이살균기",
-                "current_rev": 443213942,
+                "current_rev": 443268303,
                 "prev_rev": 307425683,
-                "current_profit": 206699133,
+                "current_profit": 206728764,
                 "prev_profit": 161312596,
-                "current_qty": 19192,
+                "current_qty": 19194,
                 "prev_qty": 12883
               },
               {
@@ -9366,11 +9382,11 @@
           },
           {
             "name": "생활가전",
-            "current_rev": 2887593182,
+            "current_rev": 2887632779,
             "prev_rev": 2152111250,
-            "current_profit": 1094921341,
+            "current_profit": 1094938769,
             "prev_profit": 936789014,
-            "current_qty": 97230,
+            "current_qty": 97231,
             "prev_qty": 69348,
             "products": [
               {
@@ -9393,11 +9409,11 @@
               },
               {
                 "name": "보아르아이워시",
-                "current_rev": 486563756,
+                "current_rev": 486603353,
                 "prev_rev": 342323081,
-                "current_profit": 164222193,
+                "current_profit": 164239621,
                 "prev_profit": 125466435,
-                "current_qty": 14159,
+                "current_qty": 14160,
                 "prev_qty": 9750
               },
               {
@@ -9765,14 +9781,14 @@
         },
         "11": {
           "육아": {
-            "매출": 21391538,
-            "이익": 8614447,
-            "수량": 658
+            "매출": 21445899,
+            "이익": 8644078,
+            "수량": 660
           },
           "생활가전": {
-            "매출": 33680319,
-            "이익": 12055212,
-            "수량": 1033
+            "매출": 33719916,
+            "이익": 12072640,
+            "수량": 1034
           }
         }
       }
@@ -9871,8 +9887,8 @@
             "육아": 146158698
           },
           "11": {
-            "생활": 67666164,
-            "육아": 21473107
+            "생활": 67705761,
+            "육아": 21527468
           }
         }
       },
@@ -9989,8 +10005,8 @@
       "monthly_revenue": 1195326800,
       "ytd_revenue": 12950628800,
       "annual_revenue": 14232470600,
-      "actual_month_revenue": 55071857,
-      "actual_ytd_revenue": 3876191256,
+      "actual_month_revenue": 55165815,
+      "actual_ytd_revenue": 3876285214,
       "achieve_rate_month": 4.6,
       "achieve_rate_ytd": 29.9,
       "products": [
@@ -11654,11 +11670,11 @@
             2368,
             2871,
             1702,
-            255,
+            257,
             0
           ],
           "annual_actual_2025": 12903,
-          "annual_actual_2026": 17451,
+          "annual_actual_2026": 17453,
           "channel_monthly": {
             "2025": {
               "스마트스토어": [
@@ -12542,7 +12558,7 @@
                 526,
                 465,
                 312,
-                52,
+                54,
                 0
               ],
               "롯데쇼핑(주)e커머스사업본부(m포인트몰) 신전산": [
@@ -13441,7 +13457,7 @@
             237,
             287,
             170,
-            28,
+            29,
             0
           ],
           "annual_achieve_rate": 145
@@ -33394,11 +33410,11 @@
             2188,
             1554,
             1582,
-            549,
+            550,
             0
           ],
           "annual_actual_2025": 9428,
-          "annual_actual_2026": 13321,
+          "annual_actual_2026": 13322,
           "channel_monthly": {
             "2025": {
               "스마트스토어": [
@@ -34366,7 +34382,7 @@
                 641,
                 516,
                 343,
-                52,
+                53,
                 0
               ],
               "카카오(선물하기)": [
@@ -35181,7 +35197,7 @@
             313,
             222,
             316,
-            78,
+            79,
             0
           ],
           "annual_achieve_rate": 173
