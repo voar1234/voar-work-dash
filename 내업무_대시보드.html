@@ -1450,8 +1450,8 @@
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
           <label class="pv-upload-box" id="pv-form-box" style="border:2px dashed #d1d5db;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#fafafa">
-            <div style="font-size:13px;font-weight:600;color:#374151">① 네이버 폼 응답 CSV/XLSX</div>
-            <div style="font-size:11px;color:#9ca3af;margin-top:2px">주문번호, 네이버 아이디, 영수증 URL</div>
+            <div style="font-size:13px;font-weight:600;color:#374151">① 네이버 폼 응답 XLSX (권장)</div>
+            <div style="font-size:11px;color:#9ca3af;margin-top:2px">첨부 이미지 보려면 <b>XLSX로 다운</b> · CSV는 하이퍼링크 소실됨</div>
             <div class="status" id="pv-form-status" style="font-size:12px;color:#6b7280;margin-top:6px;font-weight:600">파일을 끌어다 놓거나 클릭</div>
             <input type="file" id="pv-form-file" accept=".csv,.xlsx,.xls" hidden>
           </label>
@@ -1515,6 +1515,11 @@
         </div>
       </div>
 
+      <!-- 영수증 라이트박스 -->
+      <div id="pv-lightbox" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;cursor:zoom-out;align-items:center;justify-content:center" onclick="this.style.display='none'">
+        <img id="pv-lightbox-img" style="max-width:92vw;max-height:92vh;border-radius:6px;box-shadow:0 8px 40px rgba(0,0,0,.5)">
+      </div>
+
       <!-- 3) 필터 + 테이블 -->
       <div class="panel">
         <div style="display:flex;gap:8px;margin-bottom:10px;font-size:12px;flex-wrap:wrap;align-items:center">
@@ -1533,14 +1538,13 @@
               <th>접수일시</th>
               <th>네이버 아이디</th>
               <th>주문번호</th>
-              <th>영수증</th>
               <th>결제금액</th>
               <th>구매확정</th>
               <th>구매확정금액</th>
               <th>비고</th>
             </tr></thead>
             <tbody id="pv-tbody">
-              <tr><td colspan="8" style="text-align:center;color:#9ca3af;padding:40px">CSV 2개 업로드 후 "▶ 크로스체크 + Supabase 저장" 버튼을 눌러주세요.</td></tr>
+              <tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:40px">CSV 2개 업로드 후 "▶ 크로스체크 + Supabase 저장" 버튼을 눌러주세요.</td></tr>
             </tbody>
           </table>
         </div>
@@ -4238,10 +4242,10 @@ const PV_AUTO_MAP = {
     receipt:  ['영수증','구매영수증','첨부','receipt','사진','인증'],
   },
   store: {
-    orderNo:        ['주문번호','orderno','ordernumber'],
     productOrderNo: ['상품주문번호','productorderno','productordernumber'],
-    amount:         ['최종상품금액','결제금액','총결제금액','상품가격','총주문금액','amount','price','결제'],
+    orderNo:        ['주문번호','orderno','ordernumber'],
     status:         ['상품주문상태','주문상태','상태','처리상태','status'],
+    amount:         ['최종상품금액','결제금액','총결제금액','상품가격','총주문금액','amount','price','결제'],
     confirmDate:    ['구매확정일','확정일','confirmdate'],
   },
 };
@@ -4288,14 +4292,25 @@ function pvSetSyncStatus(msg, kind='info') {
 function pvNormKey(s) { return String(s||'').toLowerCase().replace(/[\s_\-()[\]{}·]/g,''); }
 function pvAutoMap(cols, rules) {
   const result = {};
+  const claimed = new Set();
   for (const [field, keywords] of Object.entries(rules)) {
     let best = '';
     for (const col of cols) {
+      if (claimed.has(col)) continue;
       const n = pvNormKey(col);
-      for (const kw of keywords) { if (n.includes(pvNormKey(kw))) { best = col; break; } }
+      for (const kw of keywords) { if (n === pvNormKey(kw)) { best = col; break; } }
       if (best) break;
     }
+    if (!best) {
+      for (const col of cols) {
+        if (claimed.has(col)) continue;
+        const n = pvNormKey(col);
+        for (const kw of keywords) { if (n.includes(pvNormKey(kw))) { best = col; break; } }
+        if (best) break;
+      }
+    }
     result[field] = best;
+    if (best) claimed.add(best);
   }
   return result;
 }
@@ -4333,10 +4348,24 @@ function pvParseFile(file, password = '') {
       reader.onload = (e) => {
         try {
           if (typeof XLSX === 'undefined') { reject(new Error('SheetJS 로딩 안됨')); return; }
-          const opts = { type:'array' };
+          const opts = { type:'array', cellHTML:false };
           if (password) opts.password = password;
           const wb = XLSX.read(new Uint8Array(e.target.result), opts);
           const sheet = wb.Sheets[wb.SheetNames[0]];
+          if (sheet['!ref']) {
+            const range = XLSX.utils.decode_range(sheet['!ref']);
+            for (let r = range.s.r; r <= range.e.r; r++) {
+              for (let c = range.s.c; c <= range.e.c; c++) {
+                const addr = XLSX.utils.encode_cell({r, c});
+                const cell = sheet[addr];
+                if (!cell) continue;
+                const link = cell.l && (cell.l.Target || cell.l.target);
+                if (link && typeof link === 'string' && link.match(/^https?:\/\//)) {
+                  cell.v = link; cell.w = link; cell.t = 's';
+                }
+              }
+            }
+          }
           const rows = XLSX.utils.sheet_to_json(sheet, { defval:'', raw:false });
           const cols = rows.length ? Object.keys(rows[0]) : [];
           resolve({ rows, cols });
@@ -4520,16 +4549,17 @@ function pvRender() {
   const tbody = document.getElementById('pv-tbody');
   if (!tbody) return;
   if (!shown.length) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#9ca3af;padding:40px">표시할 데이터가 없습니다.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:40px">표시할 데이터가 없습니다.</td></tr>';
     return;
   }
   tbody.innerHTML = shown.map(r => {
     const rowStyle = r.status==='unmatched'?'background:#fef2f2':r.status==='refund'?'background:#fffbeb':'';
     const orderStyle = r.status==='unmatched'?'color:#dc2626;font-weight:700':'';
     const noteStyle = r.status==='refund'?'color:#d97706;font-weight:700':'color:#6b7280';
-    const receiptCell = r.receipt
-      ? (String(r.receipt).match(/^https?:\/\//) ? `<a href="${pvEscape(r.receipt)}" target="_blank" style="color:#2563eb">📷 보기</a>` : `<span style="color:#9ca3af;font-size:11px">${pvEscape(String(r.receipt).slice(0,30))}</span>`)
-      : '<span style="color:#d1d5db;font-size:11px">(없음)</span>';
+    const hasReceipt = r.receipt && String(r.receipt).match(/^https?:\/\//);
+    const receiptIcon = hasReceipt
+      ? `<span class="pv-receipt-icon" data-url="${pvEscape(r.receipt)}" style="cursor:pointer;margin-left:6px;font-size:14px" title="영수증 보기 (클릭)">📷</span>`
+      : '';
     const confBadge = r.confirmed==='구매확정' ? '<span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">구매확정</span>'
                     : r.confirmed==='반품/교환' ? '<span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">반품/교환</span>'
                     : r.confirmed==='미확정' ? '<span style="background:#e5e7eb;color:#374151;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">미확정</span>'
@@ -4537,14 +4567,24 @@ function pvRender() {
     return `<tr style="${rowStyle}">
       <td style="font-size:12px;color:#6b7280;white-space:nowrap">${pvEscape(r.timestamp)}</td>
       <td style="font-weight:600">${pvEscape(r.naver_id)}</td>
-      <td style="font-family:Consolas,monospace;font-size:12px;${orderStyle}">${pvEscape(r.order_no)}</td>
-      <td>${receiptCell}</td>
+      <td style="font-family:Consolas,monospace;font-size:12px;${orderStyle};white-space:nowrap">${pvEscape(r.order_no)}${receiptIcon}</td>
       <td style="text-align:right">${r.amount!==null?pvFmtMoney(r.amount):'<span style="color:#9ca3af">-</span>'}</td>
       <td>${confBadge}</td>
       <td style="text-align:right">${r.confirmed_amount!==null?pvFmtMoney(r.confirmed_amount):'<span style="color:#9ca3af">-</span>'}</td>
       <td style="font-size:11px;${noteStyle}">${pvEscape(r.note)}</td>
     </tr>`;
   }).join('');
+  tbody.querySelectorAll('.pv-receipt-icon').forEach(el => {
+    el.addEventListener('click', () => {
+      const url = el.dataset.url;
+      const box = document.getElementById('pv-lightbox');
+      const img = document.getElementById('pv-lightbox-img');
+      if (!box || !img) { window.open(url, '_blank'); return; }
+      img.src = url;
+      img.onerror = () => { box.style.display='none'; window.open(url, '_blank'); };
+      box.style.display = 'flex';
+    });
+  });
 }
 
 function pvExportCsv() {
