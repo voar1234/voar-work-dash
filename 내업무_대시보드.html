@@ -4299,7 +4299,15 @@ function pvAutoMap(cols, rules) {
   }
   return result;
 }
-function pvCleanOrderNo(s) { return String(s||'').replace(/[\s\-]/g,'').trim(); }
+function pvCleanOrderNo(s) {
+  let v = String(s||'').trim();
+  if (/^[\d.]+[eE][+\-]?\d+$/.test(v)) {
+    const n = Number(v);
+    if (Number.isFinite(n)) v = Math.round(n).toFixed(0);
+  }
+  v = v.replace(/\D/g, '');
+  return v;
+}
 function pvEscape(s) { return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function pvFmtMoney(n) { if (n === null || n === undefined || n === '') return '-'; const v = parseInt(String(n).replace(/[^0-9-]/g,'')) || 0; return v.toLocaleString('ko-KR') + '원'; }
 
@@ -4455,7 +4463,8 @@ async function pvProcessData() {
     const timestamp = String(f[mF.timestamp] || '').trim();
     const naverId = String(f[mF.naverId] || '').trim();
     const receipt = String(f[mF.receipt] || '').trim();
-    const id = `${pvNormKey(naverId)}_${orderNoClean || 'noorder_'+idx}`;
+    const tsKey = String(timestamp).replace(/\D/g,'') || `idx${idx}`;
+    const id = `${pvNormKey(naverId) || 'noid'}_${tsKey}`;
 
     if (!matchedList) {
       return { id, timestamp, naver_id:naverId, order_no:orderNoRaw, order_no_clean:orderNoClean, receipt, amount:null, confirmed:'-', confirmed_amount:null, note:'스마트스토어에 없음', status:'unmatched', updated_at:new Date().toISOString() };
