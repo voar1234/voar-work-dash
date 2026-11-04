@@ -1483,6 +1483,7 @@
               <div style="font-weight:600;margin-bottom:4px;color:#374151">스마트스토어</div>
               <div style="display:grid;grid-template-columns:100px 1fr;gap:6px 10px;padding:10px;background:#f9fafb;border-radius:4px">
                 <div>주문번호:</div><select id="pv-map-store-orderNo" style="padding:3px 6px;border:1px solid #d1d5db;border-radius:4px;font-size:12px"></select>
+                <div>상품주문번호:</div><select id="pv-map-store-productOrderNo" style="padding:3px 6px;border:1px solid #d1d5db;border-radius:4px;font-size:12px"></select>
                 <div>결제금액:</div><select id="pv-map-store-amount" style="padding:3px 6px;border:1px solid #d1d5db;border-radius:4px;font-size:12px"></select>
                 <div>주문상태:</div><select id="pv-map-store-status" style="padding:3px 6px;border:1px solid #d1d5db;border-radius:4px;font-size:12px"></select>
                 <div>구매확정일:</div><select id="pv-map-store-confirmDate" style="padding:3px 6px;border:1px solid #d1d5db;border-radius:4px;font-size:12px"></select>
@@ -4224,7 +4225,7 @@ async function postReviewsToServer(arr) {
 const PV_SHARE_URL = 'https://voar1234.github.io/voar-cs-review/purchase_verify.html';
 const PV_STATE = {
   formRows:null, storeRows:null, formCols:[], storeCols:[],
-  mapping:{ form:{timestamp:'',naverId:'',orderNo:'',receipt:''}, store:{orderNo:'',amount:'',status:'',confirmDate:''} },
+  mapping:{ form:{timestamp:'',naverId:'',orderNo:'',receipt:''}, store:{orderNo:'',productOrderNo:'',amount:'',status:'',confirmDate:''} },
   results:[], filter:'all', search:'',
   bootstrapped:false,
 };
@@ -4237,10 +4238,11 @@ const PV_AUTO_MAP = {
     receipt:  ['영수증','구매영수증','첨부','receipt','사진','인증'],
   },
   store: {
-    orderNo:    ['주문번호','상품주문번호','orderno','ordernumber'],
-    amount:     ['최종상품금액','결제금액','총결제금액','상품가격','총주문금액','amount','price','결제'],
-    status:     ['상품주문상태','주문상태','상태','처리상태','status'],
-    confirmDate:['구매확정일','확정일','confirmdate'],
+    orderNo:        ['주문번호','orderno','ordernumber'],
+    productOrderNo: ['상품주문번호','productorderno','productordernumber'],
+    amount:         ['최종상품금액','결제금액','총결제금액','상품가격','총주문금액','amount','price','결제'],
+    status:         ['상품주문상태','주문상태','상태','처리상태','status'],
+    confirmDate:    ['구매확정일','확정일','confirmdate'],
   },
 };
 const PV_SUPABASE_COLS = ['id','timestamp','naver_id','order_no','order_no_clean','receipt','amount','confirmed','confirmed_amount','note','status','updated_at'];
@@ -4410,7 +4412,7 @@ function pvRenderMappingUI() {
     sel.value = PV_STATE.mapping.form[field] || '';
     sel.onchange = () => { PV_STATE.mapping.form[field] = sel.value; pvSaveLocal(); };
   }
-  for (const field of ['orderNo','amount','status','confirmDate']) {
+  for (const field of ['orderNo','productOrderNo','amount','status','confirmDate']) {
     const sel = document.getElementById('pv-map-store-' + field);
     if (!sel) continue;
     sel.innerHTML = storeOpts;
@@ -4423,14 +4425,27 @@ async function pvProcessData() {
   if (!PV_STATE.formRows || !PV_STATE.storeRows) { pvSetSyncStatus('⚠ 두 파일 모두 업로드하세요', 'err'); return; }
   const mF = PV_STATE.mapping.form;
   const mS = PV_STATE.mapping.store;
-  if (!mF.orderNo || !mS.orderNo) { pvSetSyncStatus('⚠ 양쪽 주문번호 컬럼 매핑 필요', 'err'); return; }
+  if (!mF.orderNo) { pvSetSyncStatus('⚠ 폼의 주문번호 컬럼 매핑 필요', 'err'); return; }
+  if (!mS.orderNo && !mS.productOrderNo) { pvSetSyncStatus('⚠ 스토어의 주문번호 또는 상품주문번호 컬럼 1개 이상 매핑 필요', 'err'); return; }
 
+  // 스토어 index — 주문번호(장바구니) + 상품주문번호(품목) 둘 다 키로 등록
+  // 고객이 주문번호·상품주문번호 어느 쪽으로 기재해도 매칭되게.
   const storeMap = new Map();
   for (const row of PV_STATE.storeRows) {
-    const key = pvCleanOrderNo(row[mS.orderNo]);
-    if (!key) continue;
-    if (storeMap.has(key)) storeMap.get(key).push(row);
-    else storeMap.set(key, [row]);
+    const keys = new Set();
+    if (mS.orderNo) {
+      const k1 = pvCleanOrderNo(row[mS.orderNo]);
+      if (k1) keys.add(k1);
+    }
+    if (mS.productOrderNo && mS.productOrderNo !== mS.orderNo) {
+      const k2 = pvCleanOrderNo(row[mS.productOrderNo]);
+      if (k2) keys.add(k2);
+    }
+    for (const key of keys) {
+      if (!storeMap.has(key)) storeMap.set(key, []);
+      const arr = storeMap.get(key);
+      if (!arr.includes(row)) arr.push(row);
+    }
   }
 
   const results = PV_STATE.formRows.map((f, idx) => {
@@ -4552,7 +4567,26 @@ function pvLoadLocal() {
     const d = JSON.parse(raw);
     if (d.formRows) { PV_STATE.formRows=d.formRows; PV_STATE.formCols=d.formCols||[]; const el=document.getElementById('pv-form-status'); if (el) el.textContent=`${d.formRows.length}행 (저장됨)`; document.getElementById('pv-form-box')?.setAttribute('style','border:2px solid #059669;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#ecfdf5'); }
     if (d.storeRows) { PV_STATE.storeRows=d.storeRows; PV_STATE.storeCols=d.storeCols||[]; const el=document.getElementById('pv-store-status'); if (el) el.textContent=`${d.storeRows.length}행 (저장됨)`; document.getElementById('pv-store-box')?.setAttribute('style','border:2px solid #059669;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#ecfdf5'); }
-    if (d.mapping) PV_STATE.mapping = d.mapping;
+    if (d.mapping) {
+      PV_STATE.mapping = d.mapping;
+      if (PV_STATE.mapping.store && !('productOrderNo' in PV_STATE.mapping.store)) {
+        PV_STATE.mapping.store.productOrderNo = '';
+      }
+      if (PV_STATE.storeCols.length) {
+        const auto = pvAutoMap(PV_STATE.storeCols, PV_AUTO_MAP.store);
+        for (const k of Object.keys(auto)) {
+          if (!PV_STATE.mapping.store[k]) PV_STATE.mapping.store[k] = auto[k];
+        }
+        if (PV_STATE.mapping.store.orderNo &&
+            PV_STATE.mapping.store.orderNo.includes('상품주문번호') &&
+            !PV_STATE.mapping.store.productOrderNo) {
+          PV_STATE.mapping.store.productOrderNo = PV_STATE.mapping.store.orderNo;
+          const alt = PV_STATE.storeCols.find(c => c !== PV_STATE.mapping.store.productOrderNo
+                                                && /주문번호$/.test(c.trim()));
+          PV_STATE.mapping.store.orderNo = alt || '';
+        }
+      }
+    }
   } catch (e) { console.warn('[pv] loadLocal fail', e); }
 }
 
