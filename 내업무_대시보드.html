@@ -1455,12 +1455,20 @@
             <div class="status" id="pv-form-status" style="font-size:12px;color:#6b7280;margin-top:6px;font-weight:600">파일을 끌어다 놓거나 클릭</div>
             <input type="file" id="pv-form-file" accept=".csv,.xlsx,.xls" hidden>
           </label>
-          <label class="pv-upload-box" id="pv-store-box" style="border:2px dashed #d1d5db;border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#fafafa">
-            <div style="font-size:13px;font-weight:600;color:#374151">② 스마트스토어 주문 CSV/XLSX</div>
-            <div style="font-size:11px;color:#9ca3af;margin-top:2px">주문번호, 최종상품금액, 상품주문상태</div>
-            <div class="status" id="pv-store-status" style="font-size:12px;color:#6b7280;margin-top:6px;font-weight:600">파일을 끌어다 놓거나 클릭</div>
-            <input type="file" id="pv-store-file" accept=".csv,.xlsx,.xls" hidden>
-          </label>
+          <div id="pv-store-wrap" style="display:flex;flex-direction:column;gap:6px">
+            <button type="button" class="btn primary" id="pv-api-fetch-btn" style="padding:14px;font-size:13px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px">
+              <span>📡 ② 네이버 커머스 API로 자동 조회</span>
+              <span style="font-size:11px;font-weight:400;opacity:.9">① 업로드 후 클릭 → 주문번호로 스마트스토어 자동 조회</span>
+            </button>
+            <details style="font-size:11px;color:#9ca3af">
+              <summary style="cursor:pointer">📁 (백업) 암호해제한 CSV/XLSX 수동 업로드</summary>
+              <label class="pv-upload-box" id="pv-store-box" style="display:block;border:2px dashed #d1d5db;border-radius:8px;padding:10px;text-align:center;cursor:pointer;background:#fafafa;margin-top:4px">
+                <div style="font-size:12px;color:#6b7280">암호 해제한 스마트스토어 CSV/XLSX</div>
+                <div class="status" id="pv-store-status" style="font-size:12px;color:#6b7280;margin-top:4px;font-weight:600">파일을 끌어다 놓거나 클릭</div>
+                <input type="file" id="pv-store-file" accept=".csv,.xlsx,.xls" hidden>
+              </label>
+            </details>
+          </div>
         </div>
 
         <details style="margin-top:10px;font-size:12px;color:#6b7280">
@@ -4596,11 +4604,87 @@ async function pvBootstrapFromSupabase() {
   }
 }
 
+// 📡 네이버 커머스 API 자동 조회 — ① 네이버 폼의 주문번호 리스트로 스마트스토어 주문 자동 조회
+async function pvFetchFromNaverApi() {
+  if (!PV_STATE.formRows || !PV_STATE.formRows.length) {
+    pvSetSyncStatus('⚠ 먼저 ① 네이버 폼 응답 CSV를 업로드하세요', 'err');
+    return;
+  }
+  const mF = PV_STATE.mapping.form;
+  if (!mF.orderNo) {
+    pvSetSyncStatus('⚠ 네이버 폼의 "주문번호" 컬럼 매핑이 안되었습니다 (⚙️ 매핑 열어서 선택)', 'err');
+    return;
+  }
+  const orderIds = [...new Set(
+    PV_STATE.formRows.map(r => String(r[mF.orderNo] || '').replace(/[\s\-]/g,'').trim()).filter(Boolean)
+  )];
+  if (!orderIds.length) {
+    pvSetSyncStatus('⚠ 주문번호가 비어있음', 'err');
+    return;
+  }
+  const btn = document.getElementById('pv-api-fetch-btn');
+  const origHtml = btn ? btn.innerHTML : '';
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span>⏳ 조회 중...</span><span style="font-size:11px;font-weight:400;opacity:.9">네이버 커머스 API 호출 중 (10~30초)</span>'; }
+  pvSetSyncStatus(`📡 네이버 커머스에서 ${orderIds.length}건 조회 중...`, 'info');
+  try {
+    const res = await fetch('/api/naver-commerce/orders-lookup', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ orderIds }),
+    });
+    const data = await res.json();
+    if (!res.ok || !data.ok) {
+      pvSetSyncStatus(`⚠ 조회 실패: ${data.error || res.status}`, 'err');
+      return;
+    }
+    const storeRows = [];
+    for (const r of (data.results || [])) {
+      if (!r.matched) continue;
+      for (const d of (r.details || [])) {
+        storeRows.push({
+          '주문번호':       d.orderId,
+          '상품주문번호':   d.productOrderId,
+          '최종상품금액':   d.totalPaymentAmount || 0,
+          '상품주문상태':   [d.productOrderStatus, d.claimStatus].filter(Boolean).join(' / '),
+          '구매확정일':     d.decisionDate || '',
+          '상품명':         d.productName || '',
+          '구매자명':       d.ordererName || '',
+          '구매자아이디':   d.ordererId || '',
+          '주문일시':       d.orderDate || '',
+        });
+      }
+    }
+    if (!storeRows.length) {
+      pvSetSyncStatus(`⚠ 매칭된 주문 0건 (조회 기간 내 변경이력 없을 수 있음)`, 'err');
+      return;
+    }
+    PV_STATE.storeRows = storeRows;
+    PV_STATE.storeCols = Object.keys(storeRows[0]);
+    PV_STATE.mapping.store = {
+      orderNo: '주문번호',
+      amount: '최종상품금액',
+      status: '상품주문상태',
+      confirmDate: '구매확정일',
+    };
+    document.getElementById('pv-store-status').textContent = `✓ API ${storeRows.length}행 (매칭 ${data.matched_count}/${data.orderIds_count})`;
+    document.getElementById('pv-store-box')?.setAttribute('style', 'display:block;border:2px solid #059669;border-radius:8px;padding:10px;text-align:center;cursor:pointer;background:#ecfdf5;margin-top:4px');
+    pvSaveLocal();
+    pvRenderMappingUI();
+    pvUpdateUploadStatus();
+    pvSetSyncStatus(`✓ 네이버 커머스 조회 완료 — 매칭 ${data.matched_count}/${data.orderIds_count}건 · 이제 "▶ 크로스체크 + Supabase 저장" 클릭`, 'ok');
+  } catch (e) {
+    pvSetSyncStatus('⚠ 네트워크 오류: '+e.message, 'err');
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
+  }
+}
+
 async function pvOnEnter() {
   if (PV_STATE.bootstrapped) return;
   PV_STATE.bootstrapped = true;
   pvSetupDropZone('pv-form-box', 'pv-form-file', 'form');
   pvSetupDropZone('pv-store-box', 'pv-store-file', 'store');
+  document.getElementById('pv-api-fetch-btn')?.addEventListener('click', pvFetchFromNaverApi);
   document.getElementById('pv-process-btn')?.addEventListener('click', pvProcessData);
   document.getElementById('pv-reset-btn')?.addEventListener('click', pvResetAll);
   document.getElementById('pv-export-btn')?.addEventListener('click', pvExportCsv);
