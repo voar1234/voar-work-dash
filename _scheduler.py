@@ -110,7 +110,7 @@ def already_out(q):
 
 
 def due_items(d, now):
-    auto = d.get('autoPublish') is True
+    auto = auto_on(d)
     slots = d.get('slots') or []
     out, held = [], []
     for q in (d.get('queue') or []) + (d.get('reels') or []):
@@ -136,6 +136,22 @@ def due_items(d, now):
     return out
 
 
+# ─────────── 자동 발행 스위치 ───────────
+# 예전엔 Supabase data 안의 autoPublish 를 봤는데, 여러 스크립트가 그 덩어리를
+# 통째로 덮어쓰면서 스위치가 조용히 꺼지곤 했다 (2026-10-07 이후 발행 0건).
+# 깃에 올라가는 파일로 옮겨서 아무도 못 건드리게 한다.
+MODE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                         'baby', 'publish_mode.json')
+
+
+def auto_on(d):
+    try:
+        with open(MODE_FILE, encoding='utf-8') as f:
+            return json.load(f).get('auto') is True
+    except Exception:
+        return d.get('autoPublish') is True      # 파일이 없으면 예전 방식으로
+
+
 def autoschedule(d, now):
     """자동 발행이 켜져 있으면 카드가 다 된 글에 발행일을 매긴다.
 
@@ -145,7 +161,7 @@ def autoschedule(d, now):
     카드가 없거나 제작이 안 끝난 글은 건드리지 않는다 —
     빈 글이 그대로 나가면 안 된다.
     """
-    if d.get('autoPublish') is not True:
+    if not auto_on(d):
         return 0
     hhmm = (d.get('cfg') or {}).get('time') or '20:30'
     items = (d.get('queue') or []) + (d.get('reels') or [])
