@@ -99,8 +99,10 @@ def inspect(path):
             hh, ss, vv = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
             if 0.07 <= hh <= 0.14 and ss >= 0.45 and vv >= 0.75:
                 body += 1                      # 몸통 노랑
-            if y < sh * 0.16 and vv < 0.5 and ss < 0.25:
-                sprout += 1                    # 머리 위 새싹
+            if y < sh * 0.16 and (
+                    (vv < 0.5 and ss < 0.25)              # 어른 노티 — 어두운 회색
+                    or (0.18 <= hh <= 0.45 and ss >= 0.30 and vv >= 0.40)):
+                sprout += 1                    # 머리 위 새싹 (회색 또는 연두)
     m['body'] = body / max(1, opaque)
     m['sprout'] = sprout / max(1, opaque)
 
@@ -130,7 +132,7 @@ def _load(path, h, flip):
     return im.resize((max(1, int(im.width * s)), h), Image.LANCZOS)
 
 
-def made(name, prompt, base='hello', h=380, flip=False, log=print):
+def made(name, prompt, base='hello', h=380, flip=False, log=print, baby=False):
     """주문제작 노티. name 으로 캐시를 찾고, 없으면 만들어 저장한다.
 
     name   저장 이름 (bottle_hug, carseat_sit …)
@@ -157,7 +159,7 @@ def made(name, prompt, base='hello', h=380, flip=False, log=print):
         refs = [r for r in refs if os.path.exists(r) and not r.endswith(base + '.png')]
         tmp = os.path.join(GEN, f'{name}.try{i}.png')
         try:
-            _gpt_img.noti(base, prompt, out_path=tmp, refs=refs)
+            _gpt_img.noti(base, prompt, out_path=tmp, refs=refs, baby=baby)
         except SystemExit as e:
             log(f'  노티 {name} {i}차 생성 실패: {e}')
             continue
