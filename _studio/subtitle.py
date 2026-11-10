@@ -31,6 +31,7 @@ HEAVY = os.path.join(FD, 'NanumSquareNeo-eHv.ttf')
 BOLD = os.path.join(FD, 'NanumSquareNeo-cBd.ttf')
 
 W, H = 1080, 1920
+# 릴스는 아래 420px 쯤을 캡션·버튼이 덮는다. 글자는 1500 위에만 둔다.
 INK = (58, 48, 40)
 CREAM = (255, 250, 240)
 
@@ -46,8 +47,8 @@ CAPS = {
     'B': [(0.00, 0.50, '그날도 혼자 잘 놀던 중', 'line'),
           (0.52, 1.00, '엄마 찾아 부엌으로 쪼르르', 'line')],
     'C': [(0.00, 0.45, '설거지하던 엄마', 'line'),
-          (0.50, 0.72, '뿡', 'bang'),
-          (0.74, 1.00, '…?', 'bang')],
+          (0.48, 0.70, '뿡', 'bang'),
+          (0.72, 1.00, '어...? 이 냄새는...', 'line')],
     'D': [(0.00, 0.55, '엄마! 응가! 응가!', 'talk'),
           (0.58, 1.00, '아니야 아기야… 엄마 아니야…', 'line')],
 }
@@ -90,17 +91,17 @@ def card(text, style, path):
     d = ImageDraw.Draw(im)
 
     if style == 'bang':
-        fnt = ImageFont.truetype(HEAVY, 190)
-        col, y0, stroke = (255, 138, 92), H // 2 - 180, 14
+        fnt = ImageFont.truetype(HEAVY, 150)
+        col, y0, stroke = (255, 138, 92), 170, 14
     elif style == 'hook':
         fnt = ImageFont.truetype(HEAVY, 62)
         col, y0, stroke = INK, 150, 0
     elif style == 'talk':
         fnt = ImageFont.truetype(HEAVY, 76)
-        col, y0, stroke = (240, 124, 80), 1620, 10
+        col, y0, stroke = (240, 124, 80), 1310, 10
     else:
         fnt = ImageFont.truetype(BOLD, 68)
-        col, y0, stroke = INK, 1640, 10
+        col, y0, stroke = INK, 1330, 10
 
     lines = _wrap(d, text, fnt, W - 140)
     gap = int(fnt.size * 1.28)
