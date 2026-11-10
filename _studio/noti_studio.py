@@ -62,7 +62,12 @@ REJECT = os.path.join(GEN, '_reject')          # 걸러진 것 — 나중에 판
 # 비율 위쪽은 넉넉히 둔다. 앉거나 둘이 나란히 선 자세는 가로로 퍼지는데,
 # 서 있는 몸 기준(1.05)으로 막았더니 멀쩡한 그림이 세 번 다 걸러졌다
 # (2026-11-05 '앉은 모습' — 1.09~1.23 인데 실제로는 문제 없었다).
-CHECK = dict(margin=0.003, sprout=0.012, body=0.35, aspect=(0.45, 1.45))
+# 2026-11-10 소품(싱크대·수납장)이 들어오면서 두 기준을 고쳤다.
+#   sprout  '전체 대비' 로 재니 소품이 분모를 키워 멀쩡한 그림이 걸렸다
+#           (c1_dish_c 3연속 탈락). '몸통 대비' 로 바꾸니 안정적이다.
+#           실측: 소품 큼 0.036 · 보통 0.030~0.042 → 기준 0.020
+#   body    소품이 자리를 차지하면 몸통 비율이 0.31 까지 내려간다 → 0.35 에서 0.25 로
+CHECK = dict(margin=0.003, sprout=0.020, body=0.25, aspect=(0.45, 1.45))
 
 
 def _solid_box(im, thr=40):
@@ -89,6 +94,23 @@ def inspect(path):
     small = small.resize((200, max(1, int(200 * small.height / small.width))), Image.NEAREST)
     sw, sh = small.size
     sp = small.load()
+
+    # 몸통(노란 덩어리) 윗선을 먼저 찾는다. 새싹은 그 위에만 있다.
+    body_top = sh
+    for y in range(sh):
+        for x in range(sw):
+            r, g, b, a = sp[x, y]
+            if a < 200:
+                continue
+            hh, ss, vv = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
+            if 0.07 <= hh <= 0.14 and ss >= 0.45 and vv >= 0.75:
+                body_top = y
+                break
+        if body_top < sh:
+            break
+    # 몸통 위 30% 높이까지가 새싹 자리. 소품이 위에 있어도 이 창은 안 밀린다.
+    sprout_lo = max(0, int(body_top - sh * 0.30))
+
     opaque = body = sprout = 0
     for y in range(sh):
         for x in range(sw):
@@ -99,12 +121,12 @@ def inspect(path):
             hh, ss, vv = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
             if 0.07 <= hh <= 0.14 and ss >= 0.45 and vv >= 0.75:
                 body += 1                      # 몸통 노랑
-            if y < sh * 0.16 and (
+            if sprout_lo <= y <= body_top and (
                     (vv < 0.5 and ss < 0.25)              # 어른 노티 — 어두운 회색
                     or (0.18 <= hh <= 0.45 and ss >= 0.30 and vv >= 0.40)):
                 sprout += 1                    # 머리 위 새싹 (회색 또는 연두)
     m['body'] = body / max(1, opaque)
-    m['sprout'] = sprout / max(1, opaque)
+    m['sprout'] = sprout / max(1, body)      # 전체가 아니라 몸통 대비
 
     if m['margin'] < CHECK['margin']:
         return False, '가장자리에 닿음 (어딘가 잘림)', m
