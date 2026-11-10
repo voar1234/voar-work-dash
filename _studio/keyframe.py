@@ -29,6 +29,8 @@ BODY_H = 700             # 큰 노티 몸통이 이 높이가 되도록 맞춘�
 # 바닥선을 올리고 나니 아래가 휑해 캐릭터가 작아 보였다. 안전 영역(130~1500)을
 # 채우도록 620 에서 키웠다. 더 키우면 머리가 효과음 자리를 침범한다.
 BG = (255, 250, 240)     # 크림색
+TOP_SAFE = 130           # 이 위로는 릴스 상단 UI·제목 띠가 덮는다
+FIT_H = BASELINE - TOP_SAFE      # 그림 전체가 이 높이 안에 들어와야 안 잘린다
 
 
 def _solid(im, thr=40):
@@ -69,10 +71,22 @@ def body_box(im):
     while hi < sm.width - 1 and cols[hi + 1] >= peak * 0.45:
         hi += 1
 
-    ys = [y for y in range(sm.height) if any(mask[y][lo:hi + 1])]
-    if not ys:
+    # 띠 안에서 노란 행을 찾되, '가장 긴 연속 덩어리' 만 쓴다.
+    # min~max 로 재면 멀리 떨어진 노란 점 하나에 높이가 부푼다.
+    # (c1_dish_e: 몸통 464 + 바닥의 16px 점 → 720 으로 뛰었다. 그만큼 덜 확대돼
+    #  같은 묶음의 c3 와 캐릭터 크기가 어긋났다.)
+    rows = [sum(mask[y][lo:hi + 1]) for y in range(sm.height)]
+    nz = [y for y, v in enumerate(rows) if v]
+    if not nz:
         return None
-    return (lo * step, min(ys) * step, (hi + 1) * step, (max(ys) + 1) * step)
+    runs, s0 = [], nz[0]
+    for a, b in zip(nz, nz[1:]):
+        if b - a > 1:
+            runs.append((s0, a))
+            s0 = b
+    runs.append((s0, nz[-1]))
+    y0, y1 = max(runs, key=lambda r: r[1] - r[0])
+    return (lo * step, y0 * step, (hi + 1) * step, (y1 + 1) * step)
 
 
 def place(src, out, flip=False):
