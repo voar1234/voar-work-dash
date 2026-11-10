@@ -35,14 +35,16 @@ W, H = 1080, 1920
 INK = (58, 48, 40)
 CREAM = (255, 250, 240)
 
+# 영상 내내 붙어 있는 상단 제목 띠. (글자, 색) 조각으로 적어 핵심만 노랑으로 뺀다.
+TITLE = [('아기가 ', 'w'), ('응가', 'y'), ('를 배우면 생기는 일', 'w')]
+
 # (시작비율, 끝비율, 문구, 스타일)
 #   style 'hook'  맨 위 띠  — 첫 3초 동안 이탈을 막는 한 줄
 #         'line'  아래쪽   — 보통 설명 자막
 #         'talk'  아래쪽   — 대사. 따옴표 대신 색으로 구분
 #         'bang'  화면 중앙 — 효과음. 크게 한 번 때린다
 CAPS = {
-    'A': [(0.00, 1.00, '18개월, 응가를 막 배운 아기', 'hook'),
-          (0.00, 0.50, '응가하면 꼭 알려주러 와요', 'line'),
+    'A': [(0.00, 0.50, '응가하면 꼭 알려주러 와요', 'line'),
           (0.52, 1.00, '응가! 응가!', 'talk')],
     'B': [(0.00, 0.50, '그날도 혼자 잘 놀던 중', 'line'),
           (0.52, 1.00, '엄마 찾아 부엌으로 쪼르르', 'line')],
@@ -122,6 +124,43 @@ def card(text, style, path):
     return path
 
 
+def title_card(path):
+    """검은 띠 + 흰 글씨, 핵심 단어만 노랑. 영상 내내 떠 있는다."""
+    im = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    fnt = ImageFont.truetype(HEAVY, 72)
+
+    # 줄바꿈: 조각을 이어 붙이며 폭을 넘으면 끊는다
+    lines, cur, limit = [], [], W - 120
+    for text, col in TITLE:
+        for word in text.replace(' ', ' ​').split('​'):
+            if not word:
+                continue
+            wide = sum(d.textlength(t, font=fnt) for t, _ in cur) + d.textlength(word, font=fnt)
+            if cur and wide > limit:
+                lines.append(cur)
+                cur = []
+            cur.append((word, col))
+    if cur:
+        lines.append(cur)
+
+    gap = int(fnt.size * 1.26)
+    pad = 34
+    bot = pad * 2 + gap * (len(lines) - 1) + fnt.size
+    d.rectangle([0, 0, W, bot], fill=(18, 16, 15, 242))
+
+    y = pad
+    for ln in lines:
+        x = (W - sum(d.textlength(t, font=fnt) for t, _ in ln)) / 2
+        for t, col in ln:
+            d.text((x, y), t, font=fnt,
+                   fill=(255, 221, 64) if col == 'y' else (255, 255, 255))
+            x += d.textlength(t, font=fnt)
+        y += gap
+    im.save(path)
+    return path
+
+
 def main():
     os.makedirs(TMP, exist_ok=True)
     found = []
@@ -155,6 +194,10 @@ def main():
 
     # ② 자막을 비율 → 실제 초로 바꿔 얹는다
     ins, filt, last, n = ['-i', joined], [], '[0:v]', 0
+    ins += ['-i', title_card(os.path.join(TMP, 'title.png'))]
+    n += 1
+    filt.append(f'{last}[{n}:v]overlay=0:0[v{n}]')      # 제목은 처음부터 끝까지
+    last = f'[v{n}]'
     for key, start, length in marks:
         for a, b, text, style in CAPS.get(key, []):
             png = card(text, style, os.path.join(TMP, f'{key}{n}.png'))
