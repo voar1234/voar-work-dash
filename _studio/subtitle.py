@@ -6,8 +6,12 @@
   글자는 보간이 끝난 영상 위에 나중에 얹어야 또렷하다.
 
 쓰는 법
-  1) 힉스필드에서 받은 묶음 영상 4개를 for_video/clips 에 넣는다.
-       A.mp4  B.mp4  C.mp4  D.mp4   (이름 앞글자만 맞으면 된다)
+  1) 힉스필드에서 받은 영상을 for_video/clips 에 넣는다.
+       2장(시작·끝) 모드로 받았으면 — 9개
+         A1 A2 A3 / B1 B2 / C1 C2 C3 / D1    (.mp4)
+       멀티 키프레임으로 묶음째 받았으면 — 4개
+         A B C D                             (.mp4)
+       앞글자로 묶고 번호순으로 이어 붙이므로 둘 다 그대로 돌아간다.
   2) python subtitle.py
   3) for_video/아가노티_응가사건.mp4 가 나온다.
 
@@ -163,27 +167,35 @@ def title_card(path):
 
 def main():
     os.makedirs(TMP, exist_ok=True)
+    # 한 묶음이 영상 여러 토막으로 쪼개져 올 수 있다.
+    # 힉스필드 기본 모드는 이미지 2장(시작·끝)만 받으므로 4컷 묶음은 3토막이 된다.
+    # A1.mp4 A2.mp4 A3.mp4 처럼 앞글자+번호로 넣으면 번호순으로 이어 붙인다.
+    # 멀티 키프레임 모델로 묶음째 받았으면 A.mp4 한 개만 넣어도 그대로 돌아간다.
     found = []
     for key in 'ABCD':
-        hit = [f for f in sorted(os.listdir(CLIPS))
-               if f.lower().endswith(('.mp4', '.mov')) and f.upper().startswith(key)]
+        hit = sorted(f for f in os.listdir(CLIPS)
+                     if f.lower().endswith(('.mp4', '.mov')) and f.upper().startswith(key))
         if not hit:
             raise SystemExit(f'{CLIPS} 에 {key} 로 시작하는 영상이 없습니다')
-        found.append((key, os.path.join(CLIPS, hit[0])))
+        found.append((key, [os.path.join(CLIPS, f) for f in hit]))
 
     # ① 묶음마다 9:16 으로 맞춰 다시 쓴다.
     #    힉스필드가 정사각(1440x1440)으로 뱉는 경우가 있어 그대로 이으면 섞인다.
+    #    자막은 '묶음 전체' 기준 비율이라, 묶음이 몇 토막으로 왔든
+    #    토막 길이를 합친 구간에 걸쳐 붙는다.
     parts, marks, t = [], [], 0.0
-    for key, src in found:
-        out = os.path.join(TMP, key + '_9x16.mp4')
-        run(['ffmpeg', '-y', '-i', src, '-vf',
-             f'scale={W}:{H}:force_original_aspect_ratio=increase,'
-             f'crop={W}:{H},fps=30,setsar=1',
-             '-an', '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', out])
-        d = dur(out)
-        marks.append((key, t, d))
-        parts.append(out)
-        t += d
+    for key, srcs in found:
+        g0 = t
+        for i, src in enumerate(srcs, 1):
+            out = os.path.join(TMP, '%s%d_9x16.mp4' % (key, i))
+            run(['ffmpeg', '-y', '-i', src, '-vf',
+                 f'scale={W}:{H}:force_original_aspect_ratio=increase,'
+                 f'crop={W}:{H},fps=30,setsar=1',
+                 '-an', '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', out])
+            parts.append(out)
+            t += dur(out)
+        marks.append((key, g0, t - g0))
+        print('  %s : 토막 %d개 · %.1f초' % (key, len(srcs), t - g0))
 
     lst = os.path.join(TMP, 'list.txt')
     with open(lst, 'w', encoding='utf-8') as f:
